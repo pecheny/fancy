@@ -1,4 +1,5 @@
 package ;
+import gl.GNLayer;
 import entitygl.DrawcallDataProvider;
 import shaderbuilder.SnaderBuilder;
 import openfl.events.Event;
@@ -30,7 +31,7 @@ class FancyPg extends Sprite {
             ]);
         root.addChild(rw.entity);
         new StageAspectResizer(rw, 0.2);
-        var l:GLLayer<ColorSet> = root.getComponent(GLLayer);
+        var l:GNLayer<ColorSet> = root.getComponent(GNLayer);
         var drd:DrawcallDataProvider<ColorSet> = quad.widget().entity.getComponent(DrawcallDataProvider);
         trace(drd);
         trace(drd.views);
@@ -58,7 +59,7 @@ class FancyPg extends Sprite {
     static function createDisplayRoot(root:Entity) {
 
         // -- color layer
-        var l = new GLLayer(ColorSet.instance,
+        var l = new GNLayer(ColorSet.instance,
         new ShaderBase(
         [PosPassthrough.instance, ColorPassthroughVert.instance],
         [ColorPassthroughFrag.instance]).create,
