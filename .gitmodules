@@ -1,0 +1,6 @@
+[submodule "lib/openfl-opengl"]
+	path = lib/openfl-opengl
+	url = git@github.com:pecheny/openfl-opengl.git
+[submodule "lib/alayout"]
+	path = lib/alayout
+	url = git@github.com:pecheny/alayout.git

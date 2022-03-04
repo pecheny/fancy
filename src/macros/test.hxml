@@ -1,0 +1,5 @@
+-cp ..
+-lib entity
+-main macros.InitMacroTest
+-D dump=pretty
+--interp
