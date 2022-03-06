@@ -7,7 +7,6 @@ import gltools.SimpleBlitRenderer;
 import gltools.VertDataRenderer;
 import entitygl.DrawcallDataProvider;
 import graphics.shapes.QuadGraphicElement;
-import graphics.GraphicsLayer;
 import transform.GAspectTransform;
 import crosstarget.Widgetable;
 import al.al2d.Axis2D;
@@ -21,7 +20,6 @@ import transform.AspectRatioProvider;
 
 class ColouredQuad extends Widgetable implements Renderable<ColorSet>{
     public var q:QuadGraphicElement<ColorSet>;
-    var colorContainer:GraphicsContainer<ColorSet>;
     var color:Int;
 
     public function new(w:Widget2D, color) {
@@ -36,9 +34,7 @@ class ColouredQuad extends Widgetable implements Renderable<ColorSet>{
         var fluidTransform = new GFluidTransform(aspectRatio);
         var e = w.entity;
         var renderTarget = new RenderDataTarget();
-        colorContainer = new GraphicsContainer(ColorSet.instance, e, renderTarget);
         var qq = new QuadGraphicElement(ColorSet.instance);
-        var tt = colorContainer.addGraphic(qq);
 
         q = fluidTransform.addChild(qq);
 //        colorContainer.build();
