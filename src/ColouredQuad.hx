@@ -33,9 +33,9 @@ class ColouredQuad extends Widgetable implements Renderable<ColorSet>{
         var fluidTransform = new GFluidTransform(aspectRatio);
         var e = w.entity;
         var renderTarget = new RenderDataTarget();
-        var qq = new QuadGraphicElement(ColorSet.instance);
+        q = new QuadGraphicElement(ColorSet.instance, fluidTransform.transformValue);
 
-        q = fluidTransform.addChild(qq);
+//        q = fluidTransform.addChild(qq);
 //        colorContainer.build();
 
         for (a in Axis2D.keys) {
