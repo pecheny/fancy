@@ -1,13 +1,13 @@
 package graphics.shapes;
-import IGT.IGraphicsTransform;
+import gl.sets.ColorSet;
 import al.al2d.Axis2D;
 import al.al2d.Widget2D.AxisCollection2D;
-import data.AttribAliases;
-import gl.AttribSet;
 import data.IndexCollection;
-import gl.Renderable;
-import gl.RenderTargets;
-class QuadGraphicElement<T:AttribSet>  implements Renderable<T> implements IGraphicsTransform {
+import gl.AttribSet;
+import gl.ValueWriter.AttributeWriters;
+import haxe.io.Bytes;
+import IGT.IGraphicsTransform;
+class QuadGraphicElement<T:AttribSet>  implements IGraphicsTransform {
     public var weights:Array<Array<Float>>;
     var transformators:AxisCollection2D<Float->Float> = new AxisCollection2D();
 
@@ -26,17 +26,19 @@ class QuadGraphicElement<T:AttribSet>  implements Renderable<T> implements IGrap
         transformators[axis] = tr;
     }
 
-    public function render(targets:RenderTargets<T>):Void {
-        targets.blitIndices(IndexCollections.QUAD_ODD, 6);
+    public inline function getIndices():IndexCollection {
+        return IndexCollections.QUAD_ODD;
+    }
+
+    public function writePostions(target:Bytes, writer:AttributeWriters, vertOffset = 0) {
         inline function writeAxis(axis:Axis2D, i) {
             var tr = transformators[axis];
             var wg = weights[axis][i];
-            targets.writeValue(AttribAliases.NAME_POSITION, axis, tr(wg));
+            writer[axis].setValue(target, vertOffset+i, tr(wg));
         }
         for (i in 0...4) {
             writeAxis(horizontal, i);
             writeAxis(vertical, i);
-            targets.vertexDone();
         }
     }
 }

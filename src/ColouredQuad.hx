@@ -1,30 +1,29 @@
 package ;
-import gl.RenderTargets;
-import gl.Renderable;
-import data.IndexCollection;
-import data.IndexCollection.SimpleIndexProvider;
-import gltools.SimpleBlitRenderer;
-import gltools.VertDataRenderer;
-import entitygl.DrawcallDataProvider;
-import graphics.shapes.QuadGraphicElement;
-import transform.GAspectTransform;
-import crosstarget.Widgetable;
 import al.al2d.Axis2D;
 import al.al2d.Widget2D;
+import crosstarget.Widgetable;
 import data.AttribAliases;
-import ec.CtxBinder;
+import gl.Renderable;
+import gl.RenderTargets;
 import gl.sets.ColorSet;
+import gl.ValueWriter.AttributeWriters;
 import gltools.VertDataTarget.RenderDataTarget;
+import graphics.shapes.QuadGraphicElement;
+import haxe.io.Bytes;
 import mesh.providers.AttrProviders.SolidColorProvider;
 import transform.AspectRatioProvider;
+import transform.GAspectTransform;
 
 class ColouredQuad extends Widgetable implements Renderable<ColorSet>{
     public var q:QuadGraphicElement<ColorSet>;
     var color:Int;
-
+    var buffer:Bytes;
+    var posWriter:AttributeWriters;
     public function new(w:Widget2D, color) {
         this.color = color;
         super(w);
+        buffer =  Bytes.alloc(4*ColorSet.instance.stride);
+        posWriter = ColorSet.instance.getWriter(AttribAliases.NAME_POSITION);
     }
 
     @:once var ratioProvider:AspectRatioProvider;
@@ -55,14 +54,16 @@ class ColouredQuad extends Widgetable implements Renderable<ColorSet>{
 
     var cp:SolidColorProvider;
 
-
     public function setColor(c:Int) {
         cp.setColor(c);
+        MeshUtilss.writeInt8Attribute(ColorSet.instance, buffer, AttribAliases.NAME_COLOR_IN, 0, 4, cp.getValue);
     }
 
     public function render(targets:RenderTargets<ColorSet>):Void {
-        MeshUtilss.writeInt8Attribute(ColorSet.instance, targets.verts.getBytes(), AttribAliases.NAME_COLOR_IN, targets.verts.pos, 4, cp.getValue);
-        q.render(targets);
+        var inds = q.getIndices();
+        targets.blitIndices(inds, inds.length);
+        q.writePostions(buffer, posWriter);
+        targets.blitVerts(buffer, 4);
     }
 
 

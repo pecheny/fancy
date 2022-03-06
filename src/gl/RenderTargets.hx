@@ -19,6 +19,12 @@ class RenderTargets<T:AttribSet> {
         attrs.getWriter(attrAlias)[comp].setValue(verts.getBytes(), verts.pos, val);
     }
 
+    public inline function blitVerts(source:Bytes, count:Int, srcPos = 0) {
+        verts.grantCapacity((verts.pos + count) * attrs.stride);
+        verts.getBytes().blit(verts.pos * attrs.stride, source, srcPos*attrs.stride, count*attrs.stride);
+        verts.pos += count;
+    }
+
     public inline function blitIndices(source:Bytes, count:Int, srcPos = 0) {
         inds.grantCapacity((inds.pos + count) * IndexCollection.ELEMENT_SIZE);
         var bytes:IndexCollection = inds.getBytes();
