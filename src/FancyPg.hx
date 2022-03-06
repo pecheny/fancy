@@ -1,16 +1,14 @@
 package ;
-import gl.GNLayer;
-import entitygl.DrawcallDataProvider;
-import shaderbuilder.SnaderBuilder;
-import openfl.events.Event;
-import gl.sets.ColorSet;
-import oglrenderer.GLLayer;
-import haxe.ds.ReadOnlyArray;
-import ec.Entity;
-import openfl.display.Sprite;
-import al.openfl.StageAspectResizer;
 import al.al2d.Axis2D;
 import al.Builder;
+import al.openfl.StageAspectResizer;
+import ec.Entity;
+import gl.GNLayer;
+import gl.sets.ColorSet;
+import haxe.ds.ReadOnlyArray;
+import openfl.display.Sprite;
+import openfl.events.Event;
+import shaderbuilder.SnaderBuilder;
 import transform.AspectRatioProvider;
 class FancyPg extends Sprite {
     public function new() {
@@ -20,21 +18,16 @@ class FancyPg extends Sprite {
         var ar = root.getComponentUpward(AspectRatioProvider).getFactorsRef();
         var customSvgW = b.widget(portion, 1, portion, 1);
 
-        var quad = new ColouredQuad(b.widget(), 0xff0000);
+
+//        var quads = [for (i in 0...12)new ColouredQuad(b.widget(), Std.int(0xffffff*Math.random()))];
+        var quads = [for (i in 0...2)new ColorBars(b.widget(), Std.int(0xffffff * Math.random()))];
 //        var bars = new BarsItem(b.widget(), elements, root.getComponentUpward(AspectRatioProvider).getFactorsRef(), new ColorArrayProvider([new RGB(255,0,0)]).getValue);
-        var rw = b.align(horizontal).container(
-            [
-                quad.widget()
-//                new RichLabel(customSvgW).setText(getSampleText()).widget(),
-//                    b.align(vertical).container([
-//                        new RichLabel(b.widget()).setText(getSampleText()).widget(),
-//                        new RichLabel(b.widget()).setText(getSampleText()).widget(),
-//                    ])
-            ]);
+        var rw = b.align(horizontal).container(quads.map(q -> q.widget()));
         root.addChild(rw.entity);
         new StageAspectResizer(rw, 2);
         var l:GNLayer<ColorSet> = root.getComponent(GNLayer);
-        l.addView(quad);
+        for (q in quads)
+            l.addView(q);
 //        var drd:DrawcallDataProvider<ColorSet> = quad.widget().entity.getComponent(DrawcallDataProvider);
 //        trace(drd);
 //        trace(drd.views);
