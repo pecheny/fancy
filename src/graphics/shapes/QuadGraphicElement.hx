@@ -1,32 +1,42 @@
 package graphics.shapes;
-import graphics.GraphicsLayer.GraphicsElement;
+import IGT.IGraphicsTransform;
 import al.al2d.Axis2D;
+import al.al2d.Widget2D.AxisCollection2D;
 import data.AttribAliases;
-import data.AttribSet;
+import gl.AttribSet;
 import data.IndexCollection;
-class QuadGraphicElement<T:AttribSet> extends GraphicsElement<T> {
+import gl.Renderable;
+import gl.RenderTargets;
+class QuadGraphicElement<T:AttribSet>  implements Renderable<T> implements IGraphicsTransform {
     public var weights:Array<Array<Float>>;
+    var transformators:AxisCollection2D<Float->Float> = new AxisCollection2D();
 
     public function new(attrs:T) {
-        super(attrs);
         weights = [];
         weights[0] = RectWeights.weights[horizontal].copy();
         weights[1] = RectWeights.weights[vertical].copy();
+        for (k in Axis2D.keys)
+            transformators[k] = identity;
     }
 
-    override public function applyTransform(axis:Axis2D, tr:Float -> Float) {
+    function identity(v) return v;
 
-        for (i in 0...weights[axis].length) {
+
+    public function applyTransform(axis:Axis2D, tr:Float -> Float) {
+        transformators[axis] = tr;
+    }
+
+    public function render(targets:RenderTargets<T>):Void {
+        targets.blitIndices(IndexCollections.QUAD_ODD, 6);
+        inline function writeAxis(axis:Axis2D, i) {
+            var tr = transformators[axis];
             var wg = weights[axis][i];
-            writers[AttribAliases.NAME_POSITION][axis].setValue(i, tr(wg));
+            targets.writeValue(AttribAliases.NAME_POSITION, axis, tr(wg));
         }
-    }
-
-    override public function vertCount():Int {
-        return 4;
-    }
-
-    override public function indexCollection():IndexCollection {
-        return IndexCollections.QUAD_ODD;
+        for (i in 0...4) {
+            writeAxis(horizontal, i);
+            writeAxis(vertical, i);
+            targets.vertexDone();
+        }
     }
 }

@@ -1,5 +1,6 @@
 package gl;
 #if lime
+import gl.sets.ColorSet;
 import data.IndexCollection.IndicesFetcher;
 import lime.graphics.opengl.GL;
 import openfl.display.OpenGLRenderer;
@@ -10,7 +11,7 @@ import bindings.GLProgram;
 import bindings.GLUniformLocation;
 import bindings.WebGLRenderContext;
 import data.AttribAliases;
-import data.AttribSet;
+import gl.AttribSet;
 import data.ShadersAttrs;
 import datatools.ExtensibleBytes;
 import flash.events.Event;
@@ -23,7 +24,7 @@ import openfl.display.DisplayObject;
 #end
 class GNLayer<T:AttribSet> extends DisplayObject {
     var program:GLProgram;
-    var children:Array<VertIndDataProvider<T>> = [];
+    var children:Array<Renderable<T>> = [];
     var gl:WebGLRenderContext;
     var viewport:ViewportRect;
 
@@ -45,6 +46,7 @@ class GNLayer<T:AttribSet> extends DisplayObject {
         this.renderingAspect = aspect;
         this.set = set;
         this.shaderBuilder = shaderBuilder;
+        this.targets  = new RenderTargets(set);
         addEventListener(RenderEvent.RENDER_OPENGL, render);
         addEventListener(Event.ENTER_FRAME, onEnterFrame);
     }
@@ -79,16 +81,16 @@ class GNLayer<T:AttribSet> extends DisplayObject {
         #end
     }
 
-    public function addView(v:VertIndDataProvider<T>) {
+    public function addView(v:Renderable<T>) {
         children.push(v) ;
     }
 
-    public function removeView(v:VertIndDataProvider<T>) {
+    public function removeView(v:Renderable<T>) {
         children.remove(v) ;
     }
 
-    var data = new RenderDataTarget();
-    var inds = new ExtensibleBytes(64);
+    var targets:RenderTargets<T> ;
+//    var inds = new ExtensibleBytes(64);
 
 
     public function render(event:RenderEvent) {
@@ -101,37 +103,38 @@ class GNLayer<T:AttribSet> extends DisplayObject {
         if (program == null) {
             init(gl);
         }
-        data.pos = 0;
+
+        targets.flush();
+
         for (child in children) {
-            data.grantCapacity(data.pos + child.getVertsCount() * set.stride);
-            child.render(data);
-            data.pos += child.getVertsCount() * set.stride;
+            child.render(targets);
         }
-        var indCount = gatherIndices(inds, 0, 0);
+        var indCount = targets.indsCount();//;gatherIndices(inds, 0, 0);
         bind();
         if (viewport != null)
             gl.viewport(viewport.x, viewport.y, viewport.width, viewport.height);
-        gl.bufferData(gl.ARRAY_BUFFER, data.getView(), gl.STREAM_DRAW);
+
+        gl.bufferData(gl.ARRAY_BUFFER, targets.verts.getView(), gl.STREAM_DRAW);
 //         set uniforms
         gl.blendFunc(srcAlpha, dstAlpha);
         gl.uniform1f(screenTIdx, 0);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesBuffer);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, inds.getView(), gl.DYNAMIC_DRAW);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, targets.inds.getView(), gl.DYNAMIC_DRAW);
         gl.drawElements(gl.TRIANGLES, indCount, gl.UNSIGNED_SHORT, 0);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
         unbind();
     }
 
-    public function gatherIndices(target, startWith:Int, offset:Int) {
-        var idxPointer = startWith;
-        var vertPoin = offset;
-        for (child in children) {
-            IndicesFetcher.gatherIndices(target, idxPointer, vertPoin, child.getInds(), child.getIndsCount()) ;
-            idxPointer += child.getIndsCount();
-            vertPoin += child.getVertsCount();
-        }
-        return idxPointer;
-    }
+//    public function gatherIndices(target, startWith:Int, offset:Int) {
+//        var idxPointer = startWith;
+//        var vertPoin = offset;
+//        for (child in children) {
+//            IndicesFetcher.gatherIndices(target, idxPointer, vertPoin, child.getInds(), child.getIndsCount()) ;
+//            idxPointer += child.getIndsCount();
+//            vertPoin += child.getVertsCount();
+//        }
+//        return idxPointer;
+//    }
 
     public function setViewport(x, y, w, h) {
         this.viewport = new ViewportRect(x, y, w, h);

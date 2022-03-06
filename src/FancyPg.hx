@@ -3,7 +3,7 @@ import gl.GNLayer;
 import entitygl.DrawcallDataProvider;
 import shaderbuilder.SnaderBuilder;
 import openfl.events.Event;
-import gltools.sets.ColorSet;
+import gl.sets.ColorSet;
 import oglrenderer.GLLayer;
 import haxe.ds.ReadOnlyArray;
 import ec.Entity;
@@ -19,7 +19,9 @@ class FancyPg extends Sprite {
         var root = createRoot();
         var ar = root.getComponentUpward(AspectRatioProvider).getFactorsRef();
         var customSvgW = b.widget(portion, 1, portion, 1);
+
         var quad = new ColouredQuad(b.widget(), 0xff0000);
+//        var bars = new BarsItem(b.widget(), elements, root.getComponentUpward(AspectRatioProvider).getFactorsRef(), new ColorArrayProvider([new RGB(255,0,0)]).getValue);
         var rw = b.align(horizontal).container(
             [
                 quad.widget()
@@ -30,15 +32,16 @@ class FancyPg extends Sprite {
 //                    ])
             ]);
         root.addChild(rw.entity);
-        new StageAspectResizer(rw, 0.2);
+        new StageAspectResizer(rw, 2);
         var l:GNLayer<ColorSet> = root.getComponent(GNLayer);
-        var drd:DrawcallDataProvider<ColorSet> = quad.widget().entity.getComponent(DrawcallDataProvider);
-        trace(drd);
-        trace(drd.views);
-        for (v in drd.views) {
-            trace(l  + " " + v);
-            l.addView(v);
-        }
+        l.addView(quad);
+//        var drd:DrawcallDataProvider<ColorSet> = quad.widget().entity.getComponent(DrawcallDataProvider);
+//        trace(drd);
+//        trace(drd.views);
+//        for (v in drd.views) {
+//            trace(l  + " " + v);
+//            l.addView(v);
+//        }
     }
 
 
