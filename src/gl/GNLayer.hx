@@ -125,16 +125,10 @@ class GNLayer<T:AttribSet> extends DisplayObject {
         unbind();
     }
 
-//    public function gatherIndices(target, startWith:Int, offset:Int) {
-//        var idxPointer = startWith;
-//        var vertPoin = offset;
-//        for (child in children) {
-//            IndicesFetcher.gatherIndices(target, idxPointer, vertPoin, child.getInds(), child.getIndsCount()) ;
-//            idxPointer += child.getIndsCount();
-//            vertPoin += child.getVertsCount();
-//        }
-//        return idxPointer;
-//    }
+    function printVerts(n) {
+        for (i in 0...n)
+            trace( set.printVertex(targets.verts.getBytes(), i) );
+    }
 
     public function setViewport(x, y, w, h) {
         this.viewport = new ViewportRect(x, y, w, h);
