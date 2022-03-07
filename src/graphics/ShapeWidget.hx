@@ -44,7 +44,7 @@ class ShapeWidget<T:AttribSet> extends Widgetable implements Renderable<T> {
         var aspectRatio = ratioProvider.getFactorsRef();
         fluidTransform = new GFluidTransform(aspectRatio);
         for (a in Axis2D.keys) {
-            var applier2:GTransformAxisApplier = cast fluidTransform.getAxisApplier(a);
+            var applier2 = fluidTransform.getAxisApplier(a);
             w.axisStates[a].addSibling(applier2);
         }
         createShapes();
