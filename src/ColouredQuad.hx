@@ -12,7 +12,7 @@ import graphics.shapes.QuadGraphicElement;
 import haxe.io.Bytes;
 import mesh.providers.AttrProviders.SolidColorProvider;
 import transform.AspectRatioProvider;
-import transform.GAspectTransform;
+import transform.ProportionalTransformator;
 
 class ColouredQuad extends Widgetable implements Renderable<ColorSet>{
     public var q:QuadGraphicElement<ColorSet>;
@@ -30,7 +30,7 @@ class ColouredQuad extends Widgetable implements Renderable<ColorSet>{
 
     override function init() {
         var aspectRatio = ratioProvider.getFactorsRef();
-        var fluidTransform = new GFluidTransform(aspectRatio);
+        var fluidTransform = new LiquidTransformator(aspectRatio);
         var e = w.entity;
         var renderTarget = new RenderDataTarget();
         q = new QuadGraphicElement(ColorSet.instance, fluidTransform.transformValue);

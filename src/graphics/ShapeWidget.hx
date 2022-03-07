@@ -1,21 +1,19 @@
 package graphics;
-import gl.AttribSet;
-import data.IndexCollection;
-import graphics.shapes.Shape;
 import al.al2d.Axis2D;
-import al.al2d.LineThicknessCalculator;
 import al.al2d.Widget2D;
 import crosstarget.Widgetable;
 import data.AttribAliases;
+import data.IndexCollection;
+import gl.AttribSet;
 import gl.Renderable;
 import gl.RenderTargets;
 import gl.sets.ColorSet;
 import gl.ValueWriter.AttributeWriters;
-import graphics.shapes.Bar;
+import graphics.shapes.Shape;
 import haxe.io.Bytes;
 import mesh.providers.AttrProviders.SolidColorProvider;
 import transform.AspectRatioProvider;
-import transform.GAspectTransform;
+import transform.LiquidTransformator;
 
 class ShapeWidget<T:AttribSet> extends Widgetable implements Renderable<T> {
     var buffer:Bytes;
@@ -25,7 +23,7 @@ class ShapeWidget<T:AttribSet> extends Widgetable implements Renderable<T> {
     var inds:IndexCollection;
     var cp:SolidColorProvider;
     var attrs = ColorSet.instance;
-    var fluidTransform:GFluidTransform;
+    var fluidTransform:LiquidTransformator;
     var inited = false;
 
     public function new(w:Widget2D) {
@@ -42,7 +40,7 @@ class ShapeWidget<T:AttribSet> extends Widgetable implements Renderable<T> {
 
     override function init() {
         var aspectRatio = ratioProvider.getFactorsRef();
-        fluidTransform = new GFluidTransform(aspectRatio);
+        fluidTransform = new LiquidTransformator(aspectRatio);
         for (a in Axis2D.keys) {
             var applier2 = fluidTransform.getAxisApplier(a);
             w.axisStates[a].addSibling(applier2);
