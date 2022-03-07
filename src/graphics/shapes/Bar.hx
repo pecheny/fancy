@@ -1,10 +1,9 @@
 package graphics.shapes;
-import gl.sets.ColorSet;
-import gl.ValueWriter;
 import al.al2d.Axis2D;
 import al.al2d.Widget2D.AxisCollection2D;
 import al.al2d.Widget2D;
 import data.IndexCollection;
+import gl.ValueWriter;
 import graphics.shapes.RectWeights;
 import haxe.ds.ReadOnlyArray;
 import haxe.io.Bytes;

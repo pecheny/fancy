@@ -2,7 +2,6 @@ package ;
 import al.al2d.LineThicknessCalculator;
 import al.al2d.Widget2D;
 import data.AttribAliases;
-import gl.RenderTargets;
 import gl.sets.ColorSet;
 import graphics.shapes.Bar;
 import graphics.ShapeWidget;
