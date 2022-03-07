@@ -12,7 +12,7 @@ import graphics.shapes.QuadGraphicElement;
 import haxe.io.Bytes;
 import mesh.providers.AttrProviders.SolidColorProvider;
 import transform.AspectRatioProvider;
-import transform.ProportionalTransformator;
+import transform.ProportionalTransformer;
 
 class ColouredQuad extends Widgetable implements Renderable<ColorSet>{
     public var q:QuadGraphicElement<ColorSet>;

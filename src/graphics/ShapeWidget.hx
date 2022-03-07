@@ -13,7 +13,7 @@ import graphics.shapes.Shape;
 import haxe.io.Bytes;
 import mesh.providers.AttrProviders.SolidColorProvider;
 import transform.AspectRatioProvider;
-import transform.LiquidTransformator;
+import transform.LiquidTransformer;
 
 class ShapeWidget<T:AttribSet> extends Widgetable implements Renderable<T> {
     var buffer:Bytes;
@@ -23,7 +23,7 @@ class ShapeWidget<T:AttribSet> extends Widgetable implements Renderable<T> {
     var inds:IndexCollection;
     var cp:SolidColorProvider;
     var attrs = ColorSet.instance;
-    var fluidTransform:LiquidTransformator;
+    var fluidTransform:LiquidTransformer;
     var inited = false;
 
     public function new(w:Widget2D) {
@@ -40,7 +40,7 @@ class ShapeWidget<T:AttribSet> extends Widgetable implements Renderable<T> {
 
     override function init() {
         var aspectRatio = ratioProvider.getFactorsRef();
-        fluidTransform = new LiquidTransformator(aspectRatio);
+        fluidTransform = new LiquidTransformer(aspectRatio);
         for (a in Axis2D.keys) {
             var applier2 = fluidTransform.getAxisApplier(a);
             w.axisStates[a].addSibling(applier2);

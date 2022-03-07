@@ -4,7 +4,7 @@ import al.al2d.Boundbox;
 import al.core.AxisApplier;
 import al.al2d.Axis2D;
 import al.al2d.Widget2D.AxisCollection2D;
-class Transformator {
+class Transformer {
     var appliers:AxisCollection2D<TransformatorAxisApplier> = new AxisCollection2D();
     public var pos:Array<Float> = [0, 0];
     public var size:Array<Float> = [1, 1];
@@ -32,9 +32,9 @@ class Transformator {
 
 class TransformatorAxisApplier implements AxisApplier {
     var axisIntex:Axis2D;
-    var target:Transformator;
+    var target:Transformer;
 
-    public function new(target:Transformator, c) {
+    public function new(target:Transformer, c) {
         this.target = target;
         axisIntex = c;
     }
