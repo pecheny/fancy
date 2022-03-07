@@ -1,4 +1,6 @@
 package ;
+import data.IndexCollection;
+import graphics.shapes.Shape;
 import al.al2d.Axis2D;
 import al.al2d.LineThicknessCalculator;
 import al.al2d.Widget2D;
@@ -14,16 +16,21 @@ import mesh.providers.AttrProviders.SolidColorProvider;
 import transform.AspectRatioProvider;
 import transform.GAspectTransform;
 
-class ColorBars extends Widgetable implements Renderable<ColorSet>{
+class ColorBars extends Widgetable implements Renderable<ColorSet> {
     public var q:Bar;
     var color:Int;
     var buffer:Bytes;
     var posWriter:AttributeWriters;
+    var children:Array<Shape> = [];
+    var vertsCount:Int = 0;
+    var inds:IndexCollection;
+    var cp:SolidColorProvider;
+    var attrs = ColorSet.instance;
+
     public function new(w:Widget2D, color) {
         this.color = color;
         super(w);
-        buffer =  Bytes.alloc(4*ColorSet.instance.stride);
-        posWriter = ColorSet.instance.getWriter(AttribAliases.NAME_POSITION);
+        posWriter = attrs.getWriter(AttribAliases.NAME_POSITION);
     }
 
     @:once var ratioProvider:AspectRatioProvider;
@@ -38,29 +45,59 @@ class ColorBars extends Widgetable implements Renderable<ColorSet>{
 
         var lineCalc = new LineThicknessCalculator(w, aspectRatio);
         var bb = new BarsBuilder(aspectRatio, lineCalc.lineScales());
-        cp = new SolidColorProvider(0, 0, 0);
+        cp = SolidColorProvider.fromInt(color, 128);
 
-//        q = new QuadGraphicElement(ColorSet.instance, fluidTransform.transformValue);
+//        q = new QuadGraphicElement(attrs, fluidTransform.transformValue);
         var elements = [
-        new BarContainer(FixedThikness(new BarAxisSlot ({pos:0., thikness:1.}, null)), Portion(new BarAxisSlot ({start:0., end:1.}, null)))
+            new BarContainer(FixedThikness(new BarAxisSlot ({pos:.5, thikness:1.}, null)), Portion(new BarAxisSlot ({start:0., end:1.}, null))),
+            new BarContainer(FixedThikness(new BarAxisSlot ({pos:0., thikness:1.}, null)), Portion(new BarAxisSlot ({start:0., end:1.}, null)) ),
         ];
-        q = bb.create(ColorSet.instance, fluidTransform.transformValue, elements[0]);
+        var indsCount = 0;
+        for (e in elements) {
+            var sh = bb.create(attrs, fluidTransform.transformValue, e);
+            children.push(sh);
+            vertsCount += sh.getVertsCount();
+            indsCount += sh.getIndices().length;
+        }
+        buffer = Bytes.alloc(vertsCount * attrs.stride);
+        inds = new IndexCollection(indsCount);
+        fillIndices();
+        trace(inds);
         setColor(color);
     }
 
-    var cp:SolidColorProvider;
+    function fillIndices() {
+        var indNum = 0;
+        var vertNum = 0;
+        for (sh in children) {
+            var shInds = sh.getIndices();
+            for (i in 0...shInds.length) {
+                inds[indNum + i] = shInds[i] + vertNum;
+            }
+            vertNum += sh.getVertsCount();
+            indNum += shInds.length;
+        }
+    }
+
 
     public function setColor(c:Int) {
         cp.setColor(c);
-        MeshUtilss.writeInt8Attribute(ColorSet.instance, buffer, AttribAliases.NAME_COLOR_IN, 0, 4, cp.getValue);
+        MeshUtilss.writeInt8Attribute(attrs, buffer, AttribAliases.NAME_COLOR_IN, 0, vertsCount, cp.getValue);
     }
 
     public function render(targets:RenderTargets<ColorSet>):Void {
-        var inds = q.getIndices();
         targets.blitIndices(inds, inds.length);
-        q.writePostions(buffer, posWriter);
-        targets.blitVerts(buffer, 4);
+//        targets.verts.grantCapacity(attrs.stride * (targets.verts.pos + vertsCount));
+        var pos = 0;
+        for (sh in children) {
+            sh.writePostions(buffer, posWriter, pos);
+            pos += sh.getVertsCount();
+        }
+        targets.blitVerts(buffer, vertsCount );
     }
 
-
+    function printVerts(n) {
+        for (i in 0...n)
+            trace(i  + " " + attrs.printVertex(buffer, i));
+    }
 }

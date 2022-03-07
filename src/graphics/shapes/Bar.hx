@@ -1,4 +1,5 @@
 package graphics.shapes;
+import gl.sets.ColorSet;
 import gl.ValueWriter;
 import al.al2d.Axis2D;
 import al.al2d.Widget2D.AxisCollection2D;
@@ -9,7 +10,7 @@ import haxe.ds.ReadOnlyArray;
 import haxe.io.Bytes;
 import transform.AspectRatio;
 
-class Bar {
+class Bar implements Shape {
     var axis:AxisCollection2D<BarAxisBase> = new AxisCollection2D();
     var transformators:(Axis2D, Float) -> Float;
 
@@ -21,8 +22,12 @@ class Bar {
 
     public function writePostions(target:Bytes, writer:AttributeWriters, vertOffset = 0) {
         for (a in Axis2D.keys) {
-            axis[a] .writePositions(a, transformators, target, writer, vertOffset);
+            axis[a].writePositions(a, transformators, target, writer, vertOffset);
         }
+    }
+
+    public function getVertsCount():Int {
+        return 4;
     }
 
     public function getIndices() {

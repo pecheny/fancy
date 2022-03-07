@@ -35,8 +35,8 @@ class RenderTargets<T:AttribSet> {
         inds.pos += count;
     }
 
-    public inline function vertexDone() {
-        verts.pos++;
+    public inline function commitVertices(num:Int = 1) {
+        verts.pos += num;
     }
 
     public inline function flush() {
