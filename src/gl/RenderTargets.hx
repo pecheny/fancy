@@ -14,14 +14,14 @@ class RenderTargets<T:AttribSet> {
     }
 
 
-    public inline function writeValue(attrAlias:String,  comp:Int, val:Float) {
+    public inline function writeValue(attrAlias:String, comp:Int, val:Float) {
         verts.grantCapacity((verts.pos + 256) * attrs.stride);
         attrs.getWriter(attrAlias)[comp].setValue(verts.getBytes(), verts.pos, val);
     }
 
-    public inline function blitVerts(source:Bytes, count:Int, srcPos = 0) {
+    public function blitVerts(source:Bytes, count:Int, srcPos = 0) {
         verts.grantCapacity((verts.pos + count) * attrs.stride);
-        verts.getBytes().blit(verts.pos * attrs.stride, source, srcPos*attrs.stride, count*attrs.stride);
+        verts.getBytes().blit(verts.pos * attrs.stride, source, srcPos * attrs.stride, count * attrs.stride);
         verts.pos += count;
     }
 
@@ -29,7 +29,7 @@ class RenderTargets<T:AttribSet> {
         inds.grantCapacity((inds.pos + count) * IndexCollection.ELEMENT_SIZE);
         var bytes:IndexCollection = inds.getBytes();
         inds.getBytes().blit(inds.pos * IndexCollection.ELEMENT_SIZE, source, srcPos * IndexCollection.ELEMENT_SIZE, count * IndexCollection.ELEMENT_SIZE);
-        for (v in inds.pos...inds.pos+count) {
+        for (v in inds.pos...inds.pos + count) {
             bytes[v] += verts.pos;
         }
         inds.pos += count;
