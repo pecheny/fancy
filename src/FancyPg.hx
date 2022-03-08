@@ -3,7 +3,7 @@ import al.al2d.Axis2D;
 import al.Builder;
 import al.openfl.StageAspectResizer;
 import ec.Entity;
-import gl.GNLayer;
+import gl.GLDisplayObject;
 import gl.sets.ColorSet;
 import haxe.ds.ReadOnlyArray;
 import openfl.display.Sprite;
@@ -25,7 +25,7 @@ class FancyPg extends Sprite {
         var rw = b.align(horizontal).container(quads.map(q -> q.widget()));
         root.addChild(rw.entity);
         new StageAspectResizer(rw, 2);
-        var l:GNLayer<ColorSet> = root.getComponent(GNLayer);
+        var l:GLDisplayObject<ColorSet> = root.getComponent(GLDisplayObject);
         for (q in quads)
             l.addView(q);
 //        var drd:DrawcallDataProvider<ColorSet> = quad.widget().entity.getComponent(DrawcallDataProvider);
@@ -55,7 +55,7 @@ class FancyPg extends Sprite {
     static function createDisplayRoot(root:Entity) {
 
         // -- color layer
-        var l = new GNLayer(ColorSet.instance,
+        var l = new GLDisplayObject(ColorSet.instance,
         new ShaderBase(
         [PosPassthrough.instance, ColorPassthroughVert.instance],
         [ColorPassthroughFrag.instance]).create,

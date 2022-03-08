@@ -18,7 +18,7 @@ import openfl.display.DisplayObject;
 #if nme
          import nme.gl.GL as gl;
 #end
-class GNLayer<T:AttribSet> extends DisplayObject {
+class GLDisplayObject<T:AttribSet> extends DisplayObject {
     var program:GLProgram;
     var children:Array<Renderable<T>> = [];
     var gl:WebGLRenderContext;

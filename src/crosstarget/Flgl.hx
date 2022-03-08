@@ -7,7 +7,7 @@ import gltools.sets.ColorSet;
 import gltools.sets.MSDFSet;
 import gltools.sets.TexSet;
 import haxe.ds.ReadOnlyArray;
-import oglrenderer.GLLayer;
+import oglrenderer.GLDisplayObject;
 import oglrenderer.RenderingElements;
 import shader.MSDFShader;
 import transform.AspectRatio;
@@ -138,7 +138,7 @@ class PgRoot {
         root.addComponent(drcalls);
 
         var posShader = PosPassthrough.instance;
-        var l = new GLLayer(ColorSet.instance,
+        var l = new GLDisplayObject(ColorSet.instance,
         new ShaderBase(
         [posShader, ColorPassthroughVert.instance],
         [ ColorPassthroughFrag.instance]).create,
@@ -147,7 +147,7 @@ class PgRoot {
         drcalls.addLayer(ColorSet.instance, l);
 
 
-        var tex = new GLLayer(TexSet.instance,
+        var tex = new GLDisplayObject(TexSet.instance,
         TextureShader.instance.create,
         elFactory.newChain().add(new TextureBinder(lime.utils.Assets.getImage("Assets/9q.png"))).build());
         openfl.Lib.current.addChild(tex);
@@ -184,7 +184,7 @@ class PgRoot {
         root.addComponent(storage);
         function initFont(fac, alias:FontAlias, path, df = 2) {
             var font = storage.initFont(alias, path, fac, df);
-            var tl = new GLLayer(MSDFSet.instance, MSDFShader.instence.create,
+            var tl = new GLDisplayObject(MSDFSet.instance, MSDFShader.instence.create,
             elFactory.newChain().add(new MSDFRenderingElement(font.textureImage)).build()
             );
             drcalls.addLayer(MSDFSet.instance, tl, alias);
@@ -218,7 +218,7 @@ class PgRoot {
         root.addComponent(drcalls);
 
         // -- color layer
-        var l = new GLLayer(ColorSet.instance,
+        var l = new GLDisplayObject(ColorSet.instance,
         new ShaderBase(
         [PosPassthrough.instance, ColorPassthroughVert.instance],
         [ColorPassthroughFrag.instance]).create,
@@ -227,7 +227,7 @@ class PgRoot {
         drcalls.addLayer(ColorSet.instance, l);
         // --- end of color
 
-        var tex = new GLLayer(TexSet.instance,
+        var tex = new GLDisplayObject(TexSet.instance,
         TextureShader.instance.create,
             new TextureBinder(lime.utils.Assets.getImage("Assets/9q.png"))
         );

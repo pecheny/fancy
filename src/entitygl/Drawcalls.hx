@@ -3,13 +3,13 @@ import data.AttribSet;
 import ec.CtxBinder.CtxBindable;
 import ec.Entity;
 import gltools.VertIndDataProvider;
-import oglrenderer.GLLayer;
+import oglrenderer.GLDisplayObject;
 class Drawcalls implements CtxBindable {
-    var map = new GLLayersCollection();
+    var map = new GLDisplayObjectsCollection();
 
     public function new() {}
 
-    public function addLayer<T:AttribSet>(set:T, layer:GLLayer<T>, name = "") {
+    public function addLayer<T:AttribSet>(set:T, layer:GLDisplayObject<T>, name = "") {
         var id = getLayerId(set, name);
         if (map.exists(id))
             throw "Already has layer with id " + id;
@@ -64,16 +64,16 @@ abstract LayerId<T:AttribSet>(String) to String {
     }
 }
 @:forward(keys, exists)
-abstract GLLayersCollection(Map<String, GLLayer<AttribSet>>) {
+abstract GLDisplayObjectsCollection(Map<String, GLDisplayObject<AttribSet>>) {
     public function new() {
         this = new Map();
     }
 
-    public inline function get<T:AttribSet>(lId:LayerId<T>):GLLayer<T> {
+    public inline function get<T:AttribSet>(lId:LayerId<T>):GLDisplayObject<T> {
         return cast this.get(lId);
     }
 
-    public inline function set<T:AttribSet>(lId:LayerId<T>, l:GLLayer<T>) {
+    public inline function set<T:AttribSet>(lId:LayerId<T>, l:GLDisplayObject<T>) {
         this.set(lId, cast l);
     }
 }

@@ -1,12 +1,8 @@
 package shaderbuilder;
+import data.aliases.VaryingAliases;
 import bindings.GLProgram;
 import bindings.GLUniformLocation;
 import bindings.WebGLRenderContext;
-import data.AttribAliases;
-import data.VaryingAliases;
-import gltools.aspects.MSDFTextureBinder;
-import gltools.sets.MSDFSet;
-import oglrenderer.GLLayer.RenderingElement;
 import shaderbuilder.SnaderBuilder.PosPassthrough;
 import shaderbuilder.SnaderBuilder.ShaderBase;
 import shaderbuilder.SnaderBuilder.Uv0Passthrough;
