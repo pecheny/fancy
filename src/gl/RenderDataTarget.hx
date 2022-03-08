@@ -1,9 +1,9 @@
 package gl;
 import data.DataType;
-import datatools.ExtensibleBytes;
+import utils.DynamicBytes;
 import haxe.io.Bytes;
 class RenderDataTarget {
-    var extensible = new ExtensibleBytes(64);
+    var extensible = new DynamicBytes(64);
     public var pos:Int = 0;
 
     public function new() {

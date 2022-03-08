@@ -1,8 +1,8 @@
-package datatools;
+package utils;
 import bindings.ArrayBufferView;
 import bindings.ArrayViewBase;
 import haxe.io.Bytes;
-class ExtensibleBytes {
+class DynamicBytes {
     public var bytes(default, null):Bytes;
     var size:Int;
     var view:ArrayViewBase;

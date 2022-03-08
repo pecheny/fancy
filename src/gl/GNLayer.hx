@@ -12,7 +12,6 @@ import bindings.WebGLRenderContext;
 import data.aliases.AttribAliases;
 import gl.AttribSet;
 import data.ShadersAttrs;
-import datatools.ExtensibleBytes;
 import flash.events.Event;
 import openfl.display.DisplayObject;
 
@@ -87,7 +86,7 @@ class GNLayer<T:AttribSet> extends DisplayObject {
     }
 
     var targets:RenderTargets<T> ;
-//    var inds = new ExtensibleBytes(64);
+//    var inds = new DynamicBytes(64);
 
 
     public function render(event:RenderEvent) {

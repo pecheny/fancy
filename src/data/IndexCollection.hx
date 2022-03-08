@@ -1,5 +1,5 @@
 package data;
-import datatools.ExtensibleBytes;
+import utils.DynamicBytes;
 import haxe.io.Bytes;
 import haxe.io.UInt16Array;
 abstract IndexCollection(Bytes) from Bytes to Bytes {
@@ -94,7 +94,7 @@ class IndicesFetcher {
 *   startFrom - offset within target to write to,
 *   offset - lenth of prev vert buffer to add on each vert index
 **/
-    public static inline function gatherIndices(target:ExtensibleBytes, startFrom:Int, offset, source:Bytes, count) {
+    public static inline function gatherIndices(target:DynamicBytes, startFrom:Int, offset, source:Bytes, count) {
         for (i in 0...count) {
             var uInt = source.getUInt16(i * UInt16Array.BYTES_PER_ELEMENT);
             var pos = (i + startFrom ) * UInt16Array.BYTES_PER_ELEMENT;
