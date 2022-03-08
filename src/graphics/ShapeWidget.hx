@@ -4,10 +4,12 @@ import al.al2d.Widget2D;
 import crosstarget.Widgetable;
 import data.aliases.AttribAliases;
 import data.IndexCollection;
+import ec.CtxBinder;
 import gl.AttribSet;
+import gl.ec.DrawcallDataProvider;
+import gl.ec.Drawcalls;
 import gl.Renderable;
 import gl.RenderTargets;
-import gl.sets.ColorSet;
 import gl.ValueWriter.AttributeWriters;
 import graphics.shapes.Shape;
 import haxe.io.Bytes;
@@ -20,13 +22,17 @@ class ShapeWidget<T:AttribSet> extends Widgetable implements Renderable<T> {
     var children:Array<Shape> = [];
     var vertsCount:Int = 0;
     var inds:IndexCollection;
-    var attrs = ColorSet.instance;
+    var attrs:T;
     var fluidTransform:LiquidTransformer;
     var inited = false;
 
-    public function new(w:Widget2D) {
+    public function new(attrs:T, w:Widget2D) {
+        this.attrs = attrs;
         super(w);
         posWriter = attrs.getWriter(AttribAliases.NAME_POSITION);
+        var drawcallsData = DrawcallDataProvider.get(attrs, w.entity);
+        drawcallsData.views.push(this);
+        new CtxBinder(Drawcalls, w.entity);
     }
 
     public function addChild(shape:Shape) {

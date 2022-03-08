@@ -1,11 +1,9 @@
-package entitygl;
-import data.AttribSet;
+package gl.ec;
 import ec.Entity;
 import ec.ICustomComponentId;
-import gltools.VertIndDataProvider;
 class DrawcallDataProvider<T:AttribSet> implements ICustomComponentId {
     public var name(default, null):String;
-    public var views(default,null):Array<VertIndDataProvider<T>> = [];
+    public var views(default,null):Array<Renderable<T>> = [];
 
     public function new(set:T, name:String = "") {
         this.name = Drawcalls.getLayerId(set, name);

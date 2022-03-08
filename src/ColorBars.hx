@@ -15,9 +15,8 @@ class ColorBars extends ShapeWidget<ColorSet> {
 
     public function new(w:Widget2D, color) {
         this.color = color;
-        super(w);
+        super(ColorSet.instance, w);
     }
-
 
     override function createShapes() {
         var aspectRatio = ratioProvider.getFactorsRef();

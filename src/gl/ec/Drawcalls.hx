@@ -1,9 +1,9 @@
-package entitygl;
-import data.AttribSet;
+package gl.ec;
+import gl.Renderable;
+import gl.GLDisplayObject;
+import gl.AttribSet;
 import ec.CtxBinder.CtxBindable;
 import ec.Entity;
-import gltools.VertIndDataProvider;
-import oglrenderer.GLDisplayObject;
 class Drawcalls implements CtxBindable {
     var map = new GLDisplayObjectsCollection();
 
@@ -16,7 +16,7 @@ class Drawcalls implements CtxBindable {
         map.set(id, layer);
     }
 
-    public function addView<T:AttribSet>(set:T, view:VertIndDataProvider<T>, layerName = "") {
+    public function addView<T:AttribSet>(set:T, view:Renderable<T>, layerName = "") {
         var id = getLayerId(set, layerName);
         if (map.exists(id))
             map.get(id).addView(view);

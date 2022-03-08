@@ -1,4 +1,5 @@
 package ;
+import gl.ec.Drawcalls;
 import al.al2d.Axis2D;
 import al.Builder;
 import al.openfl.StageAspectResizer;
@@ -25,9 +26,9 @@ class FancyPg extends Sprite {
         var rw = b.align(horizontal).container(quads.map(q -> q.widget()));
         root.addChild(rw.entity);
         new StageAspectResizer(rw, 2);
-        var l:GLDisplayObject<ColorSet> = root.getComponent(GLDisplayObject);
-        for (q in quads)
-            l.addView(q);
+//        var l:GLDisplayObject<ColorSet> = root.getComponent(GLDisplayObject);
+//        for (q in quads)
+//            l.addView(q);
 //        var drd:DrawcallDataProvider<ColorSet> = quad.widget().entity.getComponent(DrawcallDataProvider);
 //        trace(drd);
 //        trace(drd.views);
@@ -53,7 +54,8 @@ class FancyPg extends Sprite {
     }
 
     static function createDisplayRoot(root:Entity) {
-
+        var drcalls = new Drawcalls();
+        root.addComponent(drcalls);
         // -- color layer
         var l = new GLDisplayObject(ColorSet.instance,
         new ShaderBase(
@@ -61,7 +63,7 @@ class FancyPg extends Sprite {
         [ColorPassthroughFrag.instance]).create,
         null);
         openfl.Lib.current.addChild(l);
-        root.addComponent(l);
+        drcalls.addLayer(ColorSet.instance, l);
         // --- end of color
     }
 }
