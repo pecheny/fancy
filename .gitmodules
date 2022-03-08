@@ -4,3 +4,9 @@
 [submodule "lib/alayout"]
 	path = lib/alayout
 	url = git@github.com:pecheny/alayout.git
+[submodule "lib/bare"]
+	path = lib/bare
+	url = C:\\Users\\shoo\\Projects\\01-HaxeProjects\\flgl-new\\bare
+[submodule "lib/input"]
+	path = lib/input
+	url = C:\\\\Users\\\\shoo\\\\Projects\\\\01-Haxe\\\\-bare-git-\\\\input

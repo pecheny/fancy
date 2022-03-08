@@ -14,8 +14,7 @@
     <source path="lib/alayout/src"/>
     <source path="lib/fsm/src"/>
     <source path="lib/input/src"/>
-    <source path="lib/sticky/src"/>
-    <source path="lib/sticky/heaps-fonts"/>
+    <source path="lib/flgl/src"/>
     <source path="lib/common/src"/>
 
     <set  name="playServicesVersion" value="11.4.2" if="android"/>
