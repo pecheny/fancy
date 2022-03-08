@@ -1,4 +1,4 @@
-package ;
+package widgets;
 import al.al2d.LineThicknessCalculator;
 import al.al2d.Widget2D;
 import data.aliases.AttribAliases;

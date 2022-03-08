@@ -1,18 +1,16 @@
-package ;
+package widgets;
+import data.aliases.AttribAliases;
 import al.al2d.Axis2D;
 import al.al2d.Widget2D;
 import crosstarget.Widgetable;
-import data.AttribAliases;
 import gl.Renderable;
 import gl.RenderTargets;
 import gl.sets.ColorSet;
 import gl.ValueWriter.AttributeWriters;
-import gltools.VertDataTarget.RenderDataTarget;
 import graphics.shapes.QuadGraphicElement;
 import haxe.io.Bytes;
 import mesh.providers.AttrProviders.SolidColorProvider;
 import transform.AspectRatioProvider;
-import transform.ProportionalTransformer;
 
 class ColouredQuad extends Widgetable implements Renderable<ColorSet>{
     public var q:QuadGraphicElement<ColorSet>;

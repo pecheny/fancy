@@ -1,9 +1,9 @@
 package ;
-import gl.ec.Drawcalls;
 import al.al2d.Axis2D;
 import al.Builder;
 import al.openfl.StageAspectResizer;
 import ec.Entity;
+import gl.ec.Drawcalls;
 import gl.GLDisplayObject;
 import gl.sets.ColorSet;
 import haxe.ds.ReadOnlyArray;
@@ -11,6 +11,7 @@ import openfl.display.Sprite;
 import openfl.events.Event;
 import shaderbuilder.SnaderBuilder;
 import transform.AspectRatioProvider;
+import widgets.ColorBars;
 class FancyPg extends Sprite {
     public function new() {
         super();
