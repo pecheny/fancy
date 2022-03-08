@@ -1,4 +1,4 @@
-package ;
+package mesh;
 import gl.AttribSet;
 import data.AttributeDescr;
 import data.DataType;
