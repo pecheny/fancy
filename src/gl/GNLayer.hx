@@ -1,7 +1,6 @@
 package gl;
 #if lime
 import gl.sets.ColorSet;
-import data.IndexCollection.IndicesFetcher;
 import lime.graphics.opengl.GL;
 import openfl.display.OpenGLRenderer;
 import openfl.events.RenderEvent;
@@ -10,13 +9,11 @@ import bindings.GLBuffer;
 import bindings.GLProgram;
 import bindings.GLUniformLocation;
 import bindings.WebGLRenderContext;
-import data.AttribAliases;
+import data.aliases.AttribAliases;
 import gl.AttribSet;
 import data.ShadersAttrs;
 import datatools.ExtensibleBytes;
 import flash.events.Event;
-import gltools.VertDataTarget.RenderDataTarget;
-import gltools.VertIndDataProvider;
 import openfl.display.DisplayObject;
 
 #if nme

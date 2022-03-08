@@ -2,7 +2,7 @@ package graphics;
 import al.al2d.Axis2D;
 import al.al2d.Widget2D;
 import crosstarget.Widgetable;
-import data.AttribAliases;
+import data.aliases.AttribAliases;
 import data.IndexCollection;
 import gl.AttribSet;
 import gl.Renderable;
@@ -11,7 +11,6 @@ import gl.sets.ColorSet;
 import gl.ValueWriter.AttributeWriters;
 import graphics.shapes.Shape;
 import haxe.io.Bytes;
-import mesh.providers.AttrProviders.SolidColorProvider;
 import transform.AspectRatioProvider;
 import transform.LiquidTransformer;
 
@@ -21,7 +20,6 @@ class ShapeWidget<T:AttribSet> extends Widgetable implements Renderable<T> {
     var children:Array<Shape> = [];
     var vertsCount:Int = 0;
     var inds:IndexCollection;
-    var cp:SolidColorProvider;
     var attrs = ColorSet.instance;
     var fluidTransform:LiquidTransformer;
     var inited = false;

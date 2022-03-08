@@ -1,5 +1,5 @@
 package gl.sets;
-import data.AttribAliases;
+import data.aliases.AttribAliases;
 import gl.AttribSet;
 import data.DataType;
 class ColorSet extends AttribSet {

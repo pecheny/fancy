@@ -1,7 +1,7 @@
 package shaderbuilder;
 import bindings.GLProgram;
-import data.AttribAliases;
-import data.VaryingAliases;
+import data.aliases.AttribAliases;
+import data.aliases.VaryingAliases;
 class ShaderBase {
     public var vs(default, null):String;
     public var fs(default, null):String;

@@ -1,8 +1,7 @@
 package gl;
-import data.AttribSet;
 import data.AttributeDescr;
 import data.DataType;
-import datatools.ByteDataWriter;
+import gl.AttribSet;
 import haxe.io.Bytes;
 class FloatValueWriter implements IValueWriter {
     var stride:Int;
@@ -73,24 +72,24 @@ class ValueWriter {
 }
 
 
-class TransformValueWriter extends FloatValueWriter {
-    var transform:Float -> Float;
-
-    public function new(target:ByteDataWriter, attr:AttributeDescr, comp:Int, stride:Int, offset:Int = 0) {
-        super( attr, comp, stride, offset);
-        transform = passthrough;
-    }
-
-    function passthrough(val) return val;
-
-    public function replaceTransform(newTransform) this.transform = newTransform;
-
-    public function addTransformNode(t) {
-        this.transform = (v) -> t(this.transform(v));
-    }
-
-    override public function setValue(target, vertIdx:Int, value:Float) {
-        super.setValue(target, vertIdx, transform(value));
-    }
-}
+//class TransformValueWriter extends FloatValueWriter {
+//    var transform:Float -> Float;
+//
+//    public function new(target:ByteDataWriter, attr:AttributeDescr, comp:Int, stride:Int, offset:Int = 0) {
+//        super( attr, comp, stride, offset);
+//        transform = passthrough;
+//    }
+//
+//    function passthrough(val) return val;
+//
+//    public function replaceTransform(newTransform) this.transform = newTransform;
+//
+//    public function addTransformNode(t) {
+//        this.transform = (v) -> t(this.transform(v));
+//    }
+//
+//    override public function setValue(target, vertIdx:Int, value:Float) {
+//        super.setValue(target, vertIdx, transform(value));
+//    }
+//}
 

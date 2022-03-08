@@ -1,7 +1,7 @@
 package ;
 import al.al2d.LineThicknessCalculator;
 import al.al2d.Widget2D;
-import data.AttribAliases;
+import data.aliases.AttribAliases;
 import gl.sets.ColorSet;
 import graphics.shapes.Bar;
 import graphics.ShapeWidget;
@@ -10,6 +10,7 @@ import mesh.providers.AttrProviders.SolidColorProvider;
 class ColorBars extends ShapeWidget<ColorSet> {
     public var q:Bar;
     var color:Int;
+    var cp:SolidColorProvider;
 
 
     public function new(w:Widget2D, color) {

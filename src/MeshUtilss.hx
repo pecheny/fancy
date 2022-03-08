@@ -2,7 +2,7 @@ package ;
 import gl.AttribSet;
 import data.AttributeDescr;
 import data.DataType;
-import data.VertexAttribProvider;
+typedef VertexAttribProvider = Int->Int->Dynamic
 class MeshUtilss {
 
     public static function writeInt8Attribute<T:AttribSet>(attrs:AttribSet, bytes:haxe.io.Bytes, attName:String, firstVert:Int, vertCount:Int, provider:VertexAttribProvider) {

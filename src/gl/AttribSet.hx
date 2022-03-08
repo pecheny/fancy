@@ -2,14 +2,11 @@ package gl;
 import haxe.io.Bytes;
 import data.ShadersAttrs;
 import data.AttributeState;
-import datatools.ByteDataWriter;
-import datatools.ByteDataReader;
 import data.AttributeDescr;
 import bindings.WebGLRenderContext;
 import data.DataType;
 import gl.ValueWriter;
 #if (cpp || js || hl)
-import datatools.DataTypeUtils;
 import bindings.GLProgram;
 #end
 import haxe.io.Float32Array;
@@ -83,7 +80,7 @@ class AttribSet {
             gl.enableVertexAttribArray(descr.idx);
             var normalized = ("colorIn" == descr.name);
             gl.vertexAttribPointer(descr.idx, descr.numComponents, getGlType(descr.type, gl), normalized, stride, offset);
-            offset += descr.numComponents * DataTypeUtils.getGlSize(descr.type);
+            offset += descr.numComponents * getGlSize(descr.type);
         }
     }
 

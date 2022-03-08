@@ -1,4 +1,4 @@
-package gl;
+package data;
 
 import data.DataType;
 typedef AttributeDescr = {

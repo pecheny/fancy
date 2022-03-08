@@ -2,7 +2,7 @@ package gl;
 import data.IndexCollection;
 import haxe.io.Bytes;
 import gl.AttribSet;
-import gltools.VertDataTarget.RenderDataTarget;
+import gl.RenderDataTarget;
 class RenderTargets<T:AttribSet> {
     public var verts(default, null) = new RenderDataTarget();
     public var inds (default, null) = new RenderDataTarget();
