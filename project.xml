@@ -11,7 +11,6 @@
     <window background="#303030" fps="60"  if="html5"/>
     <!--<window background="#303030" fps="60" orientation="portrait"/>-->
     <source path="src"/>
-    <source path="lib/openfl-opengl/src"/>
     <source path="lib/alayout/src"/>
     <source path="lib/fsm/src"/>
     <source path="lib/input/src"/>
