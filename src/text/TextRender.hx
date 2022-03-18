@@ -33,10 +33,10 @@ class TextRender<T:AttribSet> implements Renderable<T> {
     var uvWriter:AttributeWriters ;
     var dpiWriter:AttributeWriters ;
 
-    public function new(attrs:T, factory:CharsLayouterFactory, tr) {
+    public function new(attrs:T, layouter, tr) {
         this.attrs = attrs;
         this.transformer = tr;
-        charsLayouter = factory.create();
+        charsLayouter = layouter;
 
         origin[horizontal] = 0.03;
         origin[vertical] = 2 / 3;
