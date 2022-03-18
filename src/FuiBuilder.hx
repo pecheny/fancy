@@ -219,7 +219,7 @@ class GldoBuilder {
         var dc = getDrawcalls(e);
         var gldo = dc.findLayer(attrs, name);
         if (gldo != null) return gldo;
-        var gldo = new GLDisplayObject(attrs, shaders.getState.bind(_, type), aspect);
+        var gldo = new GLDisplayObject(attrs, shaders.getState.bind(attrs, _, type), aspect);
         gldo.name = name;
         var dc = getDrawcalls(e);
         dc.addLayer(attrs, gldo, name);
