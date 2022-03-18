@@ -9,4 +9,8 @@ class FontInstance<T> {
         font = f;
         texturePath = tp;
     }
+
+    public function getId() {
+        return "font_" + texturePath;
+    }
 }
