@@ -24,10 +24,8 @@ class FontStorage {
         if (fac== null)
             fac = this.fac;
         var font = fac.create(descrPath, df) ;
-        var dir = Path.directory(descrPath);
-        var texPath = Path.join([dir, font.texturePath]);
-        var image = lime.utils.Assets.getImage(texPath);
-        @:privateAccess font.textureImage = image;
+//        var image = lime.utils.Assets.getImage();
+//        @:privateAccess font.textureImage = image;
         return font;
     }
 }

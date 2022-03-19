@@ -58,7 +58,9 @@ class BMFontFactory implements FontFactory<IFont> {
         var folder = Path.directory(fontPath);
         var bytes = lime.utils.Assets.getBytes(fontPath);
         var font = FontParser.parse(bytes, ".");
+        var dir = Path.directory(fontPath);
+        var texPath = Path.join([dir, font.tilePath]);
         font.resizeTo(1);
-        return new FontInstance<IFont>(new BMFont(font, dfsize), font.tilePath);
+        return new FontInstance<IFont>(new BMFont(font, dfsize), texPath);
     }
 }

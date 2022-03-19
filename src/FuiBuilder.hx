@@ -70,7 +70,7 @@ class FuiAppBase extends Sprite {
         var font = fuiBuilder.fonts.getFont(fontName);
         if (font == null)
             throw 'there is no font $fontName';
-        var aspect = fuiBuilder.renderAspectBuilder.newChain().add(new MSDFRenderingElement(font.textureImage)).build();
+        var aspect = fuiBuilder.renderAspectBuilder.newChain().add(new MSDFRenderingElement(fuiBuilder.textureStorage, font.texturePath)).build();
         return fuiBuilder.createGldo(MSDFSet.instance, e, "msdf", aspect, font.getId());
     }
 }
@@ -85,6 +85,7 @@ class FuiBuilder {
     var xmlProc:XmlProc ;
 
     public function new() {
+        textureStorage = new TextureStorage();
         shaderRegistry = new ShaderRegistry();
         gldoBuilder = new GldoBuilder(shaderRegistry);
         xmlProc = new XmlProc(gldoBuilder);
