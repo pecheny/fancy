@@ -1,4 +1,5 @@
 package ;
+import data.DataType;
 import bindings.GLTexture;
 import bindings.WebGLRenderContext;
 import ec.Entity;
@@ -50,7 +51,7 @@ class FuiAppBase extends Sprite {
                 type:"color",
                 attrs:ColorSet.instance,
                 vert:[ColorPassthroughVert.instance, PosPassthrough.instance],
-                frag:[cast ColorPassthroughFrag.instance]
+                frag:[cast ColorPassthroughFrag.instance],
             }, (e, xml) -> fuiBuilder.createGldo(ColorSet.instance, e, "color", null, "")
         );
 
@@ -60,8 +61,9 @@ class FuiAppBase extends Sprite {
                 type:"msdf",
                 attrs:MSDFSet.instance,
                 vert:[Uv0Passthrough.instance, PosPassthrough.instance, LogisticSmoothnessCalculator.instance],
-                frag:[cast MSDFFrag.instance]
-            },  createTextGldo
+                frag:[cast MSDFFrag.instance],
+                uniforms: ["color" ]
+            }, createTextGldo
         );
     }
 
@@ -125,7 +127,7 @@ class FuiBuilder {
         return this;
     }
 
-    public function createGldo<T:AttribSet>(attrs:T, e:Entity, type:String, aspect:RenderingAspect, name:String ):GLDisplayObject<T> {
+    public function createGldo<T:AttribSet>(attrs:T, e:Entity, type:String, aspect:RenderingAspect, name:String):GLDisplayObject<T> {
         return cast gldoBuilder.getGldo(e, type, aspect, name);
     }
 
@@ -139,7 +141,7 @@ class FuiBuilder {
         return this;
     }
 
-    public function createTextStyle(fontName){
+    public function createTextStyle(fontName) {
         var font = fonts.getFont(fontName);
         return new TextStyleContext(new H2dCharsLayouterFactory(font.font), font) ;
     }
@@ -149,11 +151,12 @@ class TextStyleContext {
     public var layouterFactory(default, null):CharsLayouterFactory;
     var font:FontInstance<IFont>;
 
-    public function new (lf, f) {
+    public function new(lf, f) {
         this.layouterFactory = lf;
         this.font = f;
     }
-    public function getDrawcallName(){
+
+    public function getDrawcallName() {
         return font.getId();
     }
 }
@@ -191,8 +194,6 @@ class XmlProc {
                 throw "wrong " + node.nodeName;
         }
     }
-
-
 
 
     public function regHandler(t, h) {
