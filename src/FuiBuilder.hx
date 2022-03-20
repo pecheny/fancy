@@ -99,24 +99,6 @@ class FuiBuilder {
         xmlProc.regHandler(drawcallType, gldoFactory);
     }
 
-//    function shaderDescrs(pos) {
-//        var descrs = [
-//        {
-//            type:"texture",
-//            attrs:TexSet.instance,
-//            vert:[Uv0Passthrough.instance, pos],
-//            frag:[cast TextureFragment.get(0, 0)] // todo check
-//        },
-//        {
-//            type:"msdf",
-//            attrs:MSDFSet.instance,
-//            vert:[Uv0Passthrough.instance, pos, LogisticSmoothnessCalculator.instance],
-//            frag:[cast MSDFFrag.instance]
-//        } ] ;
-//        return descrs;
-//    }
-
-
     public function setAspects(a:Array<RenderingAspect>) {
         renderAspectBuilder = new RenderAspectBuilder(a);
         return this;
