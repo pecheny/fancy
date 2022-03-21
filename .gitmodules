@@ -10,3 +10,6 @@
 [submodule "lib/input"]
 	path = lib/input
 	url = C:\\\\Users\\\\shoo\\\\Projects\\\\01-Haxe\\\\-bare-git-\\\\input
+[submodule "lib/fsm"]
+	path = lib/fsm
+	url = git@github.com:pecheny/fsm.git
