@@ -19,6 +19,7 @@ import transform.AspectRatioProvider;
 import transform.LiquidTransformer;
 import widgets.ColorBars;
 import widgets.ColouredQuad;
+using transform.LiquidTransformer;
 class FancyPg extends FuiAppBase {
     public function new() {
         super();
@@ -45,32 +46,16 @@ class FancyPg extends FuiAppBase {
         addChild(container);
 //        var root = PgRoot.createRoot();
 
-        var quads = [for (i in 0...1)new ColorBars(b.widget(), Std.int(0xffffff * Math.random())).widget()];
-        quads.push(new DummyText(b.widget()).widget());
-        quads.push(new SomeButton(b.widget()).widget());
-        quads.push(new ColouredQuad(b.widget(), 0x303090).widget());
+        var quads = [for (i in 0...1)new ColorBars(b.widget().withLiquidTransform(ar.getFactorsRef()), Std.int(0xffffff * Math.random())).widget()];
+        quads.push(new DummyText(b.widget().withLiquidTransform(ar.getFactorsRef())).widget());
+        quads.push(new SomeButton(b.widget().withLiquidTransform(ar.getFactorsRef())).widget());
+        quads.push(new ColouredQuad(b.widget().withLiquidTransform(ar.getFactorsRef()), 0x303090).widget());
         var rw = b.align(vertical).container(quads);
         ButtonPanel.make(rw);
         root.addChild(rw.entity);
         new StageAspectResizer(rw, 2);
 
     }
-
-
-//    static function initFonts(root:Entity, ab:RenderAspectBuilder) {
-//        var drcalls = root.getComponent(Drawcalls);
-//        var storage = new FontStorage(new BMFontFactory());
-//        root.addComponent();
-//        function initFont(fac, alias:FontAlias, path, df = 2) {
-//            ab.add(new MSDFRenderingElement())
-//            var font = storage.initFont(alias, path, fac, df);
-//        }
-//
-//        var defaultfont = initFont(bmfac, "", "Assets/heaps-fonts/Cardo-36-df8.fnt", 8);
-//        var font = initFont(bmfac, "svg", "Assets/heaps-fonts/svg.fnt", 4);
-//        root.addComponentByType(CharsLayouterFactory, new H2dCharsLayouterFactory(defaultfont.font));
-//    }
-
 
     function getSampleText() {
         return lime.utils.Assets.getText("Assets/heaps-fonts/Rich-text-sample.xml");
@@ -82,9 +67,7 @@ class FancyPg extends FuiAppBase {
 
 class StageAspectKeeper implements AspectRatioProvider {
     var base:Float;
-
     var factors:Array<Float> = [1, 1];
-
 
     public function new(base:Float = 1) {
         this.base = base;
@@ -115,25 +98,14 @@ class StageAspectKeeper implements AspectRatioProvider {
 }
 
 class DummyText extends Widgetable {
-
-
-    @:once var ratioProvider:AspectRatioProvider;
-//    @:once var charsLayouterFactory:CharsLayouterFactory;
     @:once var textStyleContext:TextStyleContext;
-
+    @:once var fluidTransform:LiquidTransformer;
     override function init() {
         trace("init");
-        var aspectRatio = ratioProvider.getFactorsRef();
-        var fluidTransform = new LiquidTransformer(aspectRatio);
-        for (a in Axis2D.keys) {
-            var applier2 = fluidTransform.getAxisApplier(a);
-            w.axisStates[a].addSibling(applier2);
-        }
         var text = new TextRender(MSDFSet.instance, textStyleContext.layouterFactory.create(), fluidTransform);
         text.setText("Foo");
         var drawcallsData = DrawcallDataProvider.get(MSDFSet.instance, w.entity, textStyleContext.getDrawcallName());
         drawcallsData.views.push(text);
         new CtxBinder(Drawcalls, w.entity);
     }
-
 }

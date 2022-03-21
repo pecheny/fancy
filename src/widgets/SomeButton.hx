@@ -68,14 +68,14 @@ class SomeButton implements ClickTarget<Point> extends Widgetable {
     function press():Void {
         var ox = 0.005 / w.axisStates[horizontal].getSize();
         var oy = 0.005 / w.axisStates[vertical].getSize();
-        @:privateAccess bg.fluidTransform.setBounds(ox, oy, 1 + ox * 2, 1 + oy * 2);
+        @:privateAccess bg.transformer.setBounds(ox, oy, 1 + ox * 2, 1 + oy * 2);
         rewritePos();
     }
 
     function release():Void {
 //        if (!inited)
 //            return;
-        @:privateAccess bg.fluidTransform.setBounds(0, 0, 1, 1);
+        @:privateAccess bg.transformer.setBounds(0, 0, 1, 1);
         rewritePos();
     }
 }

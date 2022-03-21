@@ -11,7 +11,7 @@ import gl.RenderTargets;
 import gl.sets.MSDFSet;
 import gl.ValueWriter.AttributeWriters;
 import gl.ValueWriter;
-import transform.Transformer;
+import transform.TransformerBase;
 import utils.DynamicBytes;
 import text.TextLayouter;
 
@@ -22,7 +22,7 @@ class TextRender<T:AttribSet> implements Renderable<T> {
     var value = "";
     var efficientLen = 0;
     var charPos:AxisCollection2D<Float> = new AxisCollection2D();
-    var transformer:Transformer;
+    var transformer:TransformerBase;
     var stageHeight = 1;
     public var origin(default, null):AxisCollection2D<Float> = new AxisCollection2D();
     var charsLayouter:TextLayouter;

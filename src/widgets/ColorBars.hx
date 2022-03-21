@@ -29,7 +29,7 @@ class ColorBars extends ShapeWidget<ColorSet> {
             new BarContainer(FixedThikness(new BarAxisSlot ({pos:0., thikness:1.}, null)), Portion(new BarAxisSlot ({start:0., end:1.}, null)) ),
         ];
         for (e in elements) {
-            var sh = bb.create(attrs, fluidTransform.transformValue, e);
+            var sh = bb.create(attrs, transformer.transformValue, e);
             children.push(sh);
         }
     }
