@@ -1,25 +1,24 @@
 package ;
-import font.FontInstance;
-import font.IFont;
-import openfl.display.Sprite;
-import openfl.events.Event;
-import haxe.ds.ReadOnlyArray;
+import input.al.ButtonPanel;
+import widgets.SomeButton;
 import al.al2d.Axis2D;
 import al.Builder;
 import al.openfl.StageAspectResizer;
 import crosstarget.Widgetable;
 import ec.CtxBinder;
 import ec.Entity;
+import FuiBuilder;
 import gl.ec.DrawcallDataProvider;
 import gl.ec.Drawcalls;
 import gl.sets.MSDFSet;
-import text.TextLayouter.CharsLayouterFactory;
+import haxe.ds.ReadOnlyArray;
+import openfl.display.Sprite;
+import openfl.events.Event;
 import text.TextRender;
 import transform.AspectRatioProvider;
 import transform.LiquidTransformer;
 import widgets.ColorBars;
 import widgets.ColouredQuad;
-import FuiBuilder;
 class FancyPg extends FuiAppBase {
     public function new() {
         super();
@@ -27,10 +26,12 @@ class FancyPg extends FuiAppBase {
 //        var fuiBuilder = new FuiBuilder();
 //        var root:Entity = fuiBuilder.createContainer(["color", "text:''"]);
         var root:Entity = new Entity();
-        fuiBuilder.addBmFont("", "Assets/heaps-fonts/Cardo-36-df8.fnt");
-        root.addComponent(fuiBuilder.createTextStyle(""));
         var ar:StageAspectKeeper = new StageAspectKeeper(1);
         root.addComponentByName(Entity.getComponentId(AspectRatioProvider), ar);
+        fuiBuilder.configureInput(root);
+
+        fuiBuilder.addBmFont("", "Assets/heaps-fonts/Cardo-36-df8.fnt");
+        root.addComponent(fuiBuilder.createTextStyle(""));
         var dl =
         '<container>
         <drawcall type="color"/>
@@ -44,10 +45,12 @@ class FancyPg extends FuiAppBase {
         addChild(container);
 //        var root = PgRoot.createRoot();
 
-        var quads = [for (i in 0...2)new ColorBars(b.widget(), Std.int(0xffffff * Math.random())).widget()];
+        var quads = [for (i in 0...1)new ColorBars(b.widget(), Std.int(0xffffff * Math.random())).widget()];
         quads.push(new DummyText(b.widget()).widget());
+        quads.push(new SomeButton(b.widget()).widget());
         quads.push(new ColouredQuad(b.widget(), 0x303090).widget());
         var rw = b.align(vertical).container(quads);
+        ButtonPanel.make(rw);
         root.addChild(rw.entity);
         new StageAspectResizer(rw, 2);
 

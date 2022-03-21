@@ -1,4 +1,14 @@
 package ;
+import al.al2d.Axis2D;
+import al.al2d.AspectRatio;
+import input.core.InputTarget;
+import openfl.display.Stage;
+import openfl.events.Event;
+import openfl.events.MouseEvent;
+import input.ec.binders.SwitchableInputBinder;
+import input.Point;
+import input.core.InputSystemsContainer;
+import transform.AspectRatioProvider;
 import data.DataType;
 import bindings.GLTexture;
 import bindings.WebGLRenderContext;
@@ -127,6 +137,13 @@ class FuiBuilder {
         var font = fonts.getFont(fontName);
         return new TextStyleContext(new H2dCharsLayouterFactory(font.font), font) ;
     }
+
+    public function configureInput(root:Entity) {
+        var aspects = root.getComponent(AspectRatioProvider);
+        var s = new InputSystemsContainer(new Point(), null);
+        root.addComponent(new SwitchableInputBinder<Point>(s));
+        new InputRoot(s, aspects.getFactorsRef());
+    }
 }
 
 class TextStyleContext {
@@ -225,5 +242,40 @@ class TextureStorage {
         gl.bindTexture(gl.TEXTURE_2D, null);
         locations[filename] = tex;
         return tex;
+    }
+}
+class InputRoot {
+    var factors:AspectRatio;
+    var input:InputTarget<Point>;
+    var pos = new Point();
+    var stg:Stage;
+
+
+    public function new(input, fac) {
+        this.input = input;
+        this.factors = fac;
+        stg = openfl.Lib.current.stage;
+        stg.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+        stg.addEventListener(MouseEvent.MOUSE_UP, onUp);
+        stg.addEventListener(MouseEvent.MOUSE_DOWN, onDown);
+    }
+
+    function onEnterFrame(e) {
+        updatePos();
+    }
+
+    inline function updatePos() {
+        pos.x = 2 * (stg.mouseX / stg.stageWidth) * factors[horizontal];
+        pos.y = 2 * (stg.mouseY / stg.stageHeight) * factors[vertical];
+        input.setPos(pos);
+    }
+
+    function onDown(e) {
+        updatePos();
+        input.press();
+    }
+
+    function onUp(e) {
+        input.release();
     }
 }
