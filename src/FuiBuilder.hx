@@ -1,4 +1,5 @@
 package ;
+import al.appliers.PropertyAccessors.FloatPropertyReader;
 import al.al2d.Axis2D;
 import al.al2d.AspectRatio;
 import input.core.InputTarget;
@@ -38,6 +39,7 @@ import text.h2d.H2dTextLayouter.H2dCharsLayouterFactory;
 import text.TextLayouter.CharsLayouterFactory;
 
 class DummyFrag implements ShaderElement {
+    public static var instance = new DummyFrag();
     public function new() {}
 
     public function getDecls():String {
@@ -149,6 +151,7 @@ class FuiBuilder {
 class TextStyleContext {
     public var layouterFactory(default, null):CharsLayouterFactory;
     var font:FontInstance<IFont>;
+    public var fontScale:FloatPropertyReader;
 
     public function new(lf, f) {
         this.layouterFactory = lf;
@@ -157,6 +160,14 @@ class TextStyleContext {
 
     public function getDrawcallName() {
         return font.getId();
+    }
+
+    public function getFont():IFont{
+        return font.font;
+    }
+
+    public function getFontScale() {
+        return fontScale.getValue();
     }
 }
 

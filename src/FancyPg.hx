@@ -1,4 +1,9 @@
 package ;
+import utils.DummyEditorField;
+import openfl.events.KeyboardEvent;
+import openfl.text.TextFieldType;
+import flash.text.TextField;
+import text.transform.TextTransformer;
 import input.al.ButtonPanel;
 import widgets.SomeButton;
 import al.al2d.Axis2D;
@@ -29,6 +34,7 @@ class FancyPg extends FuiAppBase {
         var root:Entity = new Entity();
         var ar:StageAspectKeeper = new StageAspectKeeper(1);
         root.addComponentByName(Entity.getComponentId(AspectRatioProvider), ar);
+        root.addComponentByType(Size2D, ar);
         fuiBuilder.configureInput(root);
 
         fuiBuilder.addBmFont("", "Assets/heaps-fonts/Cardo-36-df8.fnt");
@@ -38,7 +44,7 @@ class FancyPg extends FuiAppBase {
         <drawcall type="color"/>
         <drawcall type="text" font=""/>
         </container>';
-         fuiBuilder.createContainer(root, Xml.parse(dl).firstElement());
+        fuiBuilder.createContainer(root, Xml.parse(dl).firstElement());
         var container:Sprite = root.getComponent(Sprite);
         for (i in 0...container.numChildren) {
             trace(container.getChildAt(i));
@@ -63,11 +69,11 @@ class FancyPg extends FuiAppBase {
 
 }
 
-
-
-class StageAspectKeeper implements AspectRatioProvider {
+class StageAspectKeeper implements AspectRatioProvider implements Size2D {
     var base:Float;
     var factors:Array<Float> = [1, 1];
+    var width:Float;
+    var height:Float;
 
     public function new(base:Float = 1) {
         this.base = base;
@@ -77,8 +83,8 @@ class StageAspectKeeper implements AspectRatioProvider {
 
     function onResize(e) {
         var stage = openfl.Lib.current.stage;
-        var width = stage.stageWidth;
-        var height = stage.stageHeight;
+        width = stage.stageWidth;
+        height = stage.stageHeight;
         if (width > height) {
             factors[0] = (base * width / height);
             factors[1] = base;
@@ -95,15 +101,28 @@ class StageAspectKeeper implements AspectRatioProvider {
     public function getFactorsRef():ReadOnlyArray<Float> {
         return factors;
     }
+
+    public function getValue(a:Axis2D):Float {
+        return if (a == horizontal) width else height;
+    }
 }
 
+interface Size2D {
+    function getValue(a:Axis2D):Float;
+}
 class DummyText extends Widgetable {
     @:once var textStyleContext:TextStyleContext;
     @:once var fluidTransform:LiquidTransformer;
+    @:once var aspectRatioProvider:AspectRatioProvider;
+    @:once var windowSize:Size2D;
+
     override function init() {
         trace("init");
-        var text = new TextRender(MSDFSet.instance, textStyleContext.layouterFactory.create(), fluidTransform);
-        text.setText("Foo");
+        textStyleContext.fontScale = new PixelFontHeightCalculator(aspectRatioProvider.getFactorsRef(), windowSize, 120);
+        TextTransformer.withTextTransform(w, aspectRatioProvider.getFactorsRef(), textStyleContext);
+        var tt = w.entity.getComponent(TextTransformer);
+        var text = new TextRender(MSDFSet.instance, textStyleContext.layouterFactory.create(), tt);
+        text.setText("FFoo\nbar");
         var drawcallsData = DrawcallDataProvider.get(MSDFSet.instance, w.entity, textStyleContext.getDrawcallName());
         drawcallsData.views.push(text);
         new CtxBinder(Drawcalls, w.entity);

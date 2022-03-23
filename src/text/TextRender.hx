@@ -17,14 +17,12 @@ import text.TextLayouter;
 
 
 class TextRender<T:AttribSet> implements Renderable<T> {
-    var size:Float = 0.2;
     static var indices:IndexCollection;
     var value = "";
     var efficientLen = 0;
     var charPos:AxisCollection2D<Float> = new AxisCollection2D();
     var transformer:TransformerBase;
     var stageHeight = 1;
-    public var origin(default, null):AxisCollection2D<Float> = new AxisCollection2D();
     var charsLayouter:TextLayouter;
     var bytes = new DynamicBytes(512);
     var attrs:T;
@@ -37,9 +35,6 @@ class TextRender<T:AttribSet> implements Renderable<T> {
         this.attrs = attrs;
         this.transformer = tr;
         charsLayouter = layouter;
-
-        origin[horizontal] = 0.03;
-        origin[vertical] = 2 / 3;
         for (a in Axis2D.keys) {
             charPos[a] = 0;
         }
@@ -47,7 +42,6 @@ class TextRender<T:AttribSet> implements Renderable<T> {
         uvWriter = attrs.getWriter(AttribAliases.NAME_UV_0);
         dpiWriter = attrs.getWriter(MSDFSet.NAME_DPI);
     }
-
 
     inline function setChar(at:Int, rec:TileRecord) {
         var glyph:GLGlyphData = rec.tile;
@@ -57,12 +51,12 @@ class TextRender<T:AttribSet> implements Renderable<T> {
         charPos[horizontal] = rec.x;
         charPos[vertical] = rec.y;
         for (i in 0...4) {
-            posWriter[horizontal].setValue(targ, vertOfs + i, transformer.transformValue(horizontal, origin[horizontal] + size / transformer.size[0] * (charPos[horizontal] + rec.scale * glyph.getLocalPosOffset(i, 0))));
-            posWriter[vertical].setValue(targ, vertOfs + i, transformer.transformValue(vertical, origin[vertical] + size / transformer.size[1] * (charPos[vertical] + rec.scale * ( glyph.getLocalPosOffset(i, 1) ) )));
+            posWriter[horizontal].setValue(targ, vertOfs + i, transformer.transformValue(horizontal, (charPos[horizontal] + rec.scale * glyph.getLocalPosOffset(i, 0))));
+            posWriter[vertical].setValue(targ, vertOfs + i, transformer.transformValue(vertical, (charPos[vertical] + rec.scale * ( glyph.getLocalPosOffset(i, 1) ) )));
             uvWriter[horizontal].setValue(targ, vertOfs + i, glyph.getUV(i, 0));
             uvWriter[vertical].setValue(targ, vertOfs + i, glyph.getUV(i, 1));
         }
-        var sssize = posWriter[vertical].getValue(targ, vertOfs + 1) - posWriter[vertical].getValue(targ, vertOfs);
+        var sssize = Math.abs(posWriter[vertical].getValue(targ, vertOfs + 1) - posWriter[vertical].getValue(targ, vertOfs));
         var screenDy = sssize * stageHeight / 2;// gl screen space (?)
         var smoothness = calculateGradientSize(rec, screenDy);
         for (i in 0...4) {
@@ -74,7 +68,6 @@ class TextRender<T:AttribSet> implements Renderable<T> {
         var gy = tile.tile.getLocalPosOffset(0, 1) - tile.tile.getLocalPosOffset(1, 1);
         return (tile.dfSize * screenDy) / gy;
     }
-
 
     public function setText(s:String) {
         stageHeight = openfl.Lib.current.stage.stageHeight ;
@@ -92,13 +85,12 @@ class TextRender<T:AttribSet> implements Renderable<T> {
         charsLayouter.setText(value);
         var tiles = charsLayouter.getTiles();
         efficientLen = tiles.length;
-        if (indices == null ||  indices.length < efficientLen * 4 )
+        if (indices == null || indices.length < efficientLen * 4)
             indices = IndexCollection.forQuads(efficientLen);
         bytes.grantCapacity(4 * efficientLen * attrs.stride);
         for (i in 0...efficientLen)
             setChar(i, tiles[i]);
     }
-
 
     public function render(targets:RenderTargets<T>):Void {
         if (dirty) fillBuffer();
