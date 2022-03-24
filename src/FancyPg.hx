@@ -25,6 +25,7 @@ import transform.LiquidTransformer;
 import widgets.ColorBars;
 import widgets.ColouredQuad;
 using transform.LiquidTransformer;
+using text.transform.TextTransformer.FitOneLineTextTransformer;
 class FancyPg extends FuiAppBase {
     public function new() {
         super();
@@ -119,10 +120,12 @@ class DummyText extends Widgetable {
     override function init() {
         trace("init");
         textStyleContext.fontScale = new PixelFontHeightCalculator(aspectRatioProvider.getFactorsRef(), windowSize, 120);
-        TextTransformer.withTextTransform(w, aspectRatioProvider.getFactorsRef(), textStyleContext);
-        var tt = w.entity.getComponent(TextTransformer);
+        FitOneLineTextTransformer.withOneLineFit(w, aspectRatioProvider.getFactorsRef(), textStyleContext);
+        var tt = w.entity.getComponent(FitOneLineTextTransformer);
+//        TextTransformer.withTextTransform(w, aspectRatioProvider.getFactorsRef(), textStyleContext);
+//        var tt = w.entity.getComponent(TextTransformer);
         var text = new TextRender(MSDFSet.instance, textStyleContext.layouterFactory.create(), tt);
-        text.setText("FFoo\nbar");
+        text.setText("Foo bar");
         var drawcallsData = DrawcallDataProvider.get(MSDFSet.instance, w.entity, textStyleContext.getDrawcallName());
         drawcallsData.views.push(text);
         new CtxBinder(Drawcalls, w.entity);
