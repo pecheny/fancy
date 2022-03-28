@@ -30,7 +30,7 @@ class BMFont implements IFont {
     function createGlyph(char:String) {
         var fontChar = font.getChar(char.charCodeAt(0));
         var t = fontChar.t;
-        var px = t.dx ;
+        var px:Float = -t.dx ;
         var w = t.width;
         var asc = font.lineHeight;
 
