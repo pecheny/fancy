@@ -1,11 +1,5 @@
 package ;
-import utils.DummyEditorField;
-import openfl.events.KeyboardEvent;
-import openfl.text.TextFieldType;
-import flash.text.TextField;
-import text.transform.TextTransformer;
-import input.al.ButtonPanel;
-import widgets.SomeButton;
+import widgets.ColouredQuad;
 import al.al2d.Axis2D;
 import al.Builder;
 import al.openfl.StageAspectResizer;
@@ -16,16 +10,15 @@ import FuiBuilder;
 import gl.ec.DrawcallDataProvider;
 import gl.ec.Drawcalls;
 import gl.sets.MSDFSet;
-import haxe.ds.ReadOnlyArray;
+import input.al.ButtonPanel;
 import openfl.display.Sprite;
-import openfl.events.Event;
 import text.TextRender;
+import text.transform.TextTransformer;
 import transform.AspectRatioProvider;
 import transform.LiquidTransformer;
+import utils.DummyEditorField;
 import widgets.ColorBars;
-import widgets.ColouredQuad;
 using transform.LiquidTransformer;
-using text.transform.TextTransformer.FitOneLineTextTransformer;
 class FancyPg extends FuiAppBase {
     public function new() {
         super();
@@ -33,13 +26,15 @@ class FancyPg extends FuiAppBase {
 //        var fuiBuilder = new FuiBuilder();
 //        var root:Entity = fuiBuilder.createContainer(["color", "text:''"]);
         var root:Entity = new Entity();
-        var ar:StageAspectKeeper = new StageAspectKeeper(1);
-        root.addComponentByName(Entity.getComponentId(AspectRatioProvider), ar);
-        root.addComponentByType(Size2D, ar);
+//        var ar:StageAspectKeeper = new StageAspectKeeper(1);
+        var ar = fuiBuilder.ar;
+        fuiBuilder.addBmFont("", "Assets/heaps-fonts/robo.fnt"); // todo
+        root.addComponentByName(Entity.getComponentId(AspectRatioProvider), fuiBuilder.ar);
+        root.addComponentByType(Size2D, fuiBuilder.ar);
         fuiBuilder.configureInput(root);
 
-        fuiBuilder.addBmFont("", "Assets/heaps-fonts/Cardo-36-df8.fnt");
-        root.addComponent(fuiBuilder.createTextStyle(""));
+//        fuiBuilder.addBmFont("", "Assets/heaps-fonts/monts.fnt");
+//        root.addComponent(fuiBuilder.createTextStyle(""));
         var dl =
         '<container>
         <drawcall type="color"/>
@@ -52,15 +47,28 @@ class FancyPg extends FuiAppBase {
         }
         addChild(container);
 //        var root = PgRoot.createRoot();
+        var pxStyle = fuiBuilder.textStyles.newStyle("px")
+        .withSizeInPixels(64)
+        .withPivot(horizontal, new ForwardPivot(1))
+        .withPivot(vertical, new ForwardPivot(1))
+        .build();
+
+        var fitStyle = fuiBuilder.textStyles.newStyle("fit")
+        .withFitFontScale(.75)
+        .withPivot(horizontal, new ForwardPivot(1))
+        .withPivot(vertical, new MiddlePivot())
+        .build();
 
         var quads = [for (i in 0...1)new ColorBars(b.widget().withLiquidTransform(ar.getFactorsRef()), Std.int(0xffffff * Math.random())).widget()];
-        quads.push(new DummyText(b.widget().withLiquidTransform(ar.getFactorsRef())).widget());
-        quads.push(new SomeButton(b.widget().withLiquidTransform(ar.getFactorsRef())).widget());
-        quads.push(new ColouredQuad(b.widget().withLiquidTransform(ar.getFactorsRef()), 0x303090).widget());
+        quads.push(new DummyText(b.widget().withLiquidTransform(ar.getFactorsRef()), pxStyle).widget());
+        quads.push(new DummyText(b.widget().withLiquidTransform(ar.getFactorsRef()), fitStyle).widget());
+//        quads.push(new SomeButton(b.widget().withLiquidTransform(ar.getFactorsRef())).widget());
+//        quads.push(new ColouredQuad(b.widget().withLiquidTransform(ar.getFactorsRef()), 0x303090).widget());
         var rw = b.align(vertical).container(quads);
         ButtonPanel.make(rw);
         root.addChild(rw.entity);
         new StageAspectResizer(rw, 2);
+        new DummyEditorField();
 
     }
 
@@ -70,62 +78,39 @@ class FancyPg extends FuiAppBase {
 
 }
 
-class StageAspectKeeper implements AspectRatioProvider implements Size2D {
-    var base:Float;
-    var factors:Array<Float> = [1, 1];
-    var width:Float;
-    var height:Float;
 
-    public function new(base:Float = 1) {
-        this.base = base;
-        openfl.Lib.current.stage.addEventListener(Event.RESIZE, onResize);
-        onResize(null);
-    }
 
-    function onResize(e) {
-        var stage = openfl.Lib.current.stage;
-        width = stage.stageWidth;
-        height = stage.stageHeight;
-        if (width > height) {
-            factors[0] = (base * width / height);
-            factors[1] = base;
-        } else {
-            factors[0] = base;
-            factors[1] = (base * height / width);
-        }
-    }
 
-    public inline function getFactor(cmp:Int):Float {
-        return factors[cmp];
-    }
-
-    public function getFactorsRef():ReadOnlyArray<Float> {
-        return factors;
-    }
-
-    public function getValue(a:Axis2D):Float {
-        return if (a == horizontal) width else height;
-    }
-}
-
-interface Size2D {
-    function getValue(a:Axis2D):Float;
-}
 class DummyText extends Widgetable {
-    @:once var textStyleContext:TextStyleContext;
+//    @:once
+    var textStyleContext:TextStyleContext;
     @:once var fluidTransform:LiquidTransformer;
     @:once var aspectRatioProvider:AspectRatioProvider;
     @:once var windowSize:Size2D;
 
+    public function new(w, tc) {
+        super(w);
+        new ColouredQuad(w, Std.int(Math.random() * 0xffffff));
+        this.textStyleContext = tc;
+    }
+
     override function init() {
         trace("init");
-        textStyleContext.fontScale = new PixelFontHeightCalculator(aspectRatioProvider.getFactorsRef(), windowSize, 120);
-        FitOneLineTextTransformer.withOneLineFit(w, aspectRatioProvider.getFactorsRef(), textStyleContext);
-        var tt = w.entity.getComponent(FitOneLineTextTransformer);
-//        TextTransformer.withTextTransform(w, aspectRatioProvider.getFactorsRef(), textStyleContext);
-//        var tt = w.entity.getComponent(TextTransformer);
+//        textStyleContext.fontScale = new PixelFontHeightCalculator(aspectRatioProvider.getFactorsRef(), windowSize, 120);
+
+//        FitOneLineTextTransformer.withOneLineFit(w, aspectRatioProvider.getFactorsRef(), textStyleContext);
+//        var tt = w.entity.getComponent(FitOneLineTextTransformer);
+
+        TextTransformer.withTextTransform(w, aspectRatioProvider.getFactorsRef(), textStyleContext);
+        var tt = w.entity.getComponent(TextTransformer);
+
         var text = new TextRender(MSDFSet.instance, textStyleContext.layouterFactory.create(), tt);
         text.setText("Foo bar");
+        text.setText("FoEo Bar AbAb Aboo Distance Field texture
+Ad Ae Af
+Bd Be Bf Bb Ab
+Dd De Df
+Cd Ce Cf");
         var drawcallsData = DrawcallDataProvider.get(MSDFSet.instance, w.entity, textStyleContext.getDrawcallName());
         drawcallsData.views.push(text);
         new CtxBinder(Drawcalls, w.entity);

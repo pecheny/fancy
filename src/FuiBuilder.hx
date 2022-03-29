@@ -1,5 +1,15 @@
 package ;
-import al.appliers.PropertyAccessors.FloatPropertyReader;
+import text.h2d.H2dTextLayouter.H2dRichCharsLayouterFactory;
+import haxe.ds.ReadOnlyArray;
+import text.transform.TextTransformer.ScreenPercentHeightFontHeightCalculator;
+import text.transform.TextTransformer.PixelFontHeightCalculator;
+import text.transform.TextTransformer.MiddlePivot;
+import text.transform.TextTransformer.ForwardPivot;
+import text.transform.TextTransformer.FitFontScale;
+import text.transform.TextTransformer.FontScale;
+import transform.TransformerBase;
+import al.al2d.Widget2D.AxisCollection2D;
+import text.transform.TextTransformer.TextPivot;
 import al.al2d.Axis2D;
 import al.al2d.AspectRatio;
 import input.core.InputTarget;
@@ -10,7 +20,6 @@ import input.ec.binders.SwitchableInputBinder;
 import input.Point;
 import input.core.InputSystemsContainer;
 import transform.AspectRatioProvider;
-import data.DataType;
 import bindings.GLTexture;
 import bindings.WebGLRenderContext;
 import ec.Entity;
@@ -35,11 +44,11 @@ import shaderbuilder.SnaderBuilder.ColorPassthroughFrag;
 import shaderbuilder.SnaderBuilder.ColorPassthroughVert;
 import shaderbuilder.SnaderBuilder.PosPassthrough;
 import shaderbuilder.SnaderBuilder.Uv0Passthrough;
-import text.h2d.H2dTextLayouter.H2dCharsLayouterFactory;
 import text.TextLayouter.CharsLayouterFactory;
 
 class DummyFrag implements ShaderElement {
     public static var instance = new DummyFrag();
+
     public function new() {}
 
     public function getDecls():String {
@@ -48,6 +57,46 @@ class DummyFrag implements ShaderElement {
 
     public function getExprs():String {
         return 'gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);';
+    }
+}
+interface Size2D {
+    function getValue(a:Axis2D):Float;
+}
+class StageAspectKeeper implements AspectRatioProvider implements Size2D {
+    var base:Float;
+    var factors:Array<Float> = [1, 1];
+    var width:Float;
+    var height:Float;
+
+    public function new(base:Float = 1) {
+        this.base = base;
+        openfl.Lib.current.stage.addEventListener(Event.RESIZE, onResize);
+        onResize(null);
+    }
+
+    function onResize(e) {
+        var stage = openfl.Lib.current.stage;
+        width = stage.stageWidth;
+        height = stage.stageHeight;
+        if (width > height) {
+            factors[0] = (base * width / height);
+            factors[1] = base;
+        } else {
+            factors[0] = base;
+            factors[1] = (base * height / width);
+        }
+    }
+
+    public inline function getFactor(cmp:Int):Float {
+        return factors[cmp];
+    }
+
+    public function getFactorsRef():ReadOnlyArray<Float> {
+        return factors;
+    }
+
+    public function getValue(a:Axis2D):Float {
+        return if (a == horizontal) width else height;
     }
 }
 
@@ -90,10 +139,12 @@ class FuiAppBase extends Sprite {
 }
 
 class FuiBuilder {
+    public var ar = new StageAspectKeeper(1);
     public var renderAspectBuilder(default, null):RenderAspectBuilder;
     public var textureStorage:TextureStorage;
     public var shaderRegistry:ShaderRegistry;
     public var fonts(default, null) = new FontStorage(new BMFontFactory());
+    public var textStyles:TextContextBuilder;
     var gldoBuilder:GldoBuilder ;
     var pos:ShaderElement = PosPassthrough.instance;
     var xmlProc:XmlProc ;
@@ -103,6 +154,7 @@ class FuiBuilder {
         shaderRegistry = new ShaderRegistry();
         gldoBuilder = new GldoBuilder(shaderRegistry);
         xmlProc = new XmlProc(gldoBuilder);
+        textStyles = new TextContextBuilder(fonts, ar);
         setAspects([]);
     }
 
@@ -135,11 +187,6 @@ class FuiBuilder {
         return this;
     }
 
-    public function createTextStyle(fontName) {
-        var font = fonts.getFont(fontName);
-        return new TextStyleContext(new H2dCharsLayouterFactory(font.font), font) ;
-    }
-
     public function configureInput(root:Entity) {
         var aspects = root.getComponent(AspectRatioProvider);
         var s = new InputSystemsContainer(new Point(), null);
@@ -148,27 +195,112 @@ class FuiBuilder {
     }
 }
 
+interface TextContextStorage {
+    function getStyle(name:String):TextStyleContext;
+}
+
+class TextContextBuilder implements TextContextStorage {
+    var ar:StageAspectKeeper;
+    var fonts(default, null) = new FontStorage(new BMFontFactory());
+    var layouterFactory(default, null):CharsLayouterFactory;
+    var fontScale:FontScale;
+    var pivot:AxisCollection2D<TextPivot> = new AxisCollection2D();
+    var fontName = "";
+
+    public function new(fonts:FontStorage, ar) {
+        this.fonts = fonts;
+        this.ar = ar;
+        this.layouterFactory = new H2dRichCharsLayouterFactory(fonts);
+        this.fontScale = new FitFontScale(0.75);
+        pivot[horizontal] = new ForwardPivot(0.5);
+        pivot[vertical] = new MiddlePivot();
+    }
+
+    public function withPivot(a:Axis2D, tp:TextPivot) {
+        pivot[a] = tp;
+        return this;
+    }
+
+    public function withScale(fs:FontScale) {
+        this.fontScale = fs;
+        return this;
+    }
+
+    public function withFont(name) {
+        fontName = name;
+        return this;
+    }
+
+    public function withSizeInPixels(px:Int) {
+        fontScale = new PixelFontHeightCalculator(ar.getFactorsRef(), ar, px);
+        return this;
+    }
+
+    public function withPercentFontScale(p) {
+        fontScale = new ScreenPercentHeightFontHeightCalculator(p);
+        return this;
+    }
+
+    public function withFitFontScale(p) {
+        fontScale = new FitFontScale(p);
+        return this;
+    }
+
+
+    // ===== storage ====
+
+    var name = "";
+    var styles = new Map<String, TextStyleContext>();
+
+    public function newStyle(name) {
+        this.name = name;
+        return this;
+    }
+
+    public function build() {
+        var tc = new TextStyleContext(layouterFactory, fonts.getFont(fontName), fontScale, pivot.copy());
+        if (name != "") {
+            styles[name] = tc;
+            name = "";
+        }
+        return tc;
+    }
+
+    public function getStyle(name) {
+        return styles[name];
+    }
+
+}
+
 class TextStyleContext {
     public var layouterFactory(default, null):CharsLayouterFactory;
     var font:FontInstance<IFont>;
-    public var fontScale:FloatPropertyReader;
+    var fontScale:FontScale;
+    var pivot:AxisCollection2D<TextPivot>;
 
-    public function new(lf, f) {
+    public function new(lf, f, scale, pivot) {
         this.layouterFactory = lf;
         this.font = f;
+        this.fontScale = scale;
+        this.pivot = pivot;
     }
 
     public function getDrawcallName() {
         return font.getId();
     }
 
-    public function getFont():IFont{
+    public function getFont():IFont {
         return font.font;
     }
 
-    public function getFontScale() {
-        return fontScale.getValue();
+    public function getFontScale(tr) {
+        return fontScale.getValue(tr);
     }
+
+    public function getPivot(a:Axis2D, transform:TransformerBase) {
+        return pivot[a].getPivot(a, transform, this);
+    }
+
 }
 
 typedef GldoFactory<T:AttribSet> = Entity -> Xml -> GLDisplayObject<T>;
