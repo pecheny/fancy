@@ -5,6 +5,7 @@ import haxe.ds.ReadOnlyArray;
 interface TextLayouter {
     function setText(val:String):Void;
     function getTiles():ReadOnlyArray<TileRecord>;
+    function setWidthConstraint(val:Float):Void;
 }
 
 interface CharsLayouterFactory {

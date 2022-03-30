@@ -1,4 +1,8 @@
 package ;
+import al.core.AxisApplier;
+import transform.TransformerBase;
+import text.TextLayouter;
+import al.al2d.Widget2D;
 import widgets.ColouredQuad;
 import al.al2d.Axis2D;
 import al.Builder;
@@ -49,7 +53,7 @@ class FancyPg extends FuiAppBase {
 //        var root = PgRoot.createRoot();
         var pxStyle = fuiBuilder.textStyles.newStyle("px")
         .withSizeInPixels(64)
-        .withPivot(horizontal, new ForwardPivot(1))
+        .withPivot(horizontal, new ForwardPivot(0))
         .withPivot(vertical, new ForwardPivot(1))
         .build();
 
@@ -106,6 +110,7 @@ class DummyText extends Widgetable {
         TextTransformer.withTextTransform(w, aspectRatioProvider.getFactorsRef(), textStyleContext);
         var tt = w.entity.getComponent(TextTransformer);
         var smothWr = new SmothnessWriter(dpiWriter[0], l, textStyleContext, tt, windowSize);
+        var aw = new TextAutoWidth(w, l, tt, textStyleContext);
         var text = new TextRender(attrs, l, tt, smothWr);
         text.setText("Foo bar");
         text.setText("FoEo Bar AbAb Aboo Distance Field texture
@@ -117,4 +122,27 @@ Cd Ce Cf");
         drawcallsData.views.push(text);
         new CtxBinder(Drawcalls, w.entity);
     }
+}
+
+class TextAutoWidth implements AxisApplier {
+    var textLayouter:TextLayouter;
+    var tr:TransformerBase;
+    var ctx:TextStyleContext;
+    public function new (w:Widget2D, l:TextLayouter, tr, ctx) {
+        this.textLayouter = l;
+        this.tr = tr;
+        this.ctx = ctx;
+        w.axisStates[horizontal].addSibling(this);
+    }
+
+    public function apply(pos:Float, size:Float):Void {
+        update();
+    }
+
+    function update() {
+        var val = tr.size[horizontal] / ctx.getFontScale(tr);
+        trace(val);
+        textLayouter.setWidthConstraint(val);
+    }
+
 }

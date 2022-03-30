@@ -600,7 +600,7 @@ class XmlText<T:FontChar2> extends Text<T> {
                     var fcdy = scale * fc.dy;
                     if (fc != null) {
                         xPos += font.getKerningOffset(prevChar, cc) * scale;
-                        if (rebuild) glyphs.add(cast fc, xPos, yPos + dy, scale, font.getDFSize());
+                        if (rebuild && !charset.isSpace(cc)) glyphs.add(cast fc, xPos, yPos + dy, scale, font.getDFSize());
                         if (yPos == 0 && fcdy + dy < calcYMin) calcYMin = fcdy + dy;
                         xPos += (fc.getAdvance() + letterSpacing) * scale;
                     }

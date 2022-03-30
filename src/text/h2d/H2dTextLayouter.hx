@@ -25,6 +25,10 @@ class H2dTextLayouter implements TextLayouter {
     public function getTiles():ReadOnlyArray<TileRecord> {
         return glyphs.tiles;
     }
+
+    public function setWidthConstraint(val:Float):Void {
+        text.constraintSize(val, -1);
+    }
 }
 
 class H2dCharsLayouterFactory implements CharsLayouterFactory {
@@ -65,6 +69,10 @@ class H2dRichTextLayouter implements TextLayouter {
 
     public function getTiles():ReadOnlyArray<TileRecord> {
         return glyphs.tiles;
+    }
+
+    public function setWidthConstraint(val:Float):Void {
+        text.constraintSize(val, -1);
     }
 }
 
