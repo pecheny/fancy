@@ -79,11 +79,10 @@ class FancyPg extends FuiAppBase {
 }
 
 
-
-
 class DummyText extends Widgetable {
 //    @:once
     var textStyleContext:TextStyleContext;
+    var text:String = "";
     @:once var fluidTransform:LiquidTransformer;
     @:once var aspectRatioProvider:AspectRatioProvider;
     @:once var windowSize:Size2D;
@@ -94,17 +93,20 @@ class DummyText extends Widgetable {
         this.textStyleContext = tc;
     }
 
-    override function init() {
-        trace("init");
-//        textStyleContext.fontScale = new PixelFontHeightCalculator(aspectRatioProvider.getFactorsRef(), windowSize, 120);
+    public function withText(s) {
+        text = s;
+        return this;
+    }
 
-//        FitOneLineTextTransformer.withOneLineFit(w, aspectRatioProvider.getFactorsRef(), textStyleContext);
-//        var tt = w.entity.getComponent(FitOneLineTextTransformer);
+    override function init() {
+        var attrs = MSDFSet.instance;
+        var l = textStyleContext.layouterFactory.create();
+        var dpiWriter = attrs.getWriter(MSDFSet.NAME_DPI);
 
         TextTransformer.withTextTransform(w, aspectRatioProvider.getFactorsRef(), textStyleContext);
         var tt = w.entity.getComponent(TextTransformer);
-
-        var text = new TextRender(MSDFSet.instance, textStyleContext.layouterFactory.create(), tt);
+        var smothWr = new SmothnessWriter(dpiWriter[0], l, textStyleContext, tt, windowSize);
+        var text = new TextRender(attrs, l, tt, smothWr);
         text.setText("Foo bar");
         text.setText("FoEo Bar AbAb Aboo Distance Field texture
 Ad Ae Af

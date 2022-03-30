@@ -1,4 +1,8 @@
 package text;
+import FuiBuilder.Size2D;
+import FuiBuilder.TextStyleContext;
+import haxe.io.Bytes;
+import utils.DummyEditorField;
 import al.al2d.Axis2D;
 import al.al2d.Widget2D.AxisCollection2D;
 import data.aliases.AttribAliases;
@@ -26,13 +30,15 @@ class TextRender<T:AttribSet> implements Renderable<T> {
     var charsLayouter:TextLayouter;
     var bytes = new DynamicBytes(512);
     var attrs:T;
+    var otherAttributesToFill:AttributeFiller;
 
     var posWriter:AttributeWriters ;
     var uvWriter:AttributeWriters ;
     var dpiWriter:AttributeWriters ;
 
-    public function new(attrs:T, layouter, tr) {
+    public function new(attrs:T, layouter, tr, forFill:AttributeFiller) {
         this.attrs = attrs;
+        this.otherAttributesToFill = forFill;
         this.transformer = tr;
         charsLayouter = layouter;
         for (a in Axis2D.keys) {
@@ -40,7 +46,6 @@ class TextRender<T:AttribSet> implements Renderable<T> {
         }
         posWriter = attrs.getWriter(AttribAliases.NAME_POSITION);
         uvWriter = attrs.getWriter(AttribAliases.NAME_UV_0);
-        dpiWriter = attrs.getWriter(MSDFSet.NAME_DPI);
     }
 
     inline function setChar(at:Int, rec:TileRecord) {
@@ -56,18 +61,12 @@ class TextRender<T:AttribSet> implements Renderable<T> {
             uvWriter[horizontal].setValue(targ, vertOfs + i, glyph.getUV(i, 0));
             uvWriter[vertical].setValue(targ, vertOfs + i, glyph.getUV(i, 1));
         }
-        var sssize = Math.abs(posWriter[vertical].getValue(targ, vertOfs + 1) - posWriter[vertical].getValue(targ, vertOfs));
-        var screenDy = sssize * stageHeight / 2;// gl screen space (?)
-        var smoothness = calculateGradientSize(rec, screenDy);
-        for (i in 0...4) {
-            dpiWriter[0].setValue(targ, vertOfs + i, smoothness);
-        }
+//        var sssize = Math.abs(posWriter[vertical].getValue(targ, vertOfs + 1) - posWriter[vertical].getValue(targ, vertOfs));
+//        var screenDy = sssize * stageHeight / 2;// gl screen space (?)
+//        var smoothness = DummyEditorField.value;//calculateGradientSize(rec, screenDy);
+
     }
 
-    inline function calculateGradientSize(tile:TileRecord, screenDy:Float) {
-        var gy = tile.tile.getLocalPosOffset(0, 1) - tile.tile.getLocalPosOffset(1, 1);
-        return (tile.dfSize * screenDy) / gy;
-    }
 
     public function setText(s:String) {
         stageHeight = openfl.Lib.current.stage.stageHeight ;
@@ -90,6 +89,9 @@ class TextRender<T:AttribSet> implements Renderable<T> {
         bytes.grantCapacity(4 * efficientLen * attrs.stride);
         for (i in 0...efficientLen)
             setChar(i, tiles[i]);
+        if (otherAttributesToFill != null) {
+            otherAttributesToFill.write(bytes.bytes, 0);
+        }
     }
 
     public function render(targets:RenderTargets<T>):Void {
@@ -98,4 +100,35 @@ class TextRender<T:AttribSet> implements Renderable<T> {
         targets.blitVerts(bytes.bytes, efficientLen * 4);
     }
 
+}
+
+interface AttributeFiller {
+    function write(target:Bytes, startVert:Int):Void;
+}
+
+class SmothnessWriter implements AttributeFiller {
+    var writer:IValueWriter;
+    var layouter:TextLayouter;
+    var ctx:TextStyleContext;
+    var tr:TransformerBase;
+    var ws:Size2D;
+
+    public function new(wr, l, ctx, tr, ws) {
+        this.writer = wr;
+        this.layouter = l;
+        this.ctx = ctx;
+        this.tr = tr;
+        this.ws = ws;
+    }
+
+    public function write(target:Bytes, start) {
+        var tiles = layouter.getTiles();
+        var base = ctx.getFontScale(tr) * ws.getValue(vertical) / 2;// DummyEditorField.value;
+        for (i in 0...tiles.length) {
+            var tile = tiles[i];
+            for (j in 0...4) {
+                writer.setValue(target, start + j + i, base * tile.scale);
+            }
+        }
+    }
 }
