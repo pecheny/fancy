@@ -50,6 +50,10 @@ class BMFont implements IFont {
     public function getLineHeight():Float {
         return font.lineHeight;
     }
+
+    public function getBaseline():Float {
+        return font.baseLine;
+    }
 }
 class BMFontFactory implements FontFactory<IFont> {
     public function new() {}
