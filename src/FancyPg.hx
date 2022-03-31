@@ -1,4 +1,6 @@
 package ;
+import text.style.Pivot.ForwardPivot;
+import text.style.TextStyleContext;
 import al.core.AxisApplier;
 import transform.TransformerBase;
 import text.TextLayouter;
@@ -22,7 +24,9 @@ import transform.AspectRatioProvider;
 import transform.LiquidTransformer;
 import utils.DummyEditorField;
 import widgets.ColorBars;
+import text.style.Pivot;
 using transform.LiquidTransformer;
+
 class FancyPg extends FuiAppBase {
     public function new() {
         super();
@@ -32,6 +36,7 @@ class FancyPg extends FuiAppBase {
         var root:Entity = new Entity();
 //        var ar:StageAspectKeeper = new StageAspectKeeper(1);
         var ar = fuiBuilder.ar;
+//        fuiBuilder.addBmFont("", "Assets/heaps-fonts/monts.fnt"); // todo
         fuiBuilder.addBmFont("", "Assets/heaps-fonts/robo.fnt"); // todo
         root.addComponentByName(Entity.getComponentId(AspectRatioProvider), fuiBuilder.ar);
         root.addComponentByType(Size2D, fuiBuilder.ar);
@@ -53,13 +58,13 @@ class FancyPg extends FuiAppBase {
 //        var root = PgRoot.createRoot();
         var pxStyle = fuiBuilder.textStyles.newStyle("px")
         .withSizeInPixels(64)
-        .withPivot(horizontal, new ForwardPivot(0))
-        .withPivot(vertical, new ForwardPivot(1))
+        .withPivot(horizontal, new ForwardPivot())
+        .withPivot(vertical, new ForwardPivot())
         .build();
 
         var fitStyle = fuiBuilder.textStyles.newStyle("fit")
         .withFitFontScale(.75)
-        .withPivot(horizontal, new ForwardPivot(1))
+        .withPivot(horizontal, new ForwardPivot())
         .withPivot(vertical, new MiddlePivot())
         .build();
 
@@ -128,7 +133,8 @@ class TextAutoWidth implements AxisApplier {
     var textLayouter:TextLayouter;
     var tr:TransformerBase;
     var ctx:TextStyleContext;
-    public function new (w:Widget2D, l:TextLayouter, tr, ctx) {
+
+    public function new(w:Widget2D, l:TextLayouter, tr, ctx) {
         this.textLayouter = l;
         this.tr = tr;
         this.ctx = ctx;
@@ -140,7 +146,7 @@ class TextAutoWidth implements AxisApplier {
     }
 
     function update() {
-        var val = tr.size[horizontal] / ctx.getFontScale(tr);
+        var val = ctx.getContentSize(horizontal, tr) / ctx.getFontScale(tr);//tr.size[horizontal] / ctx.getFontScale(tr);
         trace(val);
         textLayouter.setWidthConstraint(val);
     }

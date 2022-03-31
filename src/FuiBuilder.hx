@@ -1,32 +1,12 @@
 package ;
-import text.h2d.H2dTextLayouter.H2dRichCharsLayouterFactory;
-import haxe.ds.ReadOnlyArray;
-import text.transform.TextTransformer.ScreenPercentHeightFontHeightCalculator;
-import text.transform.TextTransformer.PixelFontHeightCalculator;
-import text.transform.TextTransformer.MiddlePivot;
-import text.transform.TextTransformer.ForwardPivot;
-import text.transform.TextTransformer.FitFontScale;
-import text.transform.TextTransformer.FontScale;
-import transform.TransformerBase;
-import al.al2d.Widget2D.AxisCollection2D;
-import text.transform.TextTransformer.TextPivot;
-import al.al2d.Axis2D;
+import text.style.TextContextBuilder;
 import al.al2d.AspectRatio;
-import input.core.InputTarget;
-import openfl.display.Stage;
-import openfl.events.Event;
-import openfl.events.MouseEvent;
-import input.ec.binders.SwitchableInputBinder;
-import input.Point;
-import input.core.InputSystemsContainer;
-import transform.AspectRatioProvider;
+import al.al2d.Axis2D;
 import bindings.GLTexture;
 import bindings.WebGLRenderContext;
 import ec.Entity;
 import font.bmf.BMFont.BMFontFactory;
-import font.FontInstance;
 import font.FontStorage;
-import font.IFont;
 import gl.aspects.RenderingAspect;
 import gl.AttribSet;
 import gl.ec.Drawcalls;
@@ -34,8 +14,16 @@ import gl.GLDisplayObject;
 import gl.sets.ColorSet;
 import gl.sets.MSDFSet;
 import gl.ShaderRegistry;
+import haxe.ds.ReadOnlyArray;
+import input.core.InputSystemsContainer;
+import input.core.InputTarget;
+import input.ec.binders.SwitchableInputBinder;
+import input.Point;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
+import openfl.display.Stage;
+import openfl.events.Event;
+import openfl.events.MouseEvent;
 import shaderbuilder.MSDFShader.LogisticSmoothnessCalculator;
 import shaderbuilder.MSDFShader.MSDFFrag;
 import shaderbuilder.MSDFShader.MSDFRenderingElement;
@@ -44,7 +32,7 @@ import shaderbuilder.SnaderBuilder.ColorPassthroughFrag;
 import shaderbuilder.SnaderBuilder.ColorPassthroughVert;
 import shaderbuilder.SnaderBuilder.PosPassthrough;
 import shaderbuilder.SnaderBuilder.Uv0Passthrough;
-import text.TextLayouter.CharsLayouterFactory;
+import transform.AspectRatioProvider;
 
 class DummyFrag implements ShaderElement {
     public static var instance = new DummyFrag();
@@ -193,114 +181,6 @@ class FuiBuilder {
         root.addComponent(new SwitchableInputBinder<Point>(s));
         new InputRoot(s, aspects.getFactorsRef());
     }
-}
-
-interface TextContextStorage {
-    function getStyle(name:String):TextStyleContext;
-}
-
-class TextContextBuilder implements TextContextStorage {
-    var ar:StageAspectKeeper;
-    var fonts(default, null) = new FontStorage(new BMFontFactory());
-    var layouterFactory(default, null):CharsLayouterFactory;
-    var fontScale:FontScale;
-    var pivot:AxisCollection2D<TextPivot> = new AxisCollection2D();
-    var fontName = "";
-
-    public function new(fonts:FontStorage, ar) {
-        this.fonts = fonts;
-        this.ar = ar;
-        this.layouterFactory = new H2dRichCharsLayouterFactory(fonts);
-        this.fontScale = new FitFontScale(0.75);
-        pivot[horizontal] = new ForwardPivot(0.5);
-        pivot[vertical] = new MiddlePivot();
-    }
-
-    public function withPivot(a:Axis2D, tp:TextPivot) {
-        pivot[a] = tp;
-        return this;
-    }
-
-    public function withScale(fs:FontScale) {
-        this.fontScale = fs;
-        return this;
-    }
-
-    public function withFont(name) {
-        fontName = name;
-        return this;
-    }
-
-    public function withSizeInPixels(px:Int) {
-        fontScale = new PixelFontHeightCalculator(ar.getFactorsRef(), ar, px);
-        return this;
-    }
-
-    public function withPercentFontScale(p) {
-        fontScale = new ScreenPercentHeightFontHeightCalculator(p);
-        return this;
-    }
-
-    public function withFitFontScale(p) {
-        fontScale = new FitFontScale(p);
-        return this;
-    }
-
-
-    // ===== storage ====
-
-    var name = "";
-    var styles = new Map<String, TextStyleContext>();
-
-    public function newStyle(name) {
-        this.name = name;
-        return this;
-    }
-
-    public function build() {
-        var tc = new TextStyleContext(layouterFactory, fonts.getFont(fontName), fontScale, pivot.copy());
-        if (name != "") {
-            styles[name] = tc;
-            name = "";
-        }
-        return tc;
-    }
-
-    public function getStyle(name) {
-        return styles[name];
-    }
-
-}
-
-class TextStyleContext {
-    public var layouterFactory(default, null):CharsLayouterFactory;
-    var font:FontInstance<IFont>;
-    var fontScale:FontScale;
-    var pivot:AxisCollection2D<TextPivot>;
-
-    public function new(lf, f, scale, pivot) {
-        this.layouterFactory = lf;
-        this.font = f;
-        this.fontScale = scale;
-        this.pivot = pivot;
-    }
-
-    public function getDrawcallName() {
-        return font.getId();
-    }
-
-    public function getFont():IFont {
-        return font.font;
-    }
-
-    public function getFontScale(tr) {
-        return fontScale.getValue(tr);
-    }
-
-    public function getPivot(a:Axis2D, transform:TransformerBase) {
-        return pivot[a].getPivot(a, transform, this);
-    }
-
 }
 
 typedef GldoFactory<T:AttribSet> = Entity -> Xml -> GLDisplayObject<T>;
