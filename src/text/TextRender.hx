@@ -1,6 +1,6 @@
 package text;
-import FuiBuilder.Size2D;
-import FuiBuilder.TextStyleContext;
+import text.style.TextStyleContext;
+import FuiBuilder;
 import haxe.io.Bytes;
 import utils.DummyEditorField;
 import al.al2d.Axis2D;
@@ -127,7 +127,7 @@ class SmothnessWriter implements AttributeFiller {
         for (i in 0...tiles.length) {
             var tile = tiles[i];
             for (j in 0...4) {
-                writer.setValue(target, start + j + i, base * tile.scale);
+                writer.setValue(target, start + j + i*4, base * tile.scale);
             }
         }
     }
