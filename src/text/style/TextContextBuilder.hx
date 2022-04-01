@@ -56,7 +56,7 @@ class TextContextBuilder implements TextContextStorage {
     }
 
     public function withPercentFontScale(p) {
-        fontScale = new ScreenPercentHeightFontHeightCalculator(p);
+        fontScale = new ScreenPercentHeightFontHeightCalculator(ar.getFactorsRef(), p);
         return this;
     }
 
