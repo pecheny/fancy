@@ -394,7 +394,7 @@ class XmlText<T:FontChar2> extends Text<T> {
             case Right, Center, MultilineCenter, MultilineRight:
                 var max = if (align == MultilineCenter || align == MultilineRight) Math.ceil(calcWidth) else calcWidth < 0 ? 0 : Math.ceil(realMaxWidth);
                 var k = align == Center || align == MultilineCenter ? 0.5 : 1;
-                xPos = Math.ffloor((max - size) * k);
+                xPos = ((max - size) * k);
                 if (xPos < xMin) xMin = xPos;
         }
     }
