@@ -48,7 +48,7 @@ class TextContextBuilder implements TextContextStorage {
         pivot[horizontal] =
         switch a {
             case Left: new ForwardPivot();
-            case Right: new ForwardPivot();
+            case Right: new BackwardPivot();
             case Center: new MiddlePivot();
         }
         return this;

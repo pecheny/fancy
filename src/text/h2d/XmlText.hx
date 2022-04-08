@@ -391,11 +391,19 @@ class XmlText<T:FontChar2> extends Text<T> {
             case Left:
                 xPos = 0;
                 if (xMin > 0) xMin = 0;
-            case Right, Center, MultilineCenter, MultilineRight:
-                var max = if (align == MultilineCenter || align == MultilineRight) Math.ceil(calcWidth) else calcWidth < 0 ? 0 : Math.ceil(realMaxWidth);
-                var k = align == Center || align == MultilineCenter ? 0.5 : 1;
-                xPos = ((max - size) * k);
+            case Right:
+                xPos = -size;
                 if (xPos < xMin) xMin = xPos;
+            case Center:
+                xPos = -size / 2;
+                if (xPos < xMin) xMin = xPos;
+            case _ : throw "Not implemented";
+//                Center, MultilineCenter, MultilineRight:
+//            var max = 0;// if (align == MultilineCenter || align == MultilineRight) Math.ceil(calcWidth) else calcWidth < 0 ? 0 : Math.ceil(realMaxWidth);
+//            var k = align == Center || align == MultilineCenter ? 0.5 : 1;
+//            xPos = ((max - size) * k);
+//            trace("Max: " + max + " size: " + size + " xPos: " + xPos);
+//            if (xPos < xMin) xMin = xPos;
         }
     }
 
