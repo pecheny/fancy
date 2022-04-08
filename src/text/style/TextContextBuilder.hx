@@ -1,4 +1,6 @@
 package text.style;
+import text.h2d.H2dTextLayouter.H2dCharsLayouterFactory;
+import text.TextLayouter.Align;
 import al.al2d.Axis2D;
 import al.al2d.Widget2D.AxisCollection2D;
 import font.bmf.BMFont.BMFontFactory;
@@ -22,6 +24,7 @@ class TextContextBuilder implements TextContextStorage {
     var pivot:AxisCollection2D<TextPivot> = new AxisCollection2D();
     var padding:AxisCollection2D<Padding> = new AxisCollection2D();
     var fontName = "";
+    var align:Align;
 
     public function new(fonts:FontStorage, ar) {
         this.fonts = fonts;
@@ -31,12 +34,23 @@ class TextContextBuilder implements TextContextStorage {
         pivot[horizontal] = new ForwardPivot();
         pivot[vertical] = new MiddlePivot();
 
-        padding[horizontal] = new SamePadding(.1);
+        padding[horizontal] = new SamePadding(.0);
         padding[vertical] = new SamePadding(.0);
     }
 
     public function withPivot(a:Axis2D, tp:TextPivot) {
         pivot[a] = tp;
+        return this;
+    }
+
+    public function withAlign(a:Align) {
+        this.align = a;
+        pivot[horizontal] =
+        switch a {
+            case Left: new ForwardPivot();
+            case Right: new ForwardPivot();
+            case Center: new MiddlePivot();
+        }
         return this;
     }
 
@@ -77,7 +91,7 @@ class TextContextBuilder implements TextContextStorage {
     }
 
     public function build() {
-        var tc = new TextStyleContext(layouterFactory, fonts.getFont(fontName), fontScale, pivot.copy(), padding.copy());
+        var tc = new TextStyleContext(layouterFactory, fonts.getFont(fontName), fontScale, pivot.copy(), padding.copy(), align);
         if (name != "") {
             styles[name] = tc;
             name = "";

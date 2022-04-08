@@ -1,4 +1,5 @@
 package text.style;
+import text.TextLayouter.Align;
 import al.al2d.Axis2D;
 import al.al2d.Widget2D.AxisCollection2D;
 import font.FontInstance;
@@ -9,18 +10,26 @@ import text.TextLayouter.CharsLayouterFactory;
 import transform.TransformerBase;
 
 class TextStyleContext {
-    public var layouterFactory(default, null):CharsLayouterFactory;
+    var layouterFactory(default, null):CharsLayouterFactory;
     var font:FontInstance<IFont>;
     var fontScale:FontScale;
     var pivot:AxisCollection2D<TextPivot>;
     var padding:AxisCollection2D<Padding>;
+    var align:Align;
 
-    public function new(lf, f, scale, pivot, padding) {
+    public function new(lf, f, scale, pivot, padding, align = Left) {
         this.layouterFactory = lf;
         this.font = f;
         this.fontScale = scale;
         this.pivot = pivot;
         this.padding = padding;
+        this.align = align;
+    }
+
+    public function createLayouter() {
+        var l = layouterFactory.create();
+        l.setTextAlign(align) ;
+        return l;
     }
 
     public function getDrawcallName() {

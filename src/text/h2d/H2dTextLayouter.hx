@@ -7,7 +7,8 @@ import font.IFont;
 import text.h2d.Text;
 import text.h2d.XmlText;
 import haxe.ds.ReadOnlyArray;
-import text.TextLayouter.CharsLayouterFactory;
+import text.TextLayouter;
+import text.h2d.Text.Align as H2dAlign;
 class H2dTextLayouter implements TextLayouter {
     var text:Text<GLGlyphData>;
     var glyphs:Glyphs;
@@ -28,6 +29,15 @@ class H2dTextLayouter implements TextLayouter {
 
     public function setWidthConstraint(val:Float):Void {
         text.constraintSize(val, -1);
+    }
+
+    public function setTextAlign(align:Align){
+        text.textAlign =
+        switch align {
+            case Left : H2dAlign.Left;
+            case Right : H2dAlign.Right;
+            case Center : H2dAlign.Center;
+        };
     }
 }
 
@@ -73,6 +83,15 @@ class H2dRichTextLayouter implements TextLayouter {
 
     public function setWidthConstraint(val:Float):Void {
         text.constraintSize(val, -1);
+    }
+
+    public function setTextAlign(align:Align){
+        text.textAlign =
+        switch align {
+            case Left : H2dAlign.Left;
+            case Right : H2dAlign.Right;
+            case Center : H2dAlign.Center;
+        };
     }
 }
 
