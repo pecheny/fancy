@@ -45,7 +45,16 @@ class TextStyleContext {
     }
 
     public function getPivot(a:Axis2D, transform:TransformerBase) {
-        return padding[a].getMain() + pivot[a].getPivot(a, transform, this);
+        var offset = switch a {
+            case horizontal :         switch align {
+                case Left : padding[a].getMain();
+                case Right : padding[a].getSecondary();
+                case Center : 0;
+            }
+            case vertical : padding[a].getMain();
+        }
+
+        return offset + pivot[a].getPivot(a, transform, this);
     }
 
     public function getContentSize(a:Axis2D, transform:TransformerBase) {

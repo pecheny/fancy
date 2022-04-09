@@ -34,8 +34,13 @@ class TextContextBuilder implements TextContextStorage {
         pivot[horizontal] = new ForwardPivot();
         pivot[vertical] = new MiddlePivot();
 
-        padding[horizontal] = new SamePadding(.0);
-        padding[vertical] = new SamePadding(.0);
+        padding[horizontal] = new SamePadding(0);
+        padding[vertical] = new SamePadding(0);
+    }
+
+    public function withPadding(a:Axis2D, v) {
+        padding[a] = new SamePadding(v);
+        return this;
     }
 
     public function withPivot(a:Axis2D, tp:TextPivot) {
