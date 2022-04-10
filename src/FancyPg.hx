@@ -1,4 +1,5 @@
 package ;
+import widgets.Button;
 import al.al2d.Axis2D;
 import al.Builder;
 import al.openfl.StageAspectResizer;
@@ -60,15 +61,16 @@ class FancyPg extends FuiAppBase {
 
         var fitStyle = fuiBuilder.textStyles.newStyle("fit")
         .withFitFontScale(.75)
-        .withPivot(horizontal, new ForwardPivot())
-        .withPivot(vertical, new MiddlePivot())
+        .withAlign(horizontal, Center)
+        .withAlign(vertical, Center)
         .build();
+
 
         var quads = [for (i in 0...1)new ColorBars(b.widget().withLiquidTransform(ar.getFactorsRef()), Std.int(0xffffff * Math.random())).widget()];
         quads.push(new Label(b.widget(), pcStyle).withText(sampleText).widget());
         quads.push(new Label(b.widget(), pcStyleC).withText(sampleText).widget());
         quads.push(new Label(b.widget(), pcStyleR).withText(sampleText).widget());
-        quads.push(new SomeButton(b.widget().withLiquidTransform(ar.getFactorsRef())).widget());
+        quads.push(new Button(b.widget().withLiquidTransform(ar.getFactorsRef()), null, "Button caption", fitStyle).widget());
 //        quads.push(new ColouredQuad(b.widget().withLiquidTransform(ar.getFactorsRef()), 0x303090).widget());
         var rw = b.align(vertical).container(quads);
         ButtonPanel.make(rw);

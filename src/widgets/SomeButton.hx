@@ -11,7 +11,6 @@ import input.ec.binders.ClickInputBinder;
 import input.Point;
 import mesh.providers.AttrProviders.SolidColorProvider;
 class SomeButton implements ClickTarget<Point> extends Widgetable {
-    var cachedText = "Foo bar";
     var hittester:WidgetHitTester;
     public var clickHandler:Void -> Void;
     var colors:Map<ClickTargetViewState, Int>;
