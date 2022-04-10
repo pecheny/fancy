@@ -1,4 +1,5 @@
 package ;
+import widgets.SomeButton;
 import al.al2d.Axis2D;
 import al.al2d.Widget2D;
 import al.Builder;
@@ -31,11 +32,9 @@ using transform.LiquidTransformer;
 class FancyPg extends FuiAppBase {
     public function new() {
         super();
+        var sampleText = "FoEo Bar AbAb Aboo Distance Field texture Ad Ae Af Bd Be Bf Bb Ab Dd De Df Cd Ce Cf";
         var b = new Builder();
-//        var fuiBuilder = new FuiBuilder();
-//        var root:Entity = fuiBuilder.createContainer(["color", "text:''"]);
         var root:Entity = new Entity();
-//        var ar:StageAspectKeeper = new StageAspectKeeper(1);
         var ar = fuiBuilder.ar;
 //        fuiBuilder.addBmFont("", "Assets/heaps-fonts/monts.fnt"); // todo
         fuiBuilder.addBmFont("", "Assets/heaps-fonts/robo.fnt"); // todo
@@ -43,8 +42,6 @@ class FancyPg extends FuiAppBase {
         root.addComponentByType(Size2D, fuiBuilder.ar);
         fuiBuilder.configureInput(root);
 
-//        fuiBuilder.addBmFont("", "Assets/heaps-fonts/monts.fnt");
-//        root.addComponent(fuiBuilder.createTextStyle(""));
         var dl =
         '<container>
         <drawcall type="color"/>
@@ -56,13 +53,12 @@ class FancyPg extends FuiAppBase {
             trace(container.getChildAt(i));
         }
         addChild(container);
-//        var root = PgRoot.createRoot();
         var pxStyle = fuiBuilder.textStyles.newStyle("px")
         .withSizeInPixels(64)
         .build();
 
         var pcStyle = fuiBuilder.textStyles.newStyle("pc")
-        .withAlign(vertical, Center)
+//        .withAlign(vertical, Center)
         .withPercentFontScale(.1)
         .withPadding(horizontal, 0.3)
         .build();
@@ -82,10 +78,10 @@ class FancyPg extends FuiAppBase {
         .build();
 
         var quads = [for (i in 0...1)new ColorBars(b.widget().withLiquidTransform(ar.getFactorsRef()), Std.int(0xffffff * Math.random())).widget()];
-        quads.push(new DummyText(b.widget().withLiquidTransform(ar.getFactorsRef()), pcStyle).withText("Ab ab<br/>bbaasddds").widget());
-        quads.push(new DummyText(b.widget().withLiquidTransform(ar.getFactorsRef()), pcStyleC).withText("Ab ab<br/>bbaasddds<br/>fgsfdg<br/>werwerer").widget());
-        quads.push(new DummyText(b.widget().withLiquidTransform(ar.getFactorsRef()), pcStyleR).withText("Ab ab<br/>bbaasddds<br/>fgsfdg<br/>werwerer").widget());
-//        quads.push(new SomeButton(b.widget().withLiquidTransform(ar.getFactorsRef())).widget());
+        quads.push(new DummyText(b.widget().withLiquidTransform(ar.getFactorsRef()), pcStyle).withText(sampleText).widget());
+        quads.push(new DummyText(b.widget().withLiquidTransform(ar.getFactorsRef()), pcStyleC).withText(sampleText).widget());
+        quads.push(new DummyText(b.widget().withLiquidTransform(ar.getFactorsRef()), pcStyleR).withText(sampleText).widget());
+        quads.push(new SomeButton(b.widget().withLiquidTransform(ar.getFactorsRef())).widget());
 //        quads.push(new ColouredQuad(b.widget().withLiquidTransform(ar.getFactorsRef()), 0x303090).widget());
         var rw = b.align(vertical).container(quads);
         ButtonPanel.make(rw);
@@ -131,14 +127,7 @@ class DummyText extends Widgetable {
         var smothWr = new SmothnessWriter(dpiWriter[0], l, textStyleContext, tt, windowSize);
         var aw = new TextAutoWidth(w, l, tt, textStyleContext);
         var text = new TextRender(attrs, l, tt, smothWr);
-//        if (this.text !=  "")
-//            text.setText(this.text);
-//        else
-            text.setText("FoEo Bar AbAb Aboo Distance Field texture
-Ad Ae Af
-Bd Be Bf Bb Ab
-Dd De Df
-Cd Ce Cf");
+        text.setText(this.text);
         var drawcallsData = DrawcallDataProvider.get(MSDFSet.instance, w.entity, textStyleContext.getDrawcallName());
         drawcallsData.views.push(text);
         new CtxBinder(Drawcalls, w.entity);

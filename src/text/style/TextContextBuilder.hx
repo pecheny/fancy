@@ -31,7 +31,7 @@ class TextContextBuilder implements TextContextStorage {
         this.layouterFactory = new H2dRichCharsLayouterFactory(fonts);
         this.fontScale = new FitFontScale(0.75);
         pivot[horizontal] = new ForwardPivot();
-        pivot[vertical] = new MiddlePivot();
+        pivot[vertical] = new ForwardPivot();
 
         padding[horizontal] = new SamePadding(0);
         padding[vertical] = new SamePadding(0);
