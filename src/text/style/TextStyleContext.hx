@@ -1,9 +1,9 @@
 package text.style;
-import text.TextLayouter.Align;
 import al.al2d.Axis2D;
 import al.al2d.Widget2D.AxisCollection2D;
 import font.FontInstance;
 import font.IFont;
+import text.Align;
 import text.style.Pivot;
 import text.style.Scale;
 import text.TextLayouter.CharsLayouterFactory;
@@ -15,9 +15,9 @@ class TextStyleContext {
     var fontScale:FontScale;
     var pivot:AxisCollection2D<TextPivot>;
     var padding:AxisCollection2D<Padding>;
-    var align:Align;
+    var align:AxisCollection2D<Align>;
 
-    public function new(lf, f, scale, pivot, padding, align = Left) {
+    public function new(lf, f, scale, pivot, padding, align) {
         this.layouterFactory = lf;
         this.font = f;
         this.fontScale = scale;
@@ -28,7 +28,7 @@ class TextStyleContext {
 
     public function createLayouter() {
         var l = layouterFactory.create();
-        l.setTextAlign(align) ;
+        l.setTextAlign(align[horizontal]) ;
         return l;
     }
 
@@ -45,15 +45,11 @@ class TextStyleContext {
     }
 
     public function getPivot(a:Axis2D, transform:TransformerBase) {
-        var offset = switch a {
-            case horizontal :         switch align {
-                case Left : padding[a].getMain();
-                case Right : padding[a].getSecondary();
-                case Center : 0;
-            }
-            case vertical : padding[a].getMain();
+        var offset = switch align[a] {
+            case Forward : padding[a].getMain();
+            case Backward : padding[a].getSecondary();
+            case Center : 0;
         }
-
         return offset + pivot[a].getPivot(a, transform, this);
     }
 

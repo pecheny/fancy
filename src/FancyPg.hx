@@ -1,13 +1,8 @@
 package ;
-import text.style.Pivot.ForwardPivot;
-import text.style.TextStyleContext;
-import al.core.AxisApplier;
-import transform.TransformerBase;
-import text.TextLayouter;
-import al.al2d.Widget2D;
-import widgets.ColouredQuad;
 import al.al2d.Axis2D;
+import al.al2d.Widget2D;
 import al.Builder;
+import al.core.AxisApplier;
 import al.openfl.StageAspectResizer;
 import crosstarget.Widgetable;
 import ec.CtxBinder;
@@ -18,13 +13,19 @@ import gl.ec.Drawcalls;
 import gl.sets.MSDFSet;
 import input.al.ButtonPanel;
 import openfl.display.Sprite;
+import text.Align;
+import text.style.Pivot.ForwardPivot;
+import text.style.Pivot;
+import text.style.TextStyleContext;
+import text.TextLayouter;
 import text.TextRender;
 import text.transform.TextTransformer;
 import transform.AspectRatioProvider;
 import transform.LiquidTransformer;
+import transform.TransformerBase;
 import utils.DummyEditorField;
 import widgets.ColorBars;
-import text.style.Pivot;
+import widgets.ColouredQuad;
 using transform.LiquidTransformer;
 
 class FancyPg extends FuiAppBase {
@@ -58,8 +59,20 @@ class FancyPg extends FuiAppBase {
 //        var root = PgRoot.createRoot();
         var pxStyle = fuiBuilder.textStyles.newStyle("px")
         .withSizeInPixels(64)
-        .withPivot(horizontal, new ForwardPivot())
-        .withPivot(vertical, new ForwardPivot())
+        .build();
+
+        var pcStyle = fuiBuilder.textStyles.newStyle("pc")
+        .withAlign(vertical, Center)
+        .withPercentFontScale(.1)
+        .withPadding(horizontal, 0.3)
+        .build();
+
+        var pcStyleR = fuiBuilder.textStyles.newStyle("pc")
+        .withAlign(horizontal, Backward)
+        .build();
+
+        var pcStyleC = fuiBuilder.textStyles.newStyle("pc")
+        .withAlign(horizontal, Center)
         .build();
 
         var fitStyle = fuiBuilder.textStyles.newStyle("fit")
@@ -69,8 +82,9 @@ class FancyPg extends FuiAppBase {
         .build();
 
         var quads = [for (i in 0...1)new ColorBars(b.widget().withLiquidTransform(ar.getFactorsRef()), Std.int(0xffffff * Math.random())).widget()];
-        quads.push(new DummyText(b.widget().withLiquidTransform(ar.getFactorsRef()), pxStyle).widget());
-        quads.push(new DummyText(b.widget().withLiquidTransform(ar.getFactorsRef()), fitStyle).widget());
+        quads.push(new DummyText(b.widget().withLiquidTransform(ar.getFactorsRef()), pcStyle).withText("Ab ab<br/>bbaasddds").widget());
+        quads.push(new DummyText(b.widget().withLiquidTransform(ar.getFactorsRef()), pcStyleC).withText("Ab ab<br/>bbaasddds<br/>fgsfdg<br/>werwerer").widget());
+        quads.push(new DummyText(b.widget().withLiquidTransform(ar.getFactorsRef()), pcStyleR).withText("Ab ab<br/>bbaasddds<br/>fgsfdg<br/>werwerer").widget());
 //        quads.push(new SomeButton(b.widget().withLiquidTransform(ar.getFactorsRef())).widget());
 //        quads.push(new ColouredQuad(b.widget().withLiquidTransform(ar.getFactorsRef()), 0x303090).widget());
         var rw = b.align(vertical).container(quads);
@@ -109,7 +123,7 @@ class DummyText extends Widgetable {
 
     override function init() {
         var attrs = MSDFSet.instance;
-        var l = textStyleContext.layouterFactory.create();
+        var l = textStyleContext.createLayouter();
         var dpiWriter = attrs.getWriter(MSDFSet.NAME_DPI);
 
         TextTransformer.withTextTransform(w, aspectRatioProvider.getFactorsRef(), textStyleContext);
@@ -117,8 +131,10 @@ class DummyText extends Widgetable {
         var smothWr = new SmothnessWriter(dpiWriter[0], l, textStyleContext, tt, windowSize);
         var aw = new TextAutoWidth(w, l, tt, textStyleContext);
         var text = new TextRender(attrs, l, tt, smothWr);
-        text.setText("Foo bar");
-        text.setText("FoEo Bar AbAb Aboo Distance Field texture
+//        if (this.text !=  "")
+//            text.setText(this.text);
+//        else
+            text.setText("FoEo Bar AbAb Aboo Distance Field texture
 Ad Ae Af
 Bd Be Bf Bb Ab
 Dd De Df
@@ -147,7 +163,6 @@ class TextAutoWidth implements AxisApplier {
 
     function update() {
         var val = ctx.getContentSize(horizontal, tr) / ctx.getFontScale(tr);//tr.size[horizontal] / ctx.getFontScale(tr);
-        trace(val);
         textLayouter.setWidthConstraint(val);
     }
 

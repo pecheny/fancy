@@ -4,11 +4,13 @@ import font.GLGlyphData.Glyphs;
 import font.GLGlyphData.TileRecord;
 import font.GLGlyphData;
 import font.IFont;
+import haxe.ds.ReadOnlyArray;
 import text.h2d.Text;
 import text.h2d.XmlText;
-import haxe.ds.ReadOnlyArray;
 import text.TextLayouter;
 import text.h2d.Text.Align as H2dAlign;
+import text.Align;
+
 class H2dTextLayouter implements TextLayouter {
     var text:Text<GLGlyphData>;
     var glyphs:Glyphs;
@@ -34,8 +36,8 @@ class H2dTextLayouter implements TextLayouter {
     public function setTextAlign(align:Align){
         text.textAlign =
         switch align {
-            case Left : H2dAlign.Left;
-            case Right : H2dAlign.Right;
+            case Forward : H2dAlign.Left;
+            case Backward : H2dAlign.Right;
             case Center : H2dAlign.Center;
         };
     }
@@ -88,8 +90,8 @@ class H2dRichTextLayouter implements TextLayouter {
     public function setTextAlign(align:Align){
         text.textAlign =
         switch align {
-            case Left : H2dAlign.Left;
-            case Right : H2dAlign.Right;
+            case Forward : H2dAlign.Left;
+            case Backward : H2dAlign.Right;
             case Center : H2dAlign.Center;
         };
     }
