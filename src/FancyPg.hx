@@ -1,4 +1,5 @@
 package ;
+import al.layouts.data.LayoutData.Size;
 import widgets.Button;
 import al.al2d.Axis2D;
 import al.Builder;
@@ -65,12 +66,16 @@ class FancyPg extends FuiAppBase {
         .withAlign(vertical, Center)
         .build();
 
+        var pxW = b.widget();
+        @:privateAccess pxW.axisStates[vertical].size = new PixelSize(vertical, ar);
+        @:privateAccess pxW.axisStates[vertical].size.setFixed(32);
+
 
         var quads = [for (i in 0...1)new ColorBars(b.widget().withLiquidTransform(ar.getFactorsRef()), Std.int(0xffffff * Math.random())).widget()];
         quads.push(new Label(b.widget(), pcStyle).withText(sampleText).widget());
         quads.push(new Label(b.widget(), pcStyleC).withText(sampleText).widget());
         quads.push(new Label(b.widget(), pcStyleR).withText(sampleText).widget());
-        quads.push(new Button(b.widget().withLiquidTransform(ar.getFactorsRef()), null, "Button caption", fitStyle).widget());
+        quads.push(new Button(pxW.withLiquidTransform(ar.getFactorsRef()), null, "Button caption", fitStyle).widget());
 //        quads.push(new ColouredQuad(b.widget().withLiquidTransform(ar.getFactorsRef()), 0x303090).widget());
         var rw = b.align(vertical).container(quads);
         ButtonPanel.make(rw);
@@ -83,4 +88,33 @@ class FancyPg extends FuiAppBase {
     function getSampleText() {
         return lime.utils.Assets.getText("Assets/heaps-fonts/Rich-text-sample.xml");
     }
+}
+
+class PixelSize extends Size {
+    var screen:StageAspectKeeper;
+    var a:Axis2D;
+
+    public function new(a, s) {
+        super();
+        this.a = a;
+        this.screen = s;
+    }
+
+    override public function setWeight(w:Float) {
+        throw "wrong";
+    }
+
+    override public function setFixed(w:Float) {
+        super.setFixed(w);
+    }
+
+    override public function getPortion() {
+        return 0;
+    }
+
+    override public function getFixed() {
+        return 2 * screen.getFactor(a) * value / screen.getValue(a);
+    }
+
+
 }
