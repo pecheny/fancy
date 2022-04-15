@@ -18,11 +18,11 @@ class ColouredQuad extends ShapeWidget<ColorSet> {
         super(ColorSet.instance, w);
         buffer = Bytes.alloc(4 * ColorSet.instance.stride);
         posWriter = ColorSet.instance.getWriter(AttribAliases.NAME_POSITION);
+        cp = SolidColorProvider.fromInt(color, 128);
     }
 
     override function createShapes() {
         var aspectRatio = ratioProvider.getFactorsRef();
-        cp = SolidColorProvider.fromInt(color, 128);
         var q = new QuadGraphicElement(ColorSet.instance, transformer.transformValue);
         children.push(q);
     }
