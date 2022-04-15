@@ -1,4 +1,6 @@
 package ;
+import scroll.ScissorAspect;
+import al.al2d.Widget2D;
 import text.style.TextContextBuilder;
 import al.al2d.AspectRatio;
 import al.al2d.Axis2D;
@@ -135,7 +137,9 @@ class FuiBuilder {
     public var textStyles:TextContextBuilder;
     var gldoBuilder:GldoBuilder ;
     var pos:ShaderElement = PosPassthrough.instance;
-    var xmlProc:XmlProc ;
+    var xmlProc:XmlProc;
+    var sharedAspects:Array<RenderingAspect>;
+
 
     public function new() {
         textureStorage = new TextureStorage();
@@ -152,6 +156,7 @@ class FuiBuilder {
     }
 
     public function setAspects(a:Array<RenderingAspect>) {
+        sharedAspects = a;
         renderAspectBuilder = new RenderAspectBuilder(a);
         return this;
     }
@@ -180,6 +185,11 @@ class FuiBuilder {
         var s = new InputSystemsContainer(new Point(), null);
         root.addComponent(new SwitchableInputBinder<Point>(s));
         new InputRoot(s, aspects.getFactorsRef());
+    }
+
+    public function addScissors(w:Widget2D) {
+        var  sc = new ScissorAspect(w, ar.getFactorsRef());
+        sharedAspects.push(sc);
     }
 }
 
