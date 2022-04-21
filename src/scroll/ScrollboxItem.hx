@@ -10,8 +10,8 @@ class ScrollboxItem extends ScrollboxWidget {
     public function new(w:Widget2D, content:ScrollableContent, ar) {
 
 
-        var vscroll = new FlatScrollbar(Builder.widget2d(), ar, vertical);
-        var hscroll = new FlatScrollbar(Builder.widget2d(), ar, horizontal);
+        var vscroll = new FlatScrollbar(Builder.widget(), ar, vertical);
+        var hscroll = new FlatScrollbar(Builder.widget(), ar, horizontal);
         scrollbars = new AxisCollection2D();
         scrollbars[horizontal] = hscroll;
         scrollbars[vertical] = vscroll;

@@ -1,5 +1,7 @@
 package scroll;
 
+import al.layouts.data.LayoutData.FixedSize;
+import al.layouts.data.LayoutData.FractionSize;
 import al.al2d.Axis2D;
 import al.al2d.Widget2D;
 import al.al2d.Widget2DContainer;
@@ -37,8 +39,8 @@ class ScrollboxWidget extends Widgetable implements VisibleSizeProvider {
     }
 
     function wireAxis(ar) {
-        var child1 = Builder.widget2d(portion, 1, portion, 1);
-        var child2 = Builder.widget2d(fixed, 0.03, fixed, 0.03);
+        var child1 = Builder.widget();
+        var child2 = Builder.widget(new FixedSize( 0.03), new FixedSize( 0.03));
 
         var hscroll = scrollbars[horizontal];
         var vscroll = scrollbars[vertical];
