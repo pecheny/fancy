@@ -123,9 +123,15 @@ class FontChar {
 
 	/** Use alpha channel of a texture to determine distance. **/
 	var Alpha = 3;
+}
 
-	/** Use RGB channels of a texture to determine distance. See here for details: https://github.com/Chlumsky/msdfgen **/
-	var MultiChannel = 4;
+enum SDFMode {
+	/** Classic SDF **/
+	SDF(channel:SDFChannel);
+	/** Pseudo SDF.**/
+	PSDF(channel:SDFChannel);
+	/**  See here for details: https://github.com/Chlumsky/msdfgen **/
+	MSDF;
 }
 
 /**
@@ -146,10 +152,9 @@ enum FontType {
 		See [Text](https://github.com/HeapsIO/heaps/wiki/Text) manual and [libgdx wiki](https://github.com/libgdx/libgdx/wiki/Distance-field-fonts) for more details.
 
 		@param channel The channel that serves as distance data source.
-		@param alphaCutoff The distance value that is considered to be the edge. Usually should be 0.5.
-		@param smoothing The smoothing of edge. Lower value lead to sharper edges.
+		@param distanceFieldSize thickness of field in which the distance encoded given in pixels.
 	**/
-	SignedDistanceField(channel:SDFChannel, alphaCutoff:Float, smoothing:Float);
+	SignedDistanceField(mode:SDFMode, distanceFieldSize:Int);
 }
 
 /**

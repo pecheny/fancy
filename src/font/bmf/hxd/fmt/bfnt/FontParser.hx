@@ -18,7 +18,6 @@ class FontParser {
 		var font:Font = new Font(null, 0);
 		var glyphs = font.glyphs;
 
-
 		// Supported formats:
 		// Littera formats: XML and Text
 		// http://kvazars.com/littera/
@@ -53,6 +52,11 @@ class FontParser {
 				}
 				inline function extractInt():Int {
 					return Std.parseInt(processValue());
+				}
+
+				function getSDFChannel() {
+					// todo implement channel detection according to values from common block
+					return 0;
 				}
 
 				var pageCount = 0;
@@ -119,6 +123,23 @@ class FontParser {
 							}
 							var fc = glyphs.get(second);
 							if (fc != null) fc.addKerning(first, advance);
+						case "sdf":
+							var dfSize:Int = 1;
+							var mode:SDFMode = SDF(0);
+							while (idx < line.length && reg.matchSub(line, idx)) {
+								switch (reg.matched(1)) {
+									case "size": dfSize = extractInt();
+									case "mode": switch processValue() {
+										case "sdf": mode = SDF(getSDFChannel());
+										case "psdf": mode = PSDF(getSDFChannel());
+										case "msdf": mode = MSDF;
+									}
+
+								}
+								next();
+							}
+							font.type = SignedDistanceField(mode, dfSize);
+
 					}
 				}
 
