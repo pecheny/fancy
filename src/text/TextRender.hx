@@ -85,7 +85,7 @@ class TextRender<T:AttribSet> implements Renderable<T> {
         charsLayouter.setText(value);
         var tiles = charsLayouter.getTiles();
         efficientLen = tiles.length;
-        if (indices == null || indices.length < efficientLen * 4)
+        if (indices == null || indices.length < efficientLen * 6)
             indices = IndexCollection.forQuads(efficientLen);
         bytes.grantCapacity(4 * efficientLen * attrs.stride);
         for (i in 0...efficientLen)
