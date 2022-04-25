@@ -176,7 +176,7 @@ class FuiBuilder {
     }
 
     public function addBmFont(fontName, fntPath) {
-        var font = fonts.initFont(fontName, fntPath, null, 8);
+        var font = fonts.initFont(fontName, fntPath, null);
         return this;
     }
 

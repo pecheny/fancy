@@ -8,8 +8,8 @@ class FontStorage {
         this.fac = factory;
     }
 
-    public function initFont(alias:FontAlias, descrPath:String, fac:FontFactory<IFont> = null, ?dfSize:Int):FontInstance<IFont> {
-        var instance = createInstance(descrPath, fac, dfSize);
+    public function initFont(alias:FontAlias, descrPath:String, fac:FontFactory<IFont> = null):FontInstance<IFont> {
+        var instance = createInstance(descrPath, fac);
         if (fonts.exists(alias))
             trace('[Warn] font $alias inited already.');
         fonts.set(alias, instance);
@@ -20,10 +20,10 @@ class FontStorage {
         return fonts.get(alias);
     }
 
-    function createInstance(descrPath:String, fac, df) {
+    function createInstance(descrPath:String, fac) {
         if (fac== null)
             fac = this.fac;
-        var font = fac.create(descrPath, df) ;
+        var font = fac.create(descrPath) ;
 //        var image = lime.utils.Assets.getImage();
 //        @:privateAccess font.textureImage = image;
         return font;

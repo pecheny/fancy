@@ -58,13 +58,17 @@ class BMFont implements IFont {
 class BMFontFactory implements FontFactory<IFont> {
     public function new() {}
 
-    public function create(fontPath:String, ?dfsize:Int) {
+    public function create(fontPath:String) {
         var folder = Path.directory(fontPath);
         var bytes = lime.utils.Assets.getBytes(fontPath);
         var font = FontParser.parse(bytes, ".");
         var dir = Path.directory(fontPath);
         var texPath = Path.join([dir, font.tilePath]);
         font.resizeTo(1);
-        return new FontInstance<IFont>(new BMFont(font, dfsize), texPath);
+        var dfSize = switch font.type{
+            case BitmapFont: 0;
+            case SignedDistanceField(_, s) : s;
+        }
+        return new FontInstance<IFont>(new BMFont(font, dfSize), texPath);
     }
 }
