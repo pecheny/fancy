@@ -40,6 +40,7 @@ class TextRender<T:AttribSet> implements Renderable<T> {
         this.attrs = attrs;
         this.otherAttributesToFill = forFill;
         this.transformer = tr;
+        transformer.changed.listen(setDirty);
         charsLayouter = layouter;
         for (a in Axis2D.keys) {
             charPos[a] = 0;
@@ -92,6 +93,7 @@ class TextRender<T:AttribSet> implements Renderable<T> {
         if (otherAttributesToFill != null) {
             otherAttributesToFill.write(bytes.bytes, 0);
         }
+        dirty = false;
     }
 
     public function render(targets:RenderTargets<T>):Void {
