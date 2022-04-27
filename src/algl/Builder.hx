@@ -23,7 +23,7 @@ class GlAxisStateFactory implements AxisFactory {
 
     public function create() {
         var size = switch type {
-            case sfr: new FixedSize(value);
+            case sfr: new FixedSize(value); //todo /2 its fixed size in units of the parent
             case pfr: new FractionSize(value);
             case px: new PixelSize(axis, screen, value);
         }
