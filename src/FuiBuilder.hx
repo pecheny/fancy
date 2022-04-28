@@ -114,17 +114,8 @@ class FuiAppBase extends Sprite {
                 vert:[Uv0Passthrough.instance, PosPassthrough.instance, LogisticSmoothnessCalculator.instance],
                 frag:[cast MSDFFrag.instance],
                 uniforms: ["color" ]
-            }, createTextGldo
+            }, fuiBuilder.createTextGldo
         );
-    }
-
-    function createTextGldo(e, descr:Xml) {
-        var fontName = descr.get("font");
-        var font = fuiBuilder.fonts.getFont(fontName);
-        if (font == null)
-            throw 'there is no font $fontName';
-        var aspect = fuiBuilder.renderAspectBuilder.newChain().add(new MSDFRenderingElement(fuiBuilder.textureStorage, font.texturePath)).build();
-        return fuiBuilder.createGldo(MSDFSet.instance, e, "msdf", aspect, font.getId());
     }
 }
 
@@ -170,7 +161,16 @@ class FuiBuilder {
         return cast gldoBuilder.getGldo(e, type, aspect, name);
     }
 
-    public function createContainer(e:Entity, descr) {
+    public function createTextGldo(e, descr:Xml) {
+        var fontName = descr.get("font");
+        var font = fonts.getFont(fontName);
+        if (font == null)
+            throw 'there is no font $fontName';
+        var aspect = renderAspectBuilder.newChain().add(new MSDFRenderingElement(textureStorage, font.texturePath)).build();
+        return createGldo(MSDFSet.instance, e, "msdf", aspect, font.getId());
+    }
+
+    public function createContainer(e:Entity, descr):Entity {
         xmlProc.processNode(e, descr);
         return e;
     }
