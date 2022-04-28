@@ -50,7 +50,8 @@ class H2dCharsLayouterFactory implements CharsLayouterFactory {
         this.font = f;
     }
 
-    public function create():TextLayouter {
+    public function create(fname = ""):TextLayouter {
+        //todo do not ignore fname
         return new H2dTextLayouter(font);
     }
 }
@@ -60,10 +61,10 @@ class H2dRichTextLayouter implements TextLayouter {
     var glyphs:Glyphs;
     var fonts:FontStorage;
 
-    public function new(f) {
+    public function new(f, defaultFont = "") {
         fonts = f;
         glyphs = new Glyphs();
-        text = new XmlText(fonts.getFont("").font, glyphs);
+        text = new XmlText(fonts.getFont(defaultFont).font, glyphs);
         text.defaultLoadFont = loadFont;
     }
 
@@ -104,7 +105,7 @@ class H2dRichCharsLayouterFactory implements CharsLayouterFactory {
         this.fonts = f;
     }
 
-    public function create():TextLayouter {
-        return new H2dRichTextLayouter(fonts);
+    public function create(f = ""):TextLayouter {
+        return new H2dRichTextLayouter(fonts, f);
     }
 }

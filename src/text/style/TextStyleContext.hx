@@ -1,4 +1,5 @@
 package text.style;
+import font.FontStorage;
 import al.al2d.Axis2D;
 import al.al2d.Widget2D.AxisCollection2D;
 import font.FontInstance;
@@ -12,14 +13,16 @@ import transform.TransformerBase;
 class TextStyleContext {
     var layouterFactory(default, null):CharsLayouterFactory;
     var font:FontInstance<IFont>;
+    var defaultFontName:String;
     var fontScale:FontScale;
     var pivot:AxisCollection2D<TextPivot>;
     var padding:AxisCollection2D<Padding>;
     var align:AxisCollection2D<Align>;
 
-    public function new(lf, f, scale, pivot, padding, align) {
+    public function new(lf, fonts:FontStorage, defaultFont:String, scale, pivot, padding, align) {
         this.layouterFactory = lf;
-        this.font = f;
+        this.defaultFontName = defaultFont;
+        this.font = fonts.getFont(defaultFont);
         this.fontScale = scale;
         this.pivot = pivot;
         this.padding = padding;
@@ -27,7 +30,7 @@ class TextStyleContext {
     }
 
     public function createLayouter() {
-        var l = layouterFactory.create();
+        var l = layouterFactory.create(defaultFontName);
         l.setTextAlign(align[horizontal]) ;
         return l;
     }

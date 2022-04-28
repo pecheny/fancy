@@ -104,7 +104,7 @@ class TextContextBuilder implements TextContextStorage {
     }
 
     public function build() {
-        var tc = new TextStyleContext(layouterFactory, fonts.getFont(fontName), fontScale, pivot.copy(), padding.copy(), align.copy());
+        var tc = new TextStyleContext(layouterFactory, fonts, fontName, fontScale, pivot.copy(), padding.copy(), align.copy());
         if (name != "") {
             styles[name] = tc;
             name = "";

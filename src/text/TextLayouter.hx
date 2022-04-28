@@ -11,6 +11,6 @@ interface TextLayouter {
 }
 
 interface CharsLayouterFactory {
-    function create():TextLayouter;
+    function create(fontName:String = ""):TextLayouter;
 }
 
