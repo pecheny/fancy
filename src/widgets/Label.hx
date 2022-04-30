@@ -19,6 +19,7 @@ import transform.TransformerBase;
 class Label extends Widgetable {
     var textStyleContext:TextStyleContext;
     var text:String = "";
+    var render:TextRender<MSDFSet>;
     @:once var aspectRatioProvider:AspectRatioProvider;
     @:once var windowSize:Size2D;
 
@@ -29,6 +30,8 @@ class Label extends Widgetable {
 
     public function withText(s) {
         text = s;
+        if (render!=null)
+            render.setText(s);
         return this;
     }
 
@@ -40,10 +43,10 @@ class Label extends Widgetable {
         var tt = w.entity.getComponent(TextTransformer);
         var smothWr = new SmothnessWriter(dpiWriter[0], l, textStyleContext, tt, windowSize);
         var aw = new TextAutoWidth(w, l, tt, textStyleContext);
-        var text = new TextRender(attrs, l, tt, smothWr);
-        text.setText(this.text);
+        render = new TextRender(attrs, l, tt, smothWr);
+        render.setText(this.text);
         var drawcallsData = DrawcallDataProvider.get(MSDFSet.instance, w.entity, textStyleContext.getDrawcallName());
-        drawcallsData.views.push(text);
+        drawcallsData.views.push(render);
         new CtxBinder(Drawcalls, w.entity);
     }
 }
