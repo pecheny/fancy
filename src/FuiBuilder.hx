@@ -219,7 +219,12 @@ class XmlProc {
             }
             case "drawcall" : {
                 var gldo = handlers[node.get("type")](e, node);
-                if (container != null) container.addChild(gldo);
+                if (container != null)
+                    container.addChild(gldo);
+                else {
+                    var dc = gldoBuilder.getDrawcalls(e);
+                    e.addComponent(gldo);
+                }
                 e;
             }
             case _ :
