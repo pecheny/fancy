@@ -15,10 +15,10 @@ class ColouredQuad extends ShapeWidget<ColorSet> {
 
     public function new(w:Widget2D, color) {
         this.color = color;
-        super(ColorSet.instance, w);
         buffer = Bytes.alloc(4 * ColorSet.instance.stride);
         posWriter = ColorSet.instance.getWriter(AttribAliases.NAME_POSITION);
         cp = SolidColorProvider.fromInt(color, 128);
+        super(ColorSet.instance, w);
     }
 
     override function createShapes() {

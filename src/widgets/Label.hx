@@ -23,8 +23,8 @@ class Label extends Widgetable {
     @:once var windowSize:Size2D;
 
     public function new(w, tc) {
-        super(w);
         this.textStyleContext = tc;
+        super(w);
     }
 
     public function withText(s) {
