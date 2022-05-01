@@ -16,6 +16,7 @@ interface TextContextStorage {
 }
 
 class TextContextBuilder implements TextContextStorage {
+    public static inline var DEFAULT_STYLE = 'default';
     var ar:StageAspectKeeper;
     var fonts(default, null) = new FontStorage(new BMFontFactory());
     var layouterFactory(default, null):CharsLayouterFactory;
@@ -38,7 +39,6 @@ class TextContextBuilder implements TextContextStorage {
 
         align[horizontal] = Forward;
         align[vertical] = Forward;
-        
     }
 
     public function withPadding(a:Axis2D, v) {
@@ -98,6 +98,11 @@ class TextContextBuilder implements TextContextStorage {
         return this;
     }
 
+    public function withDefaultName() {
+        name = DEFAULT_STYLE;
+        return this;
+    }
+
     public function build() {
         var tc = new TextStyleContext(layouterFactory, fonts.getFont(fontName), fontScale, pivot.copy(), padding.copy(), align.copy());
         if (name != "") {
@@ -109,6 +114,10 @@ class TextContextBuilder implements TextContextStorage {
 
     public function getStyle(name) {
         return styles[name];
+    }
+
+    public function defaultStyle() {
+        return getStyle(DEFAULT_STYLE);
     }
 
 }
