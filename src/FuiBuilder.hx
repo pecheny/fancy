@@ -125,6 +125,7 @@ class FuiBuilder {
     public var textureStorage:TextureStorage;
     public var shaderRegistry:ShaderRegistry;
     public var fonts(default, null) = new FontStorage(new BMFontFactory());
+    public var placeholderBuilder(default, null):PlaceholderBuilderGl;
     public var textStyles:TextContextBuilder;
     var gldoBuilder:GldoBuilder ;
     var pos:ShaderElement = PosPassthrough.instance;
@@ -134,6 +135,7 @@ class FuiBuilder {
 
     public function new() {
         textureStorage = new TextureStorage();
+        placeholderBuilder = new PlaceholderBuilderGl(ar);
         shaderRegistry = new ShaderRegistry();
         gldoBuilder = new GldoBuilder(shaderRegistry);
         xmlProc = new XmlProc(gldoBuilder);
