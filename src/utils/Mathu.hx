@@ -9,6 +9,10 @@ class Mathu {
             else val;
     }
 
+    public static inline function round(v:Float, prc:Float):Float {
+        return Math.round(v / prc) * prc;
+    }
+
     public static inline function min<T:Float>(a:T, b:T):T {
         return cast Math.min(a,b);
     }
