@@ -24,13 +24,13 @@ class Slider extends ShapeWidget<ColorSet> {
     var handler:Float->Void;
 
     public function new(w:Widget2D, direction:Axis2D, h) {
-        super(ColorSet.instance, w);
         this.handler = h;
         this.color = 0xffffff;
         this.mainAxis = direction;
         buffer = Bytes.alloc(4 * ColorSet.instance.stride);
         posWriter = ColorSet.instance.getWriter(AttribAliases.NAME_POSITION);
         cp = SolidColorProvider.fromInt(color, 128);
+        super(ColorSet.instance, w);
     }
 
     public function withProgress(v) {
