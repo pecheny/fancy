@@ -1,4 +1,5 @@
 package ;
+import algl.Builder.PlaceholderBuilderGl;
 import scroll.ScissorAspect;
 import al.al2d.Widget2D;
 import text.style.TextContextBuilder;
@@ -169,10 +170,11 @@ class FuiBuilder {
 
     public function createTextGldo(e, descr:Xml) {
         var fontName = descr.get("font");
+        var color = descr.exists("color") ? Std.parseInt(descr.get("color")) : 0xffffff;
         var font = fonts.getFont(fontName);
         if (font == null)
             throw 'there is no font $fontName';
-        var aspect = renderAspectBuilder.newChain().add(new MSDFRenderingElement(textureStorage, font.texturePath)).build();
+        var aspect = renderAspectBuilder.newChain().add(new MSDFRenderingElement(textureStorage, font.texturePath, color)).build();
         return createGldo(MSDFSet.instance, e, "msdf", aspect, font.getId());
     }
 
@@ -194,7 +196,7 @@ class FuiBuilder {
     }
 
     public function addScissors(w:Widget2D) {
-        var  sc = new ScissorAspect(w, ar.getFactorsRef());
+        var sc = new ScissorAspect(w, ar.getFactorsRef());
         sharedAspects.push(sc);
     }
 }
