@@ -146,6 +146,10 @@ class FuiBuilder {
         xmlProc.regHandler(drawcallType, gldoFactory);
     }
 
+    public function hasDrawcallType(type) {
+        return (shaderRegistry.getDescr(type) != null);
+    }
+
     public function setAspects(a:Array<RenderingAspect>) {
         sharedAspects = a;
         renderAspectBuilder = new RenderAspectBuilder(a);
