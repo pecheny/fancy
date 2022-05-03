@@ -47,7 +47,6 @@ class SomeButton implements ClickTarget<Point> extends Widgetable {
     }
 
     public function handler():Void {
-        trace("clck!");
         if (clickHandler != null)
             clickHandler();
     }
