@@ -25,7 +25,7 @@ class ScreenPercentHeightFontHeightCalculator implements FontScale {
 class PixelFontHeightCalculator implements FontScale {
     var ar:ReadOnlyArray<Float>;
     var windowSize:Size2D;
-    var px:Int;
+    var px:Float;
 
     public function new(ar, ws, px) {
         this.ar = ar;
