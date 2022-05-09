@@ -13,3 +13,6 @@
 [submodule "lib/fsm"]
 	path = lib/fsm
 	url = git@github.com:pecheny/fsm.git
+[submodule "lib/slec"]
+	path = lib/slec
+	url = git@github.com:pecheny/slec.git
