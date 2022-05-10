@@ -2,7 +2,7 @@ package scroll;
 import al.al2d.Axis2D;
 import al.al2d.Widget2D;
 import crosstarget.Widgetable;
-import ec.CtxBinder;
+import ec.CtxWatcher;
 import graphics.shapes.RectWeights;
 import transform.AspectRatio;
 class FlatScrollbar extends Widgetable implements WidgetScrollbar {

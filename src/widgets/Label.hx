@@ -3,7 +3,7 @@ import al.al2d.Axis2D;
 import al.al2d.Widget2D;
 import al.core.AxisApplier;
 import crosstarget.Widgetable;
-import ec.CtxBinder;
+import ec.CtxWatcher;
 import FuiBuilder.Size2D;
 import gl.ec.DrawcallDataProvider;
 import gl.ec.Drawcalls;
@@ -47,7 +47,7 @@ class Label extends Widgetable {
         render.setText(this.text);
         var drawcallsData = DrawcallDataProvider.get(MSDFSet.instance, w.entity, textStyleContext.getDrawcallName());
         drawcallsData.views.push(render);
-        new CtxBinder(Drawcalls, w.entity);
+        new CtxWatcher(Drawcalls, w.entity);
     }
 }
 

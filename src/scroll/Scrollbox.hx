@@ -9,7 +9,7 @@ import al.appliers.ContainerRefresher;
 import al.Builder;
 import al.layouts.PortionLayout;
 import crosstarget.Widgetable;
-import ec.CtxBinder;
+import ec.CtxWatcher;
 import scroll.ScrollboxInput;
 import input.al.WidgetHitTester;
 import input.core.InputSystemsContainer;
@@ -27,7 +27,7 @@ class ScrollboxWidget extends Widgetable implements VisibleSizeProvider {
         super(w);
         trace(w.entity.getChildren().length);
         var hitester = new WidgetHitTester(w);
-        new CtxBinder(SwitchableInputBinder, w.entity, true); // send upstream to scrollbox
+        new CtxWatcher(SwitchableInputBinder, w.entity, true); // send upstream to scrollbox
         var inputPassthrough = new InputSystemsContainer(new Point(), hitester);
         inputPassthrough.verbose = true;
         w.entity.addComponentByType(SwitchableInputTargets, inputPassthrough);

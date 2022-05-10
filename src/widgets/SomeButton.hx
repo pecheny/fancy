@@ -2,7 +2,7 @@ package widgets;
 import al.al2d.Axis2D;
 import al.al2d.Widget2D;
 import crosstarget.Widgetable;
-import ec.CtxBinder;
+import ec.CtxWatcher;
 import ec.Entity;
 import input.al.WidgetHitTester;
 import input.core.ClicksInputSystem.ClickTarget;
@@ -23,7 +23,7 @@ class SomeButton implements ClickTarget<Point> extends Widgetable {
         clickHandler = handler;
         hittester = new WidgetHitTester(w);
         w.entity.addComponentByName(Entity.getComponentId(ClickTarget), this);
-        new CtxBinder(ClickInputBinder, w.entity);
+        new CtxWatcher(ClickInputBinder, w.entity);
         this.w = w;
     }
 

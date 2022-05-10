@@ -2,7 +2,7 @@ package widgets;
 import al.al2d.Axis2D;
 import al.al2d.Widget2D;
 import data.aliases.AttribAliases;
-import ec.CtxBinder;
+import ec.CtxWatcher;
 import gl.sets.ColorSet;
 import graphics.shapes.ProgressBar;
 import graphics.ShapeWidget;
@@ -49,7 +49,7 @@ class Slider extends ShapeWidget<ColorSet> {
         children.push(q);
         var inp = new SliderInput(w, cast ratioProvider, mainAxis, (v) -> withProgress(v));
         w.entity.addComponentByType(SwitchableInputTarget, inp);
-        new CtxBinder(SwitchableInputBinder, w.entity);
+        new CtxWatcher(SwitchableInputBinder, w.entity);
     }
 
     override function onShapesDone() {
