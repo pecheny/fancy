@@ -126,10 +126,12 @@ class SmothnessWriter implements AttributeFiller {
     public function write(target:Bytes, start) {
         var tiles = layouter.getTiles();
         var base = ctx.getFontScale(tr) * ws.getValue(vertical) / 2;// DummyEditorField.value;
+        var dfSize = ctx.getFont().getDFSize();
         for (i in 0...tiles.length) {
             var tile = tiles[i];
+            var val = 2*dfSize / ( base * tile.scale );
             for (j in 0...4) {
-                writer.setValue(target, start + j + i*4, base * tile.scale);
+                writer.setValue(target, start + j + i*4, val);
             }
         }
     }

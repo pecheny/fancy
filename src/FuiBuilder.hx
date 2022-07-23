@@ -1,4 +1,6 @@
 package ;
+import shaderbuilder.MSDFShader;
+import shaderbuilder.SnaderBuilder.GeneralPassthrough;
 import algl.Builder.PlaceholderBuilderGl;
 import scroll.ScissorAspect;
 import al.al2d.Widget2D;
@@ -27,7 +29,6 @@ import openfl.display.Sprite;
 import openfl.display.Stage;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
-import shaderbuilder.MSDFShader.LogisticSmoothnessCalculator;
 import shaderbuilder.MSDFShader.MSDFFrag;
 import shaderbuilder.MSDFShader.MSDFRenderingElement;
 import shaderbuilder.ShaderElement;
@@ -93,6 +94,7 @@ class StageAspectKeeper implements AspectRatioProvider implements Size2D {
 
 class FuiAppBase extends Sprite {
     var fuiBuilder:FuiBuilder;
+    static var smoothShaderEl = new GeneralPassthrough(MSDFSet.NAME_DPI, MSDFShader.smoothness);
 
     public function new() {
         super();
@@ -112,7 +114,7 @@ class FuiAppBase extends Sprite {
             {
                 type:"msdf",
                 attrs:MSDFSet.instance,
-                vert:[Uv0Passthrough.instance, PosPassthrough.instance, LogisticSmoothnessCalculator.instance],
+                vert:[Uv0Passthrough.instance, PosPassthrough.instance, smoothShaderEl],
                 frag:[cast MSDFFrag.instance],
                 uniforms: ["color" ]
             }, fuiBuilder.createTextGldo
