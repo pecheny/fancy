@@ -4,7 +4,7 @@ import shaderbuilder.SnaderBuilder.GeneralPassthrough;
 import algl.Builder.PlaceholderBuilderGl;
 import scroll.ScissorAspect;
 import al.al2d.Widget2D;
-import text.style.TextContextBuilder;
+import htext.style.TextContextBuilder;
 import al.al2d.AspectRatio;
 import al.al2d.Axis2D;
 import bindings.GLTexture;
@@ -54,43 +54,43 @@ class DummyFrag implements ShaderElement {
 interface Size2D {
     function getValue(a:Axis2D):Float;
 }
-class StageAspectKeeper implements AspectRatioProvider implements Size2D {
-    var base:Float;
-    var factors:Array<Float> = [1, 1];
-    var width:Float;
-    var height:Float;
-
-    public function new(base:Float = 1) {
-        this.base = base;
-        openfl.Lib.current.stage.addEventListener(Event.RESIZE, onResize);
-        onResize(null);
-    }
-
-    function onResize(e) {
-        var stage = openfl.Lib.current.stage;
-        width = stage.stageWidth;
-        height = stage.stageHeight;
-        if (width > height) {
-            factors[0] = (base * width / height);
-            factors[1] = base;
-        } else {
-            factors[0] = base;
-            factors[1] = (base * height / width);
-        }
-    }
-
-    public inline function getFactor(cmp:Int):Float {
-        return factors[cmp];
-    }
-
-    public function getFactorsRef():ReadOnlyArray<Float> {
-        return factors;
-    }
-
-    public function getValue(a:Axis2D):Float {
-        return if (a == horizontal) width else height;
-    }
-}
+//class StageAspectKeeper implements AspectRatioProvider implements Size2D {
+//    var base:Float;
+//    var factors:Array<Float> = [1, 1];
+//    var width:Float;
+//    var height:Float;
+//
+//    public function new(base:Float = 1) {
+//        this.base = base;
+//        openfl.Lib.current.stage.addEventListener(Event.RESIZE, onResize);
+//        onResize(null);
+//    }
+//
+//    function onResize(e) {
+//        var stage = openfl.Lib.current.stage;
+//        width = stage.stageWidth;
+//        height = stage.stageHeight;
+//        if (width > height) {
+//            factors[0] = (base * width / height);
+//            factors[1] = base;
+//        } else {
+//            factors[0] = base;
+//            factors[1] = (base * height / width);
+//        }
+//    }
+//
+//    public inline function getFactor(cmp:Int):Float {
+//        return factors[cmp];
+//    }
+//
+//    public function getFactorsRef():ReadOnlyArray<Float> {
+//        return factors;
+//    }
+//
+//    public function getValue(a:Axis2D):Float {
+//        return if (a == horizontal) width else height;
+//    }
+//}
 
 class FuiAppBase extends Sprite {
     var fuiBuilder:FuiBuilder;

@@ -6,7 +6,6 @@ import al.core.AxisCollection;
 import al.core.AxisState;
 import al.ec.Entity;
 import al.layouts.data.LayoutData;
-import FuiBuilder.StageAspectKeeper;
 import algl.WidgetSizeTypeGl;
 
 class GlAxisStateFactory implements AxisFactory {
