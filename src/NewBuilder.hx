@@ -1,4 +1,5 @@
 package ;
+import Axis.ROAxisCollection2D;
 import algl.Builder.PlaceholderBuilderGl;
 import al.Builder as WB;
 import al.openfl.StageAspectResizer;
@@ -17,7 +18,8 @@ class NewBuilder extends FuiAppBase {
 //        fuiBuilder.addBmFont("", "Assets/heaps-fonts/monts.fnt"); // todo
         fuiBuilder.addBmFont("", "Assets/heaps-fonts/robo.fnt"); // todo
         root.addComponentByName(Entity.getComponentId(AspectRatioProvider), fuiBuilder.ar);
-        root.addComponentByType(Size2D, fuiBuilder.ar);
+//        root.addComponentByType(Size2D, fuiBuilder.ar);
+        root.addComponentByName(Entity.getComponentId(ROAxisCollection2D) + "_windowSize", fuiBuilder.ar.getWindowSize());
         fuiBuilder.configureInput(root);
 
         var dl =

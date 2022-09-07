@@ -1,4 +1,5 @@
 package widgets;
+import Axis.ROAxisCollection2D;
 import al.al2d.Axis2D;
 import al.al2d.Widget2D;
 import al.core.AxisApplier;
@@ -8,11 +9,11 @@ import FuiBuilder.Size2D;
 import gl.ec.DrawcallDataProvider;
 import gl.ec.Drawcalls;
 import gl.sets.MSDFSet;
-import text.style.TextStyleContext;
-import text.TextLayouter;
-import text.TextRender.SmothnessWriter;
-import text.TextRender;
-import text.transform.TextTransformer;
+import htext.style.TextStyleContext;
+import htext.TextLayouter;
+import htext.TextRender.SmothnessWriter;
+import htext.TextRender;
+import htext.transform.TextTransformer;
 import transform.AspectRatioProvider;
 import transform.TransformerBase;
 
@@ -21,7 +22,7 @@ class Label extends Widgetable {
     var text:String = "";
     var render:TextRender<MSDFSet>;
     @:once var aspectRatioProvider:AspectRatioProvider;
-    @:once var windowSize:Size2D;
+    @:once("windowSize") var windowSize:ROAxisCollection2D<Int>;
 
     public function new(w, tc) {
         this.textStyleContext = tc;
