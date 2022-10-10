@@ -17,6 +17,7 @@
     <source path="lib/flgl/src"/>
     <source path="lib/common/src"/>
     <source path="lib/slec/src"/>
+    <source path="lib/htext/src"/>
 
     <set  name="playServicesVersion" value="11.4.2" if="android"/>
 
@@ -26,6 +27,7 @@
     <haxelib name="utils"/>
 
     <haxelib name="hxcpp-debugger"/>
+    <haxedef name = "alayout" value = "true" />
     <haxedef name = "openfl_disable_context_cache" value = "true" />
     <haxedef name = "openfl_always_render" value = "true" />
 
