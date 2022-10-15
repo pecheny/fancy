@@ -1,5 +1,5 @@
 package widgets;
-import al.al2d.Axis2D;
+import Axis2D;
 import al.al2d.Widget2D;
 import crosstarget.Widgetable;
 import ec.CtxWatcher;
@@ -40,7 +40,7 @@ class SomeButton implements ClickTarget<Point> extends Widgetable {
 
 
     function rewritePos() {
-        for (a in Axis2D.keys) {
+        for (a in Axis2D) {
             var as = w.axisStates[a];
             as.apply(as.getPos(), as.getSize());
         }

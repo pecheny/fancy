@@ -1,12 +1,11 @@
 package algl;
-
-import al.al2d.Axis2D;
 import al.al2d.Widget2D;
-import al.core.AxisCollection;
 import al.core.AxisState;
 import al.ec.Entity;
 import al.layouts.data.LayoutData;
 import algl.WidgetSizeTypeGl;
+import Axis2D;
+import macros.AVConstructor;
 
 class GlAxisStateFactory implements AxisFactory {
     public var type:WidgetSizeTypeGl;
@@ -36,9 +35,7 @@ class GlAxisStateFactory implements AxisFactory {
 }
 class PlaceholderBuilderGl extends PlaceholderBuilderBase<GlAxisStateFactory> {
     public function new(s:StageAspectKeeper) {
-        factories = new AxisCollection2D();
-        for (a in Axis2D.keys)
-            factories[a] = new GlAxisStateFactory(a, s);
+        factories = AVConstructor.factoryCreate(a -> new GlAxisStateFactory(a, s));
     }
 
     public function h(t:WidgetSizeTypeGl, v:Float) {
@@ -54,7 +51,7 @@ class PlaceholderBuilderGl extends PlaceholderBuilderBase<GlAxisStateFactory> {
     }
 
     override function reset() {
-        for (k in Axis2D.keys)
+        for (k in Axis2D)
             factories[k].reset();
     }
 }
@@ -68,9 +65,8 @@ class PlaceholderBuilderBase<T:AxisFactory> {
 
     public function b():Widget2D {
         var entity = new Entity();
-        var axisStates = new AxisCollection<Axis2D, AxisState>();
-        for (a in Axis2D.keys)
-            axisStates[a] = factories[a].create();
+        var axisStates = AVConstructor.factoryCreate(Axis2D, a -> factories[a].create());
+
         var w = new Widget2D(axisStates);
         entity.addComponent(w);
         if (!keepStateAfterBuild)
@@ -78,7 +74,7 @@ class PlaceholderBuilderBase<T:AxisFactory> {
         return w;
     }
 
-    function reset(){}
+    function reset() {}
 }
 
 interface AxisFactory {

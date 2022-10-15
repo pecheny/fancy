@@ -18,6 +18,7 @@
     <source path="lib/common/src"/>
     <source path="lib/slec/src"/>
     <source path="lib/htext/src"/>
+    <source path="lib/taxis/src"/>
 
     <set  name="playServicesVersion" value="11.4.2" if="android"/>
 

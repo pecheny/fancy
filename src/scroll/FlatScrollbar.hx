@@ -1,5 +1,5 @@
 package scroll;
-import al.al2d.Axis2D;
+import Axis2D;
 import al.al2d.Widget2D;
 import crosstarget.Widgetable;
 import ec.CtxWatcher;

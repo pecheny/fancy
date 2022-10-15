@@ -1,4 +1,5 @@
 package ;
+import Axis2D;
 import shaderbuilder.MSDFShader;
 import shaderbuilder.SnaderBuilder.GeneralPassthrough;
 import algl.Builder.PlaceholderBuilderGl;
@@ -6,7 +7,6 @@ import scroll.ScissorAspect;
 import al.al2d.Widget2D;
 import htext.style.TextContextBuilder;
 import al.al2d.AspectRatio;
-import al.al2d.Axis2D;
 import bindings.GLTexture;
 import bindings.WebGLRenderContext;
 import ec.Entity;

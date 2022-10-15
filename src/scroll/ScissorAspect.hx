@@ -1,11 +1,9 @@
 package scroll;
-import gl.GLDisplayObject.GLState;
-import gl.aspects.RenderingAspect;
-import al.al2d.Axis2D;
 import al.al2d.Widget2D;
 import al.core.AxisApplier;
-import bindings.GLProgram;
-import bindings.WebGLRenderContext;
+import Axis2D;
+import gl.aspects.RenderingAspect;
+import gl.GLDisplayObject.GLState;
 import transform.AspectRatio;
 typedef  DisplayObject = {x:Float, y:Float, width:Float, height:Float }
 class DOVerticalApplier implements AxisApplier {

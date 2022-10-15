@@ -1,27 +1,25 @@
 package scroll;
-
-import al.layouts.data.LayoutData.FixedSize;
-import al.layouts.data.LayoutData.FractionSize;
-import al.al2d.Axis2D;
 import al.al2d.Widget2D;
 import al.al2d.Widget2DContainer;
 import al.appliers.ContainerRefresher;
 import al.Builder;
+import al.layouts.data.LayoutData.FixedSize;
 import al.layouts.PortionLayout;
+import Axis2D;
 import crosstarget.Widgetable;
 import ec.CtxWatcher;
-import scroll.ScrollboxInput;
 import input.al.WidgetHitTester;
 import input.core.InputSystemsContainer;
 import input.core.SwitchableInputTarget;
 import input.core.SwitchableInputTargets;
 import input.ec.binders.SwitchableInputBinder;
 import input.Point;
+import scroll.ScrollboxInput;
 
 
 class ScrollboxWidget extends Widgetable implements VisibleSizeProvider {
 
-    var scrollbars:AxisCollection2D<WidgetScrollbar> ;
+    var scrollbars:AVector2D<WidgetScrollbar> ;
 
     public function new(w:Widget2D, content:ScrollableContent, ar) {
         super(w);
@@ -62,7 +60,7 @@ class ScrollboxWidget extends Widgetable implements VisibleSizeProvider {
 
     function makeContainer(w:Widget2D, children:Array<Widget2D>) {
         var wc = new Widget2DContainer(w);
-        for (a in Axis2D.keys) {
+        for (a in Axis2D) {
             w.axisStates[a].addSibling(new ContainerRefresher(wc));
         }
         w.entity.addComponent(wc);

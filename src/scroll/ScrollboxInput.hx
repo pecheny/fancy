@@ -4,8 +4,7 @@ import scroll.Scrollbar;
 import scroll.ScrollableContent;
 import input.core.SwitchableInputTarget;
 import input.core.HitTester;
-import al.al2d.Widget2D.AxisCollection2D;
-import al.al2d.Axis2D;
+import Axis2D;
 import fsm.FSM;
 import fsm.State;
 import Math.abs as abs;
@@ -24,7 +23,7 @@ typedef TPos = input.Point;
 class ScrollboxInput extends FSM<ScrollboxStateName, ScrollboxInput> implements SwitchableInputTarget<TPos> {
     public static inline var THRESHOLD = 0.05;
     var content:ScrollableContent;
-    var scrollbars:AxisCollection2D<Scrollbar>;
+    var scrollbars:AVector2D<Scrollbar>;
     var hitester:HitTester<TPos>;
     var inputPassthrough:SwitchableInputTarget<TPos>;
     var pressOrigin:TPos = new TPos();

@@ -1,5 +1,4 @@
 package algl;
-import al.al2d.Axis2D;
 import al.layouts.data.LayoutData.ISize;
 class PixelSize implements ISize {
     var screen:StageAspectKeeper;

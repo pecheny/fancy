@@ -1,11 +1,9 @@
 package widgets;
-import Axis.ROAxisCollection2D;
-import al.al2d.Axis2D;
+import Axis2D;
 import al.al2d.Widget2D;
 import al.core.AxisApplier;
 import crosstarget.Widgetable;
 import ec.CtxWatcher;
-import FuiBuilder.Size2D;
 import gl.ec.DrawcallDataProvider;
 import gl.ec.Drawcalls;
 import gl.sets.MSDFSet;

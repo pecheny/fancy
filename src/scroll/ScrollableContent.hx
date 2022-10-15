@@ -1,6 +1,7 @@
 package scroll;
+import macros.AVConstructor;
+import Axis2D;
 import utils.Mathu;
-import al.al2d.Axis2D;
 import al.al2d.Widget2D;
 import al.al2d.Widget2DContainer;
 import al.core.AxisApplier;
@@ -9,15 +10,15 @@ import crosstarget.Widgetable;
 import ec.Signal;
 
 // provides content size, store ofset, apply offset
-class ScrollableContent extends Widgetable  {
-    var axis:AxisCollection2D<ScrollableAxisState> = new AxisCollection2D();
+class ScrollableContent extends Widgetable {
+    var axis:AVector2D<ScrollableAxisState> = AVConstructor.create(null, null);
 
     public function new(placeholder:Widget2D) {
         super(placeholder);
     }
 
     public function setOffset(a:Axis2D, val:Float) {
-        if (axis.hasValueFor(a)) {
+        if (axis[a] != null) {
             var r = axis[a].setOffset(val);
             var pha = w.axisStates[a];
             axis[a].apply(pha.getPos(), pha.getSize());
@@ -27,7 +28,7 @@ class ScrollableContent extends Widgetable  {
     }
 
     public function getOffset(a:Axis2D) {
-        if (axis.hasValueFor(a)) {
+        if (axis[a] != null) {
             return axis[a].offset;
         }
         return 0;
@@ -49,10 +50,10 @@ class W2CScrollableContent extends ScrollableContent implements ContentSizeProvi
         var c = content;
         var w = placeholder;
         placeholder.entity.addChild(content.entity);
-        for (a in Axis2D.keys) {
-                var offsetAxis = new ScrollableAxisState(c.widget().axisStates[a], a, this);
-                axis[a] = offsetAxis;
-                w.axisStates[a].addSibling(offsetAxis);
+        for (a in Axis2D) {
+            var offsetAxis = new ScrollableAxisState(c.widget().axisStates[a], a, this);
+            axis[a] = offsetAxis;
+            w.axisStates[a].addSibling(offsetAxis);
         }
     }
 
@@ -63,7 +64,7 @@ class W2CScrollableContent extends ScrollableContent implements ContentSizeProvi
 
 
 class W2DScrollableContent extends ScrollableContent implements ContentSizeProvider<Axis2D> {
-    var contentSize:AxisCollection2D<Float> = new AxisCollection2D();
+    var contentSize:AVector2D<Float> = AVConstructor.create(0, 0);
     public var contentSizeChanged(default, null) = new Signal<Axis2D -> Void>();
 
     public function new(content:Widget2D, placeholder:Widget2D) {
@@ -71,7 +72,7 @@ class W2DScrollableContent extends ScrollableContent implements ContentSizeProvi
         var c = content;
         var w = placeholder;
         placeholder.entity.addChild(content.entity);
-        for (a in Axis2D.keys) {
+        for (a in Axis2D) {
             var fixed = c.axisStates[a].size.getFixed();
             if (fixed > 0) {
                 var offsetAxis = new ScrollableAxisState(c.axisStates[a], a, this);
@@ -85,7 +86,8 @@ class W2DScrollableContent extends ScrollableContent implements ContentSizeProvi
     }
 
     public override function getContentSize(a:Axis2D):Float {
-        if (!contentSize.hasValueFor(a))
+        // todo check if correct
+        if (contentSize[a] == 0)
             return w.axisStates[a].getSize();
         return contentSize[a];
     }
@@ -113,10 +115,11 @@ class ScrollableAxisState implements AxisApplier {
     }
 
     function refresh(a) {
-        if (a!=axis)
+        if (a != axis)
             return;
         apply(lastPos, lastSize);
     }
+
     public function apply(pos:Float, size:Float):Void {
         lastPos = pos;
         lastSize = size;

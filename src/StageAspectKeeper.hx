@@ -1,13 +1,13 @@
 package ;
+import macros.AVConstructor;
+import Axis2D;
 import transform.AspectRatioProvider;
-import Axis;
-import haxe.ds.ReadOnlyArray;
 import openfl.events.Event;
 class StageAspectKeeper implements AspectRatioProvider {
     var base:Float;
-    public var aspects:Array<Float> = [1, 1];
-    public var size:Array<Int> = [1, 1];
-    public var pos:Array<Float> = [0, 0];
+    public var aspects = AVConstructor.create(Axis2D, 1., 1.);
+    public var size = AVConstructor.create(Axis2D, 1, 1);
+    public var pos = AVConstructor.create(Axis2D, 0., 0.);
 
     var width:Float;
     var height:Float;
@@ -22,26 +22,26 @@ class StageAspectKeeper implements AspectRatioProvider {
         var stage = openfl.Lib.current.stage;
         width = stage.stageWidth;
         height = stage.stageHeight;
-        size[0] = stage.stageWidth;
-        size[1] = stage.stageHeight;
+        size[horizontal] = stage.stageWidth;
+        size[vertical] = stage.stageHeight;
         if (width > height) {
-            aspects[0] = (base * width / height);
-            aspects[1] = base;
+            aspects[horizontal] = (base * width / height);
+            aspects[vertical] = base;
         } else {
-            aspects[0] = base;
-            aspects[1] = (base * height / width);
+            aspects[horizontal] = base;
+            aspects[vertical] = (base * height / width);
         }
     }
 
-    public inline function getFactor(cmp:Int):Float {
+    public inline function getFactor(cmp:Axis2D):Float {
         return aspects[cmp];
     }
 
-    public function getFactorsRef():ReadOnlyArray<Float> {
+    public function getFactorsRef():ReadOnlyAVector2D<Float> {
         return aspects;
     }
 
-    public function getWindowSize():ReadOnlyArray<Int> {
+    public function getWindowSize():ReadOnlyAVector2D<Int> {
         return size;
     }
 

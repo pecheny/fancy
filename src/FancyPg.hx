@@ -1,9 +1,7 @@
 package ;
-import Axis.ROAxisCollection2D;
-import al.layouts.data.LayoutData.FixedSize;
+import Axis2D;
 import algl.Builder.PlaceholderBuilderGl;
 import algl.PixelSize;
-import al.al2d.Axis2D;
 import al.al2d.Widget2DContainer;
 import al.Builder;
 import al.openfl.StageAspectResizer;
