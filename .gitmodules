@@ -19,3 +19,6 @@
 [submodule "lib/htext"]
 	path = lib/htext
 	url = git@github.com:pecheny/htext.git
+[submodule "lib/taxis"]
+	path = lib/taxis
+	url = git@github.com:pecheny/taxis.git
