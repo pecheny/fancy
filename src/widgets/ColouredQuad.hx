@@ -22,7 +22,6 @@ class ColouredQuad extends ShapeWidget<ColorSet> {
     }
 
     override function createShapes() {
-        var aspectRatio = ratioProvider.getFactorsRef();
         var q = new QuadGraphicElement(ColorSet.instance, transformer.transformValue);
         children.push(q);
     }
