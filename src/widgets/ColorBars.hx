@@ -30,7 +30,7 @@ class ColorBars extends ShapeWidget<ColorSet> {
         ];
         for (e in elements) {
             var sh = bb.create(attrs, transformer.transformValue, e);
-            children.push(sh);
+            addChild(sh);
         }
     }
 
@@ -41,6 +41,6 @@ class ColorBars extends ShapeWidget<ColorSet> {
 
     public function setColor(c:Int) {
         cp.setColor(c);
-        MeshUtilss.writeInt8Attribute(attrs, buffer, AttribAliases.NAME_COLOR_IN, 0, vertsCount, cp.getValue);
+        MeshUtilss.writeInt8Attribute(attrs, @:privateAccess shapeRenderer.buffer, AttribAliases.NAME_COLOR_IN, 0, shapeRenderer.getVertCount(), cp.getValue);
     }
 }
