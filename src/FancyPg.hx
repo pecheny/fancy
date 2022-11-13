@@ -1,22 +1,23 @@
 package ;
-import Axis2D;
-import algl.Builder.PlaceholderBuilderGl;
-import algl.PixelSize;
 import al.al2d.Widget2DContainer;
 import al.Builder;
 import al.openfl.StageAspectResizer;
+import algl.Builder.PlaceholderBuilderGl;
+import algl.PixelSize;
+import algl.WidgetSizeTypeGl;
+import Axis2D;
 import ec.Entity;
 import FuiBuilder;
+import htext.Align;
 import input.al.ButtonPanel;
 import openfl.display.Sprite;
 import scroll.ScrollableContent.W2CScrollableContent;
 import scroll.ScrollboxItem;
-import htext.Align;
 import transform.AspectRatioProvider;
 import utils.DummyEditorField;
 import widgets.Button;
+import widgets.ColorBars;
 import widgets.Label;
-import algl.WidgetSizeTypeGl;
 using transform.LiquidTransformer;
 using al.Builder;
 
@@ -72,7 +73,7 @@ class FancyPg extends FuiAppBase {
         @:privateAccess pxW.axisStates[vertical].size = new PixelSize(vertical, ar, 600);
 
 
-        var quads = [] ;//[for (i in 0...1)new ColorBars(b.widget().withLiquidTransform(ar.getFactorsRef()), Std.int(0xffffff * Math.random())).widget()];
+        var quads = [for (i in 0...1)new ColorBars(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getFactorsRef()), Std.int(0xffffff * Math.random())).widget()];
 //        quads.push(new Label(b.b(), pcStyle).withText(sampleText).widget());
 //        quads.push(new Label(b.b(), pcStyleC).withText(sampleText).widget());
 //        quads.push(new Label(b.b(), pcStyleR).withText(sampleText).widget());
@@ -110,4 +111,3 @@ class FancyPg extends FuiAppBase {
         return lime.utils.Assets.getText("Assets/heaps-fonts/Rich-text-sample.xml");
     }
 }
-
