@@ -1,7 +1,7 @@
 package widgets;
 import Axis2D;
 import al.al2d.Widget2D;
-import crosstarget.Widgetable;
+import widgets.Widgetable;
 import ec.CtxWatcher;
 import ec.Entity;
 import input.al.WidgetHitTester;

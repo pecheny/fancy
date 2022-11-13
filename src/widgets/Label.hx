@@ -2,7 +2,7 @@ package widgets;
 import Axis2D;
 import al.al2d.Widget2D;
 import al.core.AxisApplier;
-import crosstarget.Widgetable;
+import widgets.Widgetable;
 import ec.CtxWatcher;
 import gl.ec.DrawcallDataProvider;
 import gl.ec.Drawcalls;

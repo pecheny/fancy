@@ -1,7 +1,7 @@
 package scroll;
 import Axis2D;
 import al.al2d.Widget2D;
-import crosstarget.Widgetable;
+import widgets.Widgetable;
 import ec.CtxWatcher;
 import graphics.shapes.RectWeights;
 import transform.AspectRatio;

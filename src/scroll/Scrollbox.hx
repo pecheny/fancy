@@ -6,7 +6,7 @@ import al.Builder;
 import al.layouts.data.LayoutData.FixedSize;
 import al.layouts.PortionLayout;
 import Axis2D;
-import crosstarget.Widgetable;
+import widgets.Widgetable;
 import ec.CtxWatcher;
 import input.al.WidgetHitTester;
 import input.core.InputSystemsContainer;
