@@ -5,7 +5,7 @@ import data.aliases.AttribAliases;
 import ec.CtxWatcher;
 import gl.sets.ColorSet;
 import graphics.shapes.ProgressBar;
-import graphics.ShapeWidget;
+import widgets.ShapeWidget;
 import haxe.io.Bytes;
 import input.al.WidgetHitTester;
 import input.core.HitTester;

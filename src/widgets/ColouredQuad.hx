@@ -3,7 +3,7 @@ import al.al2d.Widget2D;
 import data.aliases.AttribAliases;
 import gl.sets.ColorSet;
 import graphics.shapes.QuadGraphicElement;
-import graphics.ShapeWidget;
+import widgets.ShapeWidget;
 import haxe.io.Bytes;
 import mesh.MeshUtilss;
 import mesh.providers.AttrProviders.SolidColorProvider;

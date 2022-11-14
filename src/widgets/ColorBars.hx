@@ -5,7 +5,7 @@ import Axis2D;
 import data.aliases.AttribAliases;
 import gl.sets.ColorSet;
 import graphics.shapes.Bar;
-import graphics.ShapeWidget;
+import widgets.ShapeWidget;
 import macros.AVConstructor;
 import mesh.MeshUtilss;
 import mesh.providers.AttrProviders.SolidColorProvider;
