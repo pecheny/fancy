@@ -59,7 +59,7 @@ class ScrollboxWidget extends Widgetable implements VisibleSizeProvider {
     }
 
     function makeContainer(w:Widget2D, children:Array<Widget2D>) {
-        var wc = new Widget2DContainer(w);
+        var wc = new Widget2DContainer(w, 2);
         for (a in Axis2D) {
             w.axisStates[a].addSibling(new ContainerRefresher(wc));
         }
