@@ -1,5 +1,8 @@
 package ;
+
 import al.al2d.Widget2DContainer;
+import al.al2d.Widget2D;
+import algl.TransformatorAxisApplier;
 import al.Builder;
 import al.openfl.StageAspectResizer;
 import algl.Builder.PlaceholderBuilderGl;
@@ -19,6 +22,7 @@ import widgets.Button;
 import widgets.ColorBars;
 import widgets.Label;
 using transform.LiquidTransformer;
+using FancyPg.Utils;
 using al.Builder;
 
 class FancyPg extends FuiAppBase {
@@ -111,3 +115,16 @@ class FancyPg extends FuiAppBase {
         return lime.utils.Assets.getText("Assets/heaps-fonts/Rich-text-sample.xml");
     }
 }
+
+class Utils {
+     public static function withLiquidTransform(w:Widget2D, aspectRatio) {
+         var transformer = new LiquidTransformer(aspectRatio);
+         for (a in Axis2D) {
+             var applier2 = new TransformatorAxisApplier(transformer, a);
+             w.axisStates[a].addSibling(applier2);
+         }
+         w.entity.addComponent(transformer);
+         return w;
+     }
+}
+

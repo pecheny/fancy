@@ -1,4 +1,5 @@
 package widgets;
+import algl.TransformatorAxisApplier;
 import Axis2D;
 import al.al2d.Widget2D;
 import al.core.AxisApplier;
@@ -11,9 +12,9 @@ import htext.style.TextStyleContext;
 import htext.TextLayouter;
 import htext.TextRender.SmothnessWriter;
 import htext.TextRender;
-import htext.transform.TextTransformer;
 import transform.AspectRatioProvider;
 import transform.TransformerBase;
+using widgets.Label.TextTransformer;
 
 class Label extends Widgetable {
     var textStyleContext:TextStyleContext;
@@ -71,4 +72,33 @@ class TextAutoWidth implements AxisApplier {
         textLayouter.setWidthConstraint(val);
     }
 
+}
+class TextTransformer extends TransformerBase {
+    var textStyleContext:TextStyleContext;
+
+    function new(w, ar, ts) {
+        super(ar);
+        textStyleContext = ts;
+    }
+
+    override public function transformValue(c:Axis2D, input:Float):Float {
+        var sign = c == 0 ? 1 : -1;
+        var r = sign *
+        (
+            (textStyleContext.getPivot(c, this) +
+            input * textStyleContext.getFontScale(this))
+            / aspects[c] // aspect ratio correction
+            - 1); // gl offset
+        return r;
+    }
+
+    public static function withTextTransform(w:Widget2D, aspectRatio, style) {
+        var transformer = new TextTransformer(w, aspectRatio, style);
+        for (a in Axis2D) {
+            var applier2 = new TransformatorAxisApplier(transformer, a);
+            w.axisStates[a].addSibling(applier2);
+        }
+        w.entity.addComponent(transformer);
+        return w;
+    }
 }
