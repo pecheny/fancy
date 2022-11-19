@@ -1,4 +1,5 @@
 package widgets;
+import a2d.Stage;
 import algl.TransformatorAxisApplier;
 import Axis2D;
 import al.al2d.Widget2D;
@@ -12,7 +13,7 @@ import htext.style.TextStyleContext;
 import htext.TextLayouter;
 import htext.TextRender.SmothnessWriter;
 import htext.TextRender;
-import transform.AspectRatioProvider;
+import a2d.AspectRatioProvider;
 import transform.TransformerBase;
 using widgets.Label.TextTransformer;
 
@@ -20,8 +21,7 @@ class Label extends Widgetable {
     var textStyleContext:TextStyleContext;
     var text:String = "";
     var render:TextRender<MSDFSet>;
-    @:once var aspectRatioProvider:AspectRatioProvider;
-    @:once("windowSize") var windowSize:ROAxisCollection2D<Int>;
+    @:once var stage:Stage;
 
     public function new(w, tc) {
         this.textStyleContext = tc;
@@ -39,9 +39,9 @@ class Label extends Widgetable {
         var attrs = MSDFSet.instance;
         var l = textStyleContext.createLayouter();
         var dpiWriter = attrs.getWriter(MSDFSet.NAME_DPI);
-        TextTransformer.withTextTransform(w, aspectRatioProvider.getFactorsRef(), textStyleContext);
+        TextTransformer.withTextTransform(w, stage.getFactorsRef(), textStyleContext);
         var tt = w.entity.getComponent(TextTransformer);
-        var smothWr = new SmothnessWriter(dpiWriter[0], l, textStyleContext, tt, windowSize);
+        var smothWr = new SmothnessWriter(dpiWriter[0], l, textStyleContext, tt, stage.getWindowSize());
         var aw = new TextAutoWidth(w, l, tt, textStyleContext);
         render = new TextRender(attrs, l, tt, smothWr);
         render.setText(this.text);

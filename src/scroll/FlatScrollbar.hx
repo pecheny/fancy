@@ -4,7 +4,7 @@ import al.al2d.Widget2D;
 import widgets.Widgetable;
 import ec.CtxWatcher;
 import graphics.shapes.RectWeights;
-import transform.AspectRatio;
+import a2d.AspectRatio;
 class FlatScrollbar extends Widgetable implements WidgetScrollbar {
 //    var handler:QuadGraphicElement<ColorSet>;
 //    var axis:Axis2D;

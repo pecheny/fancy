@@ -1,9 +1,10 @@
 package ;
+import a2d.Stage;
 import macros.AVConstructor;
 import Axis2D;
-import transform.AspectRatioProvider;
+import a2d.AspectRatioProvider;
 import openfl.events.Event;
-class StageAspectKeeper implements AspectRatioProvider {
+class StageAspectKeeper implements Stage {
     var base:Float;
     public var aspects = AVConstructor.create(Axis2D, 1., 1.);
     public var size = AVConstructor.create(Axis2D, 1, 1);

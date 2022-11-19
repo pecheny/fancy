@@ -1,4 +1,5 @@
 package algl;
+import a2d.Stage;
 import al.al2d.Widget2D;
 import al.core.AxisState;
 import al.ec.Entity;
@@ -10,7 +11,7 @@ import macros.AVConstructor;
 class GlAxisStateFactory implements AxisFactory {
     public var type:WidgetSizeTypeGl;
     public var value:Float;
-    var screen:StageAspectKeeper;
+    var screen:Stage;
     var axis:Axis2D;
 
     public function new(a, s) {
@@ -34,7 +35,7 @@ class GlAxisStateFactory implements AxisFactory {
     }
 }
 class PlaceholderBuilderGl extends PlaceholderBuilderBase<GlAxisStateFactory> {
-    public function new(s:StageAspectKeeper) {
+    public function new(s:Stage) {
         factories = AVConstructor.factoryCreate(a -> new GlAxisStateFactory(a, s));
     }
 
@@ -60,7 +61,7 @@ class PlaceholderBuilderGl extends PlaceholderBuilderBase<GlAxisStateFactory> {
 * Draft for further builder generalization.
 **/
 class PlaceholderBuilderBase<T:AxisFactory> {
-    var factories:AxisCollection2D<T>;
+    var factories:AVector2D<T>;
     var keepStateAfterBuild = false;
 
     public function b():Widget2D {

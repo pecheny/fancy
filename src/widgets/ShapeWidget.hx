@@ -9,7 +9,7 @@ import gl.ec.Drawcalls;
 import gl.Renderable;
 import gl.RenderTargets;
 import graphics.shapes.Shape;
-import transform.AspectRatioProvider;
+import a2d.AspectRatioProvider;
 import transform.LiquidTransformer;
 
 class ShapeWidget<T:AttribSet> extends Widgetable implements Renderable<T> {

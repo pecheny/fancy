@@ -1,5 +1,7 @@
 package ;
 
+import a2d.Stage;
+import a2d.WindowSizeProvider;
 import al.al2d.Widget2DContainer;
 import al.al2d.Widget2D;
 import algl.TransformatorAxisApplier;
@@ -16,7 +18,7 @@ import input.al.ButtonPanel;
 import openfl.display.Sprite;
 import scroll.ScrollableContent.W2CScrollableContent;
 import scroll.ScrollboxItem;
-import transform.AspectRatioProvider;
+import a2d.AspectRatioProvider;
 import utils.DummyEditorField;
 import widgets.Button;
 import widgets.ColorBars;
@@ -34,8 +36,10 @@ class FancyPg extends FuiAppBase {
         var b = new PlaceholderBuilderGl(ar);
 //        fuiBuilder.addBmFont("", "Assets/heaps-fonts/monts.fnt"); // todo
         fuiBuilder.addBmFont("", "Assets/heaps-fonts/robo.fnt"); // todo
-        root.addComponentByName(Entity.getComponentId(AspectRatioProvider), fuiBuilder.ar);
-        root.addComponentByName("ROAxisCollection2D_windowSize", fuiBuilder.ar.getWindowSize());
+        root.addComponentByType(AspectRatioProvider, fuiBuilder.ar);
+        root.addComponentByType(WindowSizeProvider, fuiBuilder.ar);
+        root.addComponentByType(Stage, fuiBuilder.ar);
+//        root.addComponentByName("ROAxisCollection2D_windowSize", fuiBuilder.ar.getWindowSize());
         fuiBuilder.configureInput(root);
 
         var dl =

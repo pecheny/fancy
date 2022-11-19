@@ -4,7 +4,7 @@ import al.core.AxisApplier;
 import Axis2D;
 import gl.aspects.RenderingAspect;
 import gl.GLDisplayObject.GLState;
-import transform.AspectRatio;
+import a2d.AspectRatio;
 typedef  DisplayObject = {x:Float, y:Float, width:Float, height:Float }
 class DOVerticalApplier implements AxisApplier {
     var target:DisplayObject;

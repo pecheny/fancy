@@ -1,4 +1,5 @@
 package ;
+import a2d.Stage;
 import Axis2D;
 import shaderbuilder.MSDFShader;
 import shaderbuilder.SnaderBuilder.GeneralPassthrough;
@@ -6,7 +7,7 @@ import algl.Builder.PlaceholderBuilderGl;
 import scroll.ScissorAspect;
 import al.al2d.Widget2D;
 import htext.style.TextContextBuilder;
-import al.al2d.AspectRatio;
+import a2d.AspectRatio;
 import bindings.GLTexture;
 import bindings.WebGLRenderContext;
 import ec.Entity;
@@ -19,14 +20,12 @@ import gl.GLDisplayObject;
 import gl.sets.ColorSet;
 import gl.sets.MSDFSet;
 import gl.ShaderRegistry;
-import haxe.ds.ReadOnlyArray;
 import input.core.InputSystemsContainer;
 import input.core.InputTarget;
 import input.ec.binders.SwitchableInputBinder;
 import input.Point;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
-import openfl.display.Stage;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 import shaderbuilder.MSDFShader.MSDFFrag;
@@ -36,7 +35,7 @@ import shaderbuilder.SnaderBuilder.ColorPassthroughFrag;
 import shaderbuilder.SnaderBuilder.ColorPassthroughVert;
 import shaderbuilder.SnaderBuilder.PosPassthrough;
 import shaderbuilder.SnaderBuilder.Uv0Passthrough;
-import transform.AspectRatioProvider;
+import a2d.AspectRatioProvider;
 
 class DummyFrag implements ShaderElement {
     public static var instance = new DummyFrag();
@@ -123,7 +122,7 @@ class FuiAppBase extends Sprite {
 }
 
 class FuiBuilder {
-    public var ar = new StageAspectKeeper(1);
+    public var ar:Stage = new StageAspectKeeper(1);
     public var renderAspectBuilder(default, null):RenderAspectBuilder;
     public var textureStorage:TextureStorage;
     public var shaderRegistry:ShaderRegistry;
@@ -296,7 +295,7 @@ class InputRoot {
     var factors:AspectRatio;
     var input:InputTarget<Point>;
     var pos = new Point();
-    var stg:Stage;
+    var stg:openfl.display.Stage;
 
 
     public function new(input, fac) {

@@ -1,7 +1,8 @@
 package algl;
+import a2d.Stage;
 import al.layouts.data.LayoutData.ISize;
 class PixelSize implements ISize {
-    var screen:StageAspectKeeper;
+    var screen:Stage;
     var a:Axis2D;
     public var value:Float = 0;
 
@@ -16,6 +17,6 @@ class PixelSize implements ISize {
     }
 
     public function getFixed() {
-        return 2 * screen.getFactor(a) * value / screen.getValue(a);
+        return 2 * screen.getFactorsRef()[a] * value / screen.getWindowSize()[a];
     }
 }
