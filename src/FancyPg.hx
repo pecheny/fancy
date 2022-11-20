@@ -1,5 +1,6 @@
 package ;
 
+import graphics.shapes.Bar;
 import a2d.Stage;
 import a2d.WindowSizeProvider;
 import al.al2d.Widget2DContainer;
@@ -80,8 +81,12 @@ class FancyPg extends FuiAppBase {
         var pxW = b.b();
         @:privateAccess pxW.axisStates[vertical].size = new PixelSize(vertical, ar, 600);
 
+        var elements = ()-> [
+            new BarContainer(FixedThikness(new BarAxisSlot ({pos:.5, thikness:1.}, null)), Portion(new BarAxisSlot ({start:0., end:1.}, null))),
+            new BarContainer(FixedThikness(new BarAxisSlot ({pos:0., thikness:1.}, null)), Portion(new BarAxisSlot ({start:0., end:1.}, null)) ),
+        ];
 
-        var quads = [for (i in 0...1)new ColorBars(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getFactorsRef()), Std.int(0xffffff * Math.random())).widget()];
+        var quads = [for (i in 0...1)new ColorBars(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getFactorsRef()), Std.int(0xffffff * Math.random()), elements()).widget()];
 //        quads.push(new Label(b.b(), pcStyle).withText(sampleText).widget());
 //        quads.push(new Label(b.b(), pcStyleC).withText(sampleText).widget());
 //        quads.push(new Label(b.b(), pcStyleR).withText(sampleText).widget());

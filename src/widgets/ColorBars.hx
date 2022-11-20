@@ -15,10 +15,13 @@ class ColorBars extends ShapeWidget<ColorSet> {
     public var q:Bar;
     var color:Int;
     var cp:SolidColorProvider;
+    var elements:Array<BarContainer>;
+    var bars:Array<Bar>;
 
 
-    public function new(w:Widget2D, color) {
+    public function new(w:Widget2D, color, elements) {
         this.color = color;
+        this.elements = elements;
         super(ColorSet.instance, w);
     }
 
@@ -30,14 +33,11 @@ class ColorBars extends ShapeWidget<ColorSet> {
             w.axisStates[a].addSibling(aa.appliers[a]);
         var bb = new BarsBuilder(aspectRatio, lineCalc.lineScales());
         cp = SolidColorProvider.fromInt(color, 128);
-        var elements = [
-            new BarContainer(FixedThikness(new BarAxisSlot ({pos:.5, thikness:1.}, null)), Portion(new BarAxisSlot ({start:0., end:1.}, null))),
-            new BarContainer(FixedThikness(new BarAxisSlot ({pos:0., thikness:1.}, null)), Portion(new BarAxisSlot ({start:0., end:1.}, null)) ),
-        ];
-        for (e in elements) {
+        bars = [ for (e in elements) {
             var sh = bb.create(attrs, e);
             addChild(sh);
-        }
+            sh;
+        } ];
     }
 
     override function onShapesDone() {
