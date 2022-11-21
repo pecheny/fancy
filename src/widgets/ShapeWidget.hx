@@ -47,6 +47,9 @@ class ShapeWidget<T:AttribSet> extends Widgetable implements Renderable<T> {
 
     function onShapesDone() {}
 
+    public function getBuffer():ShapesBuffer<T> {
+        return shapeRenderer;
+    }
 
     public function render(targets:RenderTargets<T>):Void {
         shapeRenderer.render(targets);

@@ -1,4 +1,6 @@
 package widgets;
+import graphics.ShapeRenderer.ShapesBuffer;
+import gl.AttribSet;
 import al.al2d.Widget2D;
 import al.core.AxisApplier;
 import Axis2D;
@@ -14,7 +16,6 @@ import transform.LineThicknessCalculator;
 class ColorBars extends ShapeWidget<ColorSet> {
     public var q:Bar;
     var color:Int;
-    var cp:SolidColorProvider;
     var elements:Array<BarContainer>;
     var bars:Array<Bar>;
 
@@ -32,24 +33,44 @@ class ColorBars extends ShapeWidget<ColorSet> {
         for (a in Axis2D)
             w.axisStates[a].addSibling(aa.appliers[a]);
         var bb = new BarsBuilder(aspectRatio, lineCalc.lineScales());
-        cp = SolidColorProvider.fromInt(color, 128);
         bars = [ for (e in elements) {
             var sh = bb.create(attrs, e);
             addChild(sh);
             sh;
         } ];
     }
+}
 
-    override function onShapesDone() {
+class ShapesColorAssigner<T:AttribSet> {
+    var attrs:T;
+    var cp:SolidColorProvider;
+    var buffer:ShapesBuffer<T>;
+    var color:Int = -1;
+
+
+    public function new(attrs, color, buffer):Void {
+        this.attrs = attrs;
+        this.buffer = buffer;
+        cp = new SolidColorProvider(0,0,0);
         setColor(color);
+        this.buffer.onInit.listen(fillBuffer);
     }
 
+    function fillBuffer() {
+        if (!buffer.isInited())
+            return;
+        MeshUtilss.writeInt8Attribute(attrs, buffer.getBuffer(), AttribAliases.NAME_COLOR_IN, 0, buffer.getVertCount(), cp.getValue);
+    }
 
     public function setColor(c:Int) {
+        if (color == c)
+            return;
         cp.setColor(c);
-        MeshUtilss.writeInt8Attribute(attrs, @:privateAccess shapeRenderer.buffer, AttribAliases.NAME_COLOR_IN, 0, shapeRenderer.getVertCount(), cp.getValue);
+        fillBuffer();
+        color = c;
     }
 }
+
 class Axis2DApplier {
     public var appliers(default, null):ReadOnlyAVector2D<StorageAxisApplier>;
     var target:LineThicknessCalculator;
