@@ -49,11 +49,11 @@ class FancyPg extends FuiAppBase {
         <drawcall type="text" font=""/>
         </container>';
         fuiBuilder.createContainer(root, Xml.parse(dl).firstElement());
+
         var container:Sprite = root.getComponent(Sprite);
-        for (i in 0...container.numChildren) {
-            trace(container.getChildAt(i));
-        }
         addChild(container);
+
+
         var pxStyle = fuiBuilder.textStyles.newStyle("px")
         .withSizeInPixels(64)
         .build();

@@ -2,7 +2,6 @@ package ;
 import a2d.Stage;
 import macros.AVConstructor;
 import Axis2D;
-import a2d.AspectRatioProvider;
 import openfl.events.Event;
 class StageAspectKeeper implements Stage {
     var base:Float;
