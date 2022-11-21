@@ -1,4 +1,5 @@
 package widgets;
+import graphics.ShapesBuffer;
 import graphics.ShapeRenderer;
 import al.al2d.Widget2D;
 import widgets.Widgetable;

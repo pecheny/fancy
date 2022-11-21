@@ -1,5 +1,6 @@
 package ;
 
+import graphics.ShapesColorAssigner;
 import gl.sets.ColorSet;
 import graphics.shapes.Bar;
 import a2d.Stage;
@@ -23,7 +24,7 @@ import scroll.ScrollboxItem;
 import a2d.AspectRatioProvider;
 import utils.DummyEditorField;
 import widgets.Button;
-import widgets.ColorBars;
+import widgets.BarWidget;
 import widgets.Label;
 using transform.LiquidTransformer;
 using FancyPg.Utils;
@@ -88,8 +89,9 @@ class FancyPg extends FuiAppBase {
         ];
 
         function cqFac() {
-            var cq = new ColorBars(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getFactorsRef()), Std.int(0xffffff * Math.random()), elements());
-            var colors = new ShapesColorAssigner(ColorSet.instance, 0, cq.getBuffer());
+            var attrs = ColorSet.instance;
+            var cq = new BarWidget(attrs, b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getFactorsRef()),  elements());
+            var colors = new ShapesColorAssigner(attrs, 0, cq.getBuffer());
             return cq;
         }
         var quads = [for (i in 0...1)cqFac().widget()];
