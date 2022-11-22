@@ -1,41 +1,97 @@
 package widgets;
+import transform.LiquidTransformer;
 import al.al2d.Widget2D;
-import data.aliases.AttribAliases;
 import gl.sets.ColorSet;
 import graphics.shapes.QuadGraphicElement;
+import graphics.ShapesColorAssigner;
+import input.core.ClicksInputSystem.ClickTargetViewState;
 import widgets.ShapeWidget;
-import haxe.io.Bytes;
-import mesh.MeshUtilss;
-import mesh.providers.AttrProviders.SolidColorProvider;
+import Axis2D;
+import widgets.ButtonBase;
+class ColouredQuad  {
 
-class ColouredQuad extends ShapeWidget<ColorSet> {
-    public var q:QuadGraphicElement<ColorSet>;
-    var color:Int;
-    var cp:SolidColorProvider;
-
-    public function new(w:Widget2D, color) {
-        this.color = color;
-//        buffer = Bytes.alloc(4 * ColorSet.instance.stride);
-//        posWriter = ColorSet.instance.getWriter(AttribAliases.NAME_POSITION);
-        cp = SolidColorProvider.fromInt(color, 128);
-        super(ColorSet.instance, w);
+    public static function flatClolorQuad(w:Widget2D):ShapeWidget<ColorSet> {
+        var attrs = ColorSet.instance;
+        var shw = new ShapeWidget(attrs, w);
+        shw.addChild(new QuadGraphicElement(attrs));
+        var colors = new ShapesColorAssigner(attrs, 0, shw.getBuffer());
+        var viewProc:ClickViewProcessor = w.entity.getComponent(ClickViewProcessor);
+        if (viewProc!=null) {
+            viewProc.addHandler(new InteractiveColors(colors.setColor).viewHandler);
+            viewProc.addHandler(new InteractiveTransform(w).viewHandler);
+        }
+        return shw;
+    }
+}
+class InteractiveColors {
+    var colors:Map<ClickTargetViewState, Int>;
+    var target:Int->Void;
+    public function new(target) {
+        this.target = target;
+        colors = ClickColorSet.default_set;
     }
 
-    override function createShapes() {
-        var q = new QuadGraphicElement(ColorSet.instance);
-        addChild(q);
+    function setColor(c:Int) {
+        target(c);
     }
 
-    override function onShapesDone() {
-        setColor(color);
+    public function viewHandler(st:ClickTargetViewState):Void {
+        setColor(colors[st]);
+    }
+}
+
+class InteractiveTransform extends Widgetable {
+    @:once var transformer:LiquidTransformer;
+    var state:ClickTargetViewState = Idle;
+    public function new(w:Widget2D) {
+        super(w);
+    }
+
+    override public function init() {
+        viewHandler(state);
     }
 
 
-    public function setColor(c:Int) {
-        color = c;
-        if (!inited)
+    function rewritePos() {
+        for (a in Axis2D) {
+            var as = w.axisStates[a];
+            as.apply(as.getPos(), as.getSize());
+        }
+    }
+
+
+    public function viewHandler(st:ClickTargetViewState):Void {
+        state = st;
+        if (!_inited)
             return;
-        cp.setColor(c);
-        MeshUtilss.writeInt8Attribute(attrs, @:privateAccess shapeRenderer.buffer, AttribAliases.NAME_COLOR_IN, 0, shapeRenderer.getVertCount(), cp.getValue);
+        switch st {
+            case Idle : release();
+            case Pressed : press();
+            case PressedOutside : press();
+            case Hovered : release();
+        }
     }
+
+
+
+    function press():Void {
+        var ox = 0.005 / w.axisStates[horizontal].getSize();
+        var oy = 0.005 / w.axisStates[vertical].getSize();
+        transformer.setBounds(ox, oy, 1 + ox * 2, 1 + oy * 2);
+        rewritePos();
+    }
+
+    function release():Void {
+        transformer.setBounds(0, 0, 1, 1);
+        rewritePos();
+    }
+}
+
+class ClickColorSet {
+    @:isVar public static var default_set(default, null):Map<ClickTargetViewState, Int> = [
+        Idle => 0xff0000,
+        Hovered => 0xffa0a0,
+        Pressed => 0xffa0a0,
+        PressedOutside => 0xff0000,
+    ];
 }
