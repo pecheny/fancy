@@ -81,38 +81,3 @@ class PlaceholderBuilderBase<T:AxisFactory> {
 interface AxisFactory {
     function create():AxisState;
 }
-
-//
-//class PlaceholderBuilder extends PlaceholderBuilderBase<SimpleAxisFactory> {
-//    public function new() {
-//        factories = new AxisCollection2D();
-//        for (a in Axis2D.keys)
-//            factories[a] = new SimpleAxisFactory();
-//    }
-//
-//    public function h(t:SizeType, v:Float) {
-//        factories[horizontal].type = t;
-//        factories[horizontal].value = v;
-//        return this;
-//    }
-//
-//    public function v(t:SizeType, v:Float) {
-//        factories[vertical].type = t;
-//        factories[vertical].value = v;
-//        return this;
-//    }
-//}
-//
-//class SimpleAxisFactory implements AxisFactory {
-//    public var type:SizeType = portion;
-//    public var value:Float;
-//
-//    public function new() {}
-//
-//    public function create() {
-//        return new AxisState(new Position(), new Size(type, value ));
-//    }
-//}
-//
-
-

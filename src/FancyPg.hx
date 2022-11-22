@@ -42,7 +42,6 @@ class FancyPg extends FuiAppBase {
         root.addComponentByType(AspectRatioProvider, fuiBuilder.ar);
         root.addComponentByType(WindowSizeProvider, fuiBuilder.ar);
         root.addComponentByType(Stage, fuiBuilder.ar);
-//        root.addComponentByName("ROAxisCollection2D_windowSize", fuiBuilder.ar.getWindowSize());
         fuiBuilder.configureInput(root);
 
         var dl =

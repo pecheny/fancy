@@ -1,12 +1,12 @@
 package ;
-import Axis.ROAxisCollection2D;
+import Axis2D.ReadOnlyAVector2D;
+import a2d.AspectRatioProvider;
 import algl.Builder.PlaceholderBuilderGl;
 import al.Builder as WB;
 import al.openfl.StageAspectResizer;
 import ec.Entity;
 import FuiBuilder;
 import openfl.display.Sprite;
-import transform.AspectRatioProvider;
 import widgets.Label;
 import algl.WidgetSizeTypeGl;
 using al.Builder ;
@@ -19,7 +19,7 @@ class NewBuilder extends FuiAppBase {
         fuiBuilder.addBmFont("", "Assets/heaps-fonts/robo.fnt"); // todo
         root.addComponentByName(Entity.getComponentId(AspectRatioProvider), fuiBuilder.ar);
 //        root.addComponentByType(Size2D, fuiBuilder.ar);
-        root.addComponentByName(Entity.getComponentId(ROAxisCollection2D) + "_windowSize", fuiBuilder.ar.getWindowSize());
+        root.addComponentByName(Entity.getComponentId(ReadOnlyAVector2D) + "_windowSize", fuiBuilder.ar.getWindowSize());
         fuiBuilder.configureInput(root);
 
         var dl =
