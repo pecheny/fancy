@@ -21,8 +21,8 @@ class ShapeWidget<T:AttribSet> extends Widgetable implements Renderable<T> {
 
     public function new(attrs:T, w:Widget2D) {
         this.attrs = attrs;
-        super(w);
         shapeRenderer = new ShapeRenderer(attrs);
+        super(w);
         var drawcallsData = DrawcallDataProvider.get(attrs, w.entity);
         drawcallsData.views.push(this);
         new CtxWatcher(Drawcalls, w.entity);

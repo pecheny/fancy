@@ -5,6 +5,7 @@ import ec.Entity;
 class Widgetable {
     var w:Widget2D;
     var entity:Entity;
+
     public function new(w:Widget2D) {
         this.w = w;
         this.entity = w.entity;
@@ -12,9 +13,9 @@ class Widgetable {
         _init(w.entity.parent);
     }
 
-    function _init(e:Entity){}
-    
-    public function init(){}
+    function _init(e:Entity) {}
+
+    public function init() {}
 
     public function widget() {
         return w;
