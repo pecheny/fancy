@@ -23,7 +23,7 @@ class WonderButton extends ButtonBase {
             new BarContainer(FixedThikness(new BarAxisSlot ({pos:0., thikness:1.}, null)), Portion(new BarAxisSlot ({start:0., end:1.}, null)))
         ];
         var bg = new BarWidget(ColorSet.instance, w, elements);
-         new BColors(ColorSet.instance, bg, 1).colorizeQuad(0);
+         new BColors(ColorSet.instance, bg, 1).colorizeQuad(0x1e1e1e);
         var colors = new BColors(ColorSet.instance, bg, 0);
         var viewProc:ClickViewProcessor = w.entity.getComponent(ClickViewProcessor);
         if (viewProc!=null) {

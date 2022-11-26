@@ -1,4 +1,5 @@
 package widgets;
+import macros.AVConstructor;
 import transform.LiquidTransformer;
 import al.al2d.Widget2D;
 import gl.sets.ColorSet;
@@ -8,7 +9,7 @@ import input.core.ClicksInputSystem.ClickTargetViewState;
 import widgets.ShapeWidget;
 import Axis2D;
 import widgets.ButtonBase;
-class ColouredQuad  {
+class ColouredQuad {
 
     public static function flatClolorQuad(w:Widget2D):ShapeWidget<ColorSet> {
         var attrs = ColorSet.instance;
@@ -16,7 +17,7 @@ class ColouredQuad  {
         shw.addChild(new QuadGraphicElement(attrs));
         var colors = new ShapesColorAssigner(attrs, 0, shw.getBuffer());
         var viewProc:ClickViewProcessor = w.entity.getComponent(ClickViewProcessor);
-        if (viewProc!=null) {
+        if (viewProc != null) {
             viewProc.addHandler(new InteractiveColors(colors.setColor).viewHandler);
             viewProc.addHandler(new InteractiveTransform(w).viewHandler);
         }
@@ -24,11 +25,22 @@ class ColouredQuad  {
     }
 }
 class InteractiveColors {
-    var colors:Map<ClickTargetViewState, Int>;
-    var target:Int->Void;
-    public function new(target) {
+    public static var DEFAULT_COLORS(default, null):AVector<ClickTargetViewState, Int> = AVConstructor.create(
+//    Idle =>
+        0,
+//    Hovered =>
+        0xd46e00,
+//    Pressed =>
+        0xd46e00,
+//    PressedOutside =>
+        0
+    );
+    var colors:AVector<ClickTargetViewState, Int>;
+    var target:Int -> Void;
+
+    public function new(target, colors = null) {
         this.target = target;
-        colors = ClickColorSet.default_set;
+        this.colors = colors == null ? DEFAULT_COLORS : colors;
     }
 
     function setColor(c:Int) {
@@ -43,6 +55,7 @@ class InteractiveColors {
 class InteractiveTransform extends Widgetable {
     @:once var transformer:LiquidTransformer;
     var state:ClickTargetViewState = Idle;
+
     public function new(w:Widget2D) {
         super(w);
     }
@@ -73,7 +86,6 @@ class InteractiveTransform extends Widgetable {
     }
 
 
-
     function press():Void {
         var ox = 0.005 / w.axisStates[horizontal].getSize();
         var oy = 0.005 / w.axisStates[vertical].getSize();
@@ -88,10 +100,5 @@ class InteractiveTransform extends Widgetable {
 }
 
 class ClickColorSet {
-    @:isVar public static var default_set(default, null):Map<ClickTargetViewState, Int> = [
-        Idle => 0xff0000,
-        Hovered => 0xffa0a0,
-        Pressed => 0xffa0a0,
-        PressedOutside => 0xff0000,
-    ];
+
 }
