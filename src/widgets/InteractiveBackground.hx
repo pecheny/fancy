@@ -1,5 +1,5 @@
 package widgets;
-import al.al2d.Widget2D;
+import al.al2d.Placeholder2D;
 import Axis2D;
 import input.core.ClicksInputSystem.ClickTargetViewState;
 import mesh.providers.AttrProviders.SolidColorProvider;
@@ -8,7 +8,7 @@ class InteractiveBackground extends Widgetable {
     var colors:Map<ClickTargetViewState, Int>;
     var bg:ColouredQuad;
 
-    public function new(w:Widget2D) {
+    public function new(w:Placeholder2D) {
         super(w);
         colors = ClickColorSet.default_set;
         bg = new ColouredQuad(w, colors[ClickTargetViewState.Idle]);

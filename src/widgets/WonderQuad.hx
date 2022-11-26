@@ -1,7 +1,7 @@
 package widgets;
 import a2d.Stage;
 import graphics.ShapesColorAssigner;
-import al.al2d.Widget2D;
+import al.al2d.Placeholder2D;
 import al.animation.Animation.Animatable;
 import al.animation.Animation.AnimWidget;
 import al.animation.AnimationTreeBuilder;
@@ -11,7 +11,7 @@ class WonderQuad extends BarWidget<ColorSet>  implements Animatable {
     var tree:AnimWidget;
     var text:String;
     @:once var stage:Stage;
-    public function new(w:Widget2D, c ){
+    public function new(w:Placeholder2D, c ){
         var elements = [
             new BarContainer(Portion(new BarAxisSlot ({start:0., end:1.}, null)), Portion(new BarAxisSlot ({start:0., end:1.}, null)) ),
         ];

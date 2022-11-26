@@ -1,5 +1,5 @@
 package htext;
-import al.al2d.Widget2D;
+import al.al2d.Placeholder2D;
 import al.core.AxisApplier;
 import Axis2D;
 import htext.style.TextStyleContext;
@@ -9,7 +9,7 @@ class TextAutoWidth implements AxisApplier {
     var tr:TransformerBase;
     var ctx:TextStyleContext;
 
-    public function new(w:Widget2D, l:TextLayouter, tr, ctx) {
+    public function new(w:Placeholder2D, l:TextLayouter, tr, ctx) {
         this.textLayouter = l;
         this.tr = tr;
         this.ctx = ctx;

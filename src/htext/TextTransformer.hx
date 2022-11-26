@@ -1,5 +1,5 @@
 package htext;
-import al.al2d.Widget2D;
+import al.al2d.Placeholder2D;
 import algl.TransformatorAxisApplier;
 import htext.style.TextStyleContext;
 import transform.TransformerBase;
@@ -22,7 +22,7 @@ class TextTransformer extends TransformerBase {
         return r;
     }
 
-    public static function withTextTransform(w:Widget2D, aspectRatio, style) {
+    public static function withTextTransform(w:Placeholder2D, aspectRatio, style) {
         var transformer = new TextTransformer(w, aspectRatio, style);
         for (a in Axis2D) {
             var applier2 = new TransformatorAxisApplier(transformer, a);

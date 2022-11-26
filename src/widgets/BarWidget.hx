@@ -1,5 +1,5 @@
 package widgets;
-import al.al2d.Widget2D;
+import al.al2d.Placeholder2D;
 import al.core.AxisApplier;
 import Axis2D;
 import gl.AttribSet;
@@ -13,7 +13,7 @@ class BarWidget<T:AttribSet> extends ShapeWidget<T> {
     var elements:Array<BarContainer>;
     var bars:Array<Bar>;
 
-    public function new(attrs:T, w:Widget2D, elements) {
+    public function new(attrs:T, w:Placeholder2D, elements) {
         this.elements = elements;
         super(attrs, w);
     }

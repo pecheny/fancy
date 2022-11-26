@@ -1,13 +1,13 @@
 package scroll;
 import macros.AVConstructor;
 import Axis2D;
-import al.al2d.Widget2D;
+import al.al2d.Placeholder2D;
 import al.Builder;
 import scroll.Scrollbox.ScrollboxWidget;
 
 class ScrollboxItem extends ScrollboxWidget {
 
-    public function new(w:Widget2D, content:ScrollableContent, ar) {
+    public function new(w:Placeholder2D, content:ScrollableContent, ar) {
 
 
         var vscroll = new FlatScrollbar(Builder.widget(), ar, vertical);

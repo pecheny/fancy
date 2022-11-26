@@ -1,6 +1,6 @@
 package widgets;
 import al.al2d.Axis2D;
-import al.al2d.Widget2D;
+import al.al2d.Placeholder2D;
 import data.aliases.AttribAliases;
 import ec.CtxWatcher;
 import gl.sets.ColorSet;
@@ -23,7 +23,7 @@ class Slider extends ShapeWidget<ColorSet> {
     var progress:Float;
     var handler:Float->Void;
 
-    public function new(w:Widget2D, direction:Axis2D, h) {
+    public function new(w:Placeholder2D, direction:Axis2D, h) {
         this.handler = h;
         this.color = 0xffffff;
         this.mainAxis = direction;
@@ -113,7 +113,7 @@ class SliderInput implements SwitchableInputTarget<Point> {
 }
 
 class ToWidgetSpace {
-    var w:Widget2D;
+    var w:Placeholder2D;
 
     public function new(w, s) {
         this.w = w;

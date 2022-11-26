@@ -1,12 +1,12 @@
 package widgets;
-import al.al2d.Widget2D;
+import al.al2d.Placeholder2D;
 import ec.Entity;
 @:autoBuild(ec.macros.InitMacro.build())
 class Widgetable {
-    var w:Widget2D;
+    var w:Placeholder2D;
     var entity:Entity;
 
-    public function new(w:Widget2D) {
+    public function new(w:Placeholder2D) {
         this.w = w;
         this.entity = w.entity;
         w.entity.onContext.listen(_init);

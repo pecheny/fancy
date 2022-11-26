@@ -1,7 +1,7 @@
 package widgets;
 import graphics.ShapesBuffer;
 import graphics.ShapeRenderer;
-import al.al2d.Widget2D;
+import al.al2d.Placeholder2D;
 import widgets.Widgetable;
 import ec.CtxWatcher;
 import gl.AttribSet;
@@ -19,7 +19,7 @@ class ShapeWidget<T:AttribSet> extends Widgetable implements Renderable<T> {
     var inited = false;
     var shapeRenderer:ShapeRenderer<T>;
 
-    public function new(attrs:T, w:Widget2D) {
+    public function new(attrs:T, w:Placeholder2D) {
         this.attrs = attrs;
         shapeRenderer = new ShapeRenderer(attrs);
         super(w);

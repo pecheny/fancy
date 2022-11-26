@@ -2,7 +2,7 @@ package scroll;
 import macros.AVConstructor;
 import Axis2D;
 import utils.Mathu;
-import al.al2d.Widget2D;
+import al.al2d.Placeholder2D;
 import al.al2d.Widget2DContainer;
 import al.core.AxisApplier;
 import al.core.WidgetContainer.ContentSizeProvider;
@@ -13,7 +13,7 @@ import ec.Signal;
 class ScrollableContent extends Widgetable {
     var axis:AVector2D<ScrollableAxisState> = AVConstructor.create(null, null);
 
-    public function new(placeholder:Widget2D) {
+    public function new(placeholder:Placeholder2D) {
         super(placeholder);
     }
 
@@ -43,7 +43,7 @@ class W2CScrollableContent extends ScrollableContent implements ContentSizeProvi
     var w2c:Widget2DContainer;
     public var contentSizeChanged(default, null) = new Signal<Axis2D -> Void>();
 
-    public function new(content:Widget2DContainer, placeholder:Widget2D) {
+    public function new(content:Widget2DContainer, placeholder:Placeholder2D) {
         super(placeholder);
         w2c = content;
         contentSizeChanged = w2c.contentSizeChanged;
@@ -67,7 +67,7 @@ class W2DScrollableContent extends ScrollableContent implements ContentSizeProvi
     var contentSize:AVector2D<Float> = AVConstructor.create(0, 0);
     public var contentSizeChanged(default, null) = new Signal<Axis2D -> Void>();
 
-    public function new(content:Widget2D, placeholder:Widget2D) {
+    public function new(content:Placeholder2D, placeholder:Placeholder2D) {
         super(placeholder);
         var c = content;
         var w = placeholder;

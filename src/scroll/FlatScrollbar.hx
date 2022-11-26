@@ -1,6 +1,6 @@
 package scroll;
 import Axis2D;
-import al.al2d.Widget2D;
+import al.al2d.Placeholder2D;
 import widgets.Widgetable;
 import ec.CtxWatcher;
 import graphics.shapes.RectWeights;
@@ -12,7 +12,7 @@ class FlatScrollbar extends Widgetable implements WidgetScrollbar {
 //    var hanlderPos:Float = 0;
 //    var tr:GFluidTransform;
 
-    public function new(w:Widget2D, aspectRatio:AspectRatio, axis:Axis2D) {
+    public function new(w:Placeholder2D, aspectRatio:AspectRatio, axis:Axis2D) {
         super(w);
 //        this.axis = axis;
 //        new CtxBinder(Drawcalls, w.entity);

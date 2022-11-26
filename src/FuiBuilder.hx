@@ -5,7 +5,7 @@ import shaderbuilder.MSDFShader;
 import shaderbuilder.SnaderBuilder.GeneralPassthrough;
 import algl.Builder.PlaceholderBuilderGl;
 import scroll.ScissorAspect;
-import al.al2d.Widget2D;
+import al.al2d.Placeholder2D;
 import htext.style.TextContextBuilder;
 import a2d.AspectRatio;
 import bindings.GLTexture;
@@ -196,7 +196,7 @@ class FuiBuilder {
         new InputRoot(s, aspects.getFactorsRef());
     }
 
-    public function addScissors(w:Widget2D) {
+    public function addScissors(w:Placeholder2D) {
         var sc = new ScissorAspect(w, ar.getFactorsRef());
         sharedAspects.push(sc);
     }

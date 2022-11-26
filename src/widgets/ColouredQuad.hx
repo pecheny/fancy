@@ -1,7 +1,7 @@
 package widgets;
 import macros.AVConstructor;
 import transform.LiquidTransformer;
-import al.al2d.Widget2D;
+import al.al2d.Placeholder2D;
 import gl.sets.ColorSet;
 import graphics.shapes.QuadGraphicElement;
 import graphics.ShapesColorAssigner;
@@ -11,7 +11,7 @@ import Axis2D;
 import widgets.ButtonBase;
 class ColouredQuad {
 
-    public static function flatClolorQuad(w:Widget2D):ShapeWidget<ColorSet> {
+    public static function flatClolorQuad(w:Placeholder2D):ShapeWidget<ColorSet> {
         var attrs = ColorSet.instance;
         var shw = new ShapeWidget(attrs, w);
         shw.addChild(new QuadGraphicElement(attrs));
@@ -56,7 +56,7 @@ class InteractiveTransform extends Widgetable {
     @:once var transformer:LiquidTransformer;
     var state:ClickTargetViewState = Idle;
 
-    public function new(w:Widget2D) {
+    public function new(w:Placeholder2D) {
         super(w);
     }
 

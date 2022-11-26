@@ -1,5 +1,5 @@
 package widgets;
-import al.al2d.Widget2D;
+import al.al2d.Placeholder2D;
 import ec.CtxWatcher;
 import ec.Entity;
 import input.al.WidgetHitTester;
@@ -13,7 +13,7 @@ class ButtonBase implements ClickTarget<Point> extends Widgetable implements Cli
     public var clickHandler:Void -> Void;
     var interactives:Array<ClickTargetViewState -> Void> = [];
 
-    public function new(w:Widget2D, handler:Void -> Void = null) {
+    public function new(w:Placeholder2D, handler:Void -> Void = null) {
         super(w);
         clickHandler = handler;
         hittester = new WidgetHitTester(w);

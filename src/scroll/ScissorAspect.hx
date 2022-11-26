@@ -1,5 +1,5 @@
 package scroll;
-import al.al2d.Widget2D;
+import al.al2d.Placeholder2D;
 import al.core.AxisApplier;
 import Axis2D;
 import gl.aspects.RenderingAspect;
@@ -58,7 +58,7 @@ class ScissorAspect implements RenderingAspect {
     public var width:Float = 2;
     public var height:Float = 2;
 
-    public function new(w:Widget2D, ar) {
+    public function new(w:Placeholder2D, ar) {
         this.ar = ar;
         stg = openfl.Lib.current.stage;
         w.axisStates[Axis2D.horizontal].addSibling(new DOHorizontalApplier(this));

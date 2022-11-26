@@ -6,7 +6,7 @@ import graphics.shapes.Bar;
 import a2d.Stage;
 import a2d.WindowSizeProvider;
 import al.al2d.Widget2DContainer;
-import al.al2d.Widget2D;
+import al.al2d.Placeholder2D;
 import algl.TransformatorAxisApplier;
 import al.Builder;
 import al.openfl.StageAspectResizer;
@@ -133,7 +133,7 @@ class FancyPg extends FuiAppBase {
 }
 
 class Utils {
-    public static function withLiquidTransform(w:Widget2D, aspectRatio) {
+    public static function withLiquidTransform(w:Placeholder2D, aspectRatio) {
         var transformer = new LiquidTransformer(aspectRatio);
         for (a in Axis2D) {
             var applier2 = new TransformatorAxisApplier(transformer, a);

@@ -1,6 +1,6 @@
 package widgets;
 import Axis2D;
-import al.al2d.Widget2D;
+import al.al2d.Placeholder2D;
 import widgets.Widgetable;
 import ec.CtxWatcher;
 import ec.Entity;
@@ -16,7 +16,7 @@ class SomeButton implements ClickTarget<Point> extends Widgetable {
     var colors:Map<ClickTargetViewState, Int>;
     var bg:ColouredQuad;
 
-    public function new(w:Widget2D, handler:Void -> Void = null) {
+    public function new(w:Placeholder2D, handler:Void -> Void = null) {
         super(w);
         colors = ClickColorSet.default_set;
         bg = new ColouredQuad(w, colors[ClickTargetViewState.Idle]);

@@ -1,5 +1,5 @@
 package scroll;
-import al.al2d.Widget2D;
+import al.al2d.Placeholder2D;
 import al.al2d.Widget2DContainer;
 import al.appliers.ContainerRefresher;
 import al.Builder;
@@ -21,7 +21,7 @@ class ScrollboxWidget extends Widgetable implements VisibleSizeProvider {
 
     var scrollbars:AVector2D<WidgetScrollbar> ;
 
-    public function new(w:Widget2D, content:ScrollableContent, ar) {
+    public function new(w:Placeholder2D, content:ScrollableContent, ar) {
         super(w);
         trace(w.entity.getChildren().length);
         var hitester = new WidgetHitTester(w);
@@ -58,7 +58,7 @@ class ScrollboxWidget extends Widgetable implements VisibleSizeProvider {
         makeContainer(w, [child1, child2]);
     }
 
-    function makeContainer(w:Widget2D, children:Array<Widget2D>) {
+    function makeContainer(w:Placeholder2D, children:Array<Placeholder2D>) {
         var wc = new Widget2DContainer(w, 2);
         for (a in Axis2D) {
             w.axisStates[a].addSibling(new ContainerRefresher(wc));

@@ -1,6 +1,6 @@
 package algl;
 import a2d.Stage;
-import al.al2d.Widget2D;
+import al.al2d.Placeholder2D;
 import al.core.AxisState;
 import al.ec.Entity;
 import al.layouts.data.LayoutData;
@@ -64,11 +64,11 @@ class PlaceholderBuilderBase<T:AxisFactory> {
     var factories:AVector2D<T>;
     var keepStateAfterBuild = false;
 
-    public function b():Widget2D {
+    public function b():Placeholder2D {
         var entity = new Entity();
         var axisStates = AVConstructor.factoryCreate(Axis2D, a -> factories[a].create());
 
-        var w = new Widget2D(axisStates);
+        var w = new Placeholder2D(axisStates);
         entity.addComponent(w);
         if (!keepStateAfterBuild)
             reset();
