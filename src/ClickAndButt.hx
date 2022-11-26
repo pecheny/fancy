@@ -7,7 +7,7 @@ import al.animation.Animation.AnimContainer;
 import al.animation.Animation.AnimWidget;
 import al.animation.AnimationTreeBuilder;
 import al.Builder;
-import al.core.Widget;
+import al.core.Placeholder;
 import al.core.WidgetContainer.AxisKeyBase;
 import al.layouts.OffsetLayout;
 import al.openfl.StageAspectResizer;
@@ -108,14 +108,14 @@ class ClickAndButt extends FuiAppBase implements Updater {
     }
 }
 class WidgetSwitcher<T:AxisKeyBase> {
-    var root:Widget<T>;
-    var current:Widget<T>;
+    var root:Placeholder<T>;
+    var current:Placeholder<T>;
 
-    public function new(root:Widget<T>) {
+    public function new(root:Placeholder<T>) {
         this.root = root;
     }
 
-    public function switchTo(target:Widget<T>) {
+    public function switchTo(target:Placeholder<T>) {
         if (current != null) {
             unbind(current);
             current = null;
@@ -127,7 +127,7 @@ class WidgetSwitcher<T:AxisKeyBase> {
         }
     }
 
-    public function bind(target:Widget<T>) {
+    public function bind(target:Placeholder<T>) {
         for (a in root.axisStates.axes()) {
             var state = root.axisStates[a];
             var chState = target.axisStates[a];
@@ -137,7 +137,7 @@ class WidgetSwitcher<T:AxisKeyBase> {
         root.entity.addChild(target.entity);
     }
 
-    public function unbind(target:Widget<T>) {
+    public function unbind(target:Placeholder<T>) {
         for (a in root.axisStates.axes()) {
             var state = root.axisStates[a];
             var chState = target.axisStates[a];
