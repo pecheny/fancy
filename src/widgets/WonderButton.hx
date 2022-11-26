@@ -1,4 +1,5 @@
 package widgets;
+import widgets.Label.AnimatedLabel;
 import widgets.ButtonBase.ClickViewProcessor;
 import widgets.ColouredQuad;
 import al.animation.Animation.AnimWidget;
@@ -30,7 +31,7 @@ class WonderButton extends ButtonBase {
 //            viewProc.addHandler(new InteractiveTransform(w).viewHandler);
         }
 
-        new Label(w, style).withText(text);
+        var lbl = new AnimatedLabel(w, style).withText(text);
 
         tree = new AnimationTreeBuilder().build(
             { layout:"wholefill",
@@ -44,6 +45,7 @@ class WonderButton extends ButtonBase {
         );
         tree.bindDeep([0, 0], BarAnimationUtils.directUnfold(elements[1]));
         tree.bindDeep([0, 1], BarAnimationUtils.directUnfold(elements[0]));
+        tree.bindDeep([0, 1], lbl.setTime);
     }
 
     public function setTime(t):Void {
