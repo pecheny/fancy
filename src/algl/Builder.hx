@@ -4,12 +4,12 @@ import al.al2d.Widget2D;
 import al.core.AxisState;
 import al.ec.Entity;
 import al.layouts.data.LayoutData;
-import algl.WidgetSizeTypeGl;
+import algl.ScreenMeasureUnit;
 import Axis2D;
 import macros.AVConstructor;
 
 class GlAxisStateFactory implements AxisFactory {
-    public var type:WidgetSizeTypeGl;
+    public var type:ScreenMeasureUnit;
     public var value:Float;
     var screen:Stage;
     var axis:Axis2D;
@@ -39,13 +39,13 @@ class PlaceholderBuilderGl extends PlaceholderBuilderBase<GlAxisStateFactory> {
         factories = AVConstructor.factoryCreate(a -> new GlAxisStateFactory(a, s));
     }
 
-    public function h(t:WidgetSizeTypeGl, v:Float) {
+    public function h(t:ScreenMeasureUnit, v:Float) {
         factories[horizontal].type = t;
         factories[horizontal].value = v;
         return this;
     }
 
-    public function v(t:WidgetSizeTypeGl, v:Float) {
+    public function v(t:ScreenMeasureUnit, v:Float) {
         factories[vertical].type = t;
         factories[vertical].value = v;
         return this;
