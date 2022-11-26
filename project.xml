@@ -4,6 +4,7 @@
     <set name="builds_folder" value="/AndroidBuilds" if="android"/>
 
     <meta title="Sample" package="com.sample.buttons" version="1.0.0" company="Company Name"/>
+<!--    <app main="ClickAndButt" path="${builds_folder}/Export" file="fgui"/>-->
     <app main="FancyPg" path="${builds_folder}/Export" file="fgui"/>
 
     <window antialiasing="4"/>
@@ -15,7 +16,6 @@
     <source path="lib/fsm/src"/>
     <source path="lib/input/src"/>
     <source path="lib/flgl/src"/>
-    <source path="lib/common/src"/>
     <source path="lib/slec/src"/>
     <source path="lib/htext/src"/>
     <source path="lib/taxis/src"/>
@@ -28,11 +28,12 @@
     <haxelib name="utils"/>
 
     <haxelib name="hxcpp-debugger"/>
-    <haxedef name = "alayout" value = "true" />
     <haxedef name = "openfl_disable_context_cache" value = "true" />
     <haxedef name = "openfl_always_render" value = "true" />
 
     <haxedef name = "HXCPP_DEBUGGER"  />
+<!--    <haxedef name = "dump" value="pretty"  />-->
+<!--    <haxeflag name = "&#45;&#45;dump" value="pretty"  />-->
 
     <haxelib name="extension-hub"/>
 

@@ -4,11 +4,11 @@ package algl;
 *  Options of units  to define zize in gl-like environments, when 'native' units depends on window size.
 *  @see al.al2d.AspectEatio
 **/
-@:enum abstract ScreenMeasureUnit(String) {
+@:enum abstract ScreenMeasureUnit(Axis<ScreenMeasureUnit>) to Axis<ScreenMeasureUnit> to Int {
     /** Size inpixels */
-    var px = "px";
+    var px;
     /** Fraction of smallest screen side */
-    var sfr = "sfr";
+    var sfr;
     /** Fraction of the parent. */
-    var pfr = "pfr";
+    var pfr;
 }

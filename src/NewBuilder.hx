@@ -8,7 +8,7 @@ import ec.Entity;
 import FuiBuilder;
 import openfl.display.Sprite;
 import widgets.Label;
-import algl.WidgetSizeTypeGl;
+import algl.ScreenMeasureUnit;
 using al.Builder ;
 class NewBuilder extends FuiAppBase {
     public function new() {

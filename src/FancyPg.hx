@@ -12,7 +12,7 @@ import al.Builder;
 import al.openfl.StageAspectResizer;
 import algl.Builder.PlaceholderBuilderGl;
 import algl.PixelSize;
-import algl.WidgetSizeTypeGl;
+import algl.ScreenMeasureUnit;
 import Axis2D;
 import ec.Entity;
 import FuiBuilder;
@@ -56,13 +56,13 @@ class FancyPg extends FuiAppBase {
 
 
         var pxStyle = fuiBuilder.textStyles.newStyle("px")
-        .withSizeInPixels(64)
+        .withSize(px, 64)
         .build();
 
         var pcStyle = fuiBuilder.textStyles.newStyle("pc")
 //        .withAlign(vertical, Center)
-        .withPercentFontScale(.1)
-        .withPadding(horizontal, 0.3)
+        .withSize(sfr, .1)
+        .withPadding(horizontal, sfr, 0.3)
         .build();
 
         var pcStyleR = fuiBuilder.textStyles.newStyle("pc")
@@ -74,7 +74,7 @@ class FancyPg extends FuiAppBase {
         .build();
 
         var fitStyle = fuiBuilder.textStyles.newStyle("fit")
-        .withFitFontScale(.75)
+        .withSize(pfr, .75)
         .withAlign(horizontal, Center)
         .withAlign(vertical, Center)
         .build();

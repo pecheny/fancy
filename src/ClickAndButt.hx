@@ -12,7 +12,7 @@ import al.core.WidgetContainer.AxisKeyBase;
 import al.layouts.OffsetLayout;
 import al.openfl.StageAspectResizer;
 import algl.Builder.PlaceholderBuilderGl;
-import algl.WidgetSizeTypeGl;
+import algl.ScreenMeasureUnit;
 import Axis2D;
 import ec.Entity;
 import FuiBuilder;
@@ -56,33 +56,17 @@ class ClickAndButt extends FuiAppBase implements Updater {
         addChild(container);
 
         var fitStyle = fuiBuilder.textStyles.newStyle("fit")
-        .withFitFontScale(.75)
+//        .withSizeInPixels(48)
+        .withSize(pfr, .5)
         .withAlign(horizontal, Forward)
-        .withAlign(vertical, Center)
-        .withPadding(horizontal, 0.1)
+        .withAlign(vertical, Backward)
+        .withPadding(horizontal, pfr, 0.33)
+        .withPadding(vertical, pfr, 0.33)
         .build();
 
-        var pcStyle = fuiBuilder.textStyles.newStyle("pc")
-//        .withAlign(vertical, Center)
-        .withPercentFontScale(.1)
-        .withPadding(horizontal, 0.3)
-        .build();
 
         root.addComponent(fitStyle);
 
-        var pcStyleR = fuiBuilder.textStyles.newStyle("pc")
-        .withAlign(horizontal, Backward)
-        .build();
-
-        var pcStyleC = fuiBuilder.textStyles.newStyle("pc")
-        .withAlign(horizontal, Center)
-        .build();
-
-        var fitStyle = fuiBuilder.textStyles.newStyle("fit")
-        .withFitFontScale(.75)
-        .withAlign(horizontal, Center)
-        .withAlign(vertical, Center)
-        .build();
 
         var stage = ar;
 
@@ -343,7 +327,7 @@ class ScreenTwo extends Screen {
         anim.animations.channels.push(h);
     }
 
-   
+
 //    @:once var b:Builder;
 //    @:once var screens:Screens;
 //
