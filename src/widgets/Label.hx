@@ -1,4 +1,7 @@
 package widgets;
+import htext.ITextRender;
+import gl.AttribSet;
+import transform.TransformerBase;
 import htext.TextAutoWidth;
 import htext.TextTransformer;
 import a2d.Stage;
@@ -14,13 +17,30 @@ import htext.TextRender;
 import widgets.Widgetable;
 using htext.TextTransformer;
 
-class Label extends Widgetable {
+typedef Label = MSDFLabel;
+
+class MSDFLabel extends LabelBase<MSDFSet> {
+    public function new(w, tc) {
+        createTextRender = _createTextRender;
+        super(w, tc, MSDFSet.instance);
+    }
+
+    function _createTextRender(attrs:MSDFSet, l, tt:TransformerBase) {
+        var dpiWriter = attrs.getWriter(MSDFSet.NAME_DPI);
+        var smothWr = new SmothnessWriter(dpiWriter[0], l, textStyleContext, tt, stage.getWindowSize());
+        return new TextRender(attrs, l, tt, smothWr);
+    }
+}
+
+class LabelBase<T:AttribSet> extends Widgetable {
     var textStyleContext:TextStyleContext;
     var text:String = "";
-    var render:TextRender<MSDFSet>;
+    var render:ITextRender<T>;
+    var attrs:T;
     @:once var stage:Stage;
 
-    public function new(w, tc) {
+    public function new(w, tc, attrs:T) {
+        this.attrs = attrs;
         this.textStyleContext = tc;
         super(w);
     }
@@ -32,57 +52,40 @@ class Label extends Widgetable {
         return this;
     }
 
+    dynamic function createTextRender(attrs:T, l, tt:TransformerBase):ITextRender<T> {
+        return new TextRender(attrs, l, tt);
+    }
+
     override function init() {
-        var attrs = MSDFSet.instance;
         var l = textStyleContext.createLayouter();
-        var dpiWriter = attrs.getWriter(MSDFSet.NAME_DPI);
         TextTransformer.withTextTransform(w, stage.getFactorsRef(), textStyleContext);
         var tt = w.entity.getComponent(TextTransformer);
-        var smothWr = new SmothnessWriter(dpiWriter[0], l, textStyleContext, tt, stage.getWindowSize());
         var aw = new TextAutoWidth(w, l, tt, textStyleContext);
-        render = new TextRender(attrs, l, tt, smothWr);
+        render = createTextRender(attrs, l, tt);
         render.setText(this.text);
-        var drawcallsData = DrawcallDataProvider.get(MSDFSet.instance, w.entity, textStyleContext.getDrawcallName());
+        var drawcallsData = DrawcallDataProvider.get(attrs, w.entity, textStyleContext.getDrawcallName());
         drawcallsData.views.push(render);
         new CtxWatcher(Drawcalls, w.entity);
     }
 }
 
-class AnimatedLabel extends Widgetable implements Animatable {
-    var textStyleContext:TextStyleContext;
-    var text:String = "";
-    var render:VUnfoldAnimTextRender<MSDFSet>;
-    @:once var stage:Stage;
-
+class AnimatedLabel extends LabelBase<MSDFSet> implements Animatable {
     public function new(w, tc) {
-        this.textStyleContext = tc;
-        super(w);
+        createTextRender = _createTextRender;
+        super(w, tc, MSDFSet.instance);
     }
 
-    public function withText(s) {
-        text = s;
-        if (render != null)
-            render.setText(s);
-        return this;
-    }
+    var _render:VUnfoldAnimTextRender<MSDFSet>;
 
-    override function init() {
-        var attrs = MSDFSet.instance;
-        var l = textStyleContext.createLayouter();
+    function _createTextRender(attrs:MSDFSet, l, tt:TransformerBase):ITextRender<MSDFSet> {
         var dpiWriter = attrs.getWriter(MSDFSet.NAME_DPI);
-        TextTransformer.withTextTransform(w, stage.getFactorsRef(), textStyleContext);
-        var tt = w.entity.getComponent(TextTransformer);
         var smothWr = new SmothnessWriter(dpiWriter[0], l, textStyleContext, tt, stage.getWindowSize());
-        var aw = new TextAutoWidth(w, l, tt, textStyleContext);
-        render = new VUnfoldAnimTextRender(attrs, l, tt, smothWr);
-        render.setText(this.text);
-        var drawcallsData = DrawcallDataProvider.get(MSDFSet.instance, w.entity, textStyleContext.getDrawcallName());
-        drawcallsData.views.push(render);
-        new CtxWatcher(Drawcalls, w.entity);
+        _render = new VUnfoldAnimTextRender(attrs, l, tt, smothWr);
+        return _render;
     }
 
     public function setTime(t:Float):Void {
-        render.setTime(t);
+        _render.setTime(t);
     }
 }
 

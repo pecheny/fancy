@@ -5,7 +5,6 @@ import data.IndexCollection;
 import font.GLGlyphData.TileRecord;
 import font.GLGlyphData;
 import gl.AttribSet;
-import gl.Renderable;
 import gl.RenderTargets;
 import gl.ValueWriter.AttributeWriters;
 import gl.ValueWriter;
@@ -16,7 +15,7 @@ import utils.DynamicBytes;
 /**
 * Version of TextRender with ability to override setChar() for using with animation or custom properties.
 **/
-class DynamicTextRender<T:AttribSet> implements Renderable<T> {
+class DynamicTextRender<T:AttribSet> implements ITextRender<T> {
     static var indices:IndexCollection;
     var value = "";
     var efficientLen = 0;

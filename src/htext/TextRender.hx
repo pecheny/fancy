@@ -5,7 +5,6 @@ import data.IndexCollection;
 import font.GLGlyphData.TileRecord;
 import font.GLGlyphData;
 import gl.AttribSet;
-import gl.Renderable;
 import gl.RenderTargets;
 import gl.ValueWriter.AttributeWriters;
 import gl.ValueWriter;
@@ -16,7 +15,7 @@ import utils.DynamicBytes;
 /**
 * TextRender combines all required from htext and flgl libs to fill haxe.io.Bytes buffer with vertex data of quads according to provided string.
 **/
-class TextRender<T:AttribSet> implements Renderable<T> {
+class TextRender<T:AttribSet> implements ITextRender<T> {
     static var indices:IndexCollection;
     var value = "";
     var efficientLen = 0;
@@ -30,7 +29,7 @@ class TextRender<T:AttribSet> implements Renderable<T> {
     var uvWriter:AttributeWriters ;
     var dpiWriter:AttributeWriters ;
 
-    public function new(attrs:T, layouter, tr, forFill:AttributeFiller) {
+    public function new(attrs:T, layouter, tr, forFill:AttributeFiller = null) {
         this.attrs = attrs;
         this.otherAttributesToFill = forFill;
         this.transformer = tr;

@@ -31,7 +31,8 @@ class WonderButton extends ButtonBase {
 //            viewProc.addHandler(new InteractiveTransform(w).viewHandler);
         }
 
-        var lbl = new AnimatedLabel(w, style).withText(text);
+        var lbl = new AnimatedLabel(w, style);
+        lbl.withText(text);
 
         tree = new AnimationTreeBuilder().build(
             { layout:"wholefill",
