@@ -3,12 +3,12 @@ import a2d.Stage;
 import graphics.ShapesColorAssigner;
 import al.al2d.Placeholder2D;
 import al.animation.Animation.Animatable;
-import al.animation.Animation.AnimWidget;
+import al.animation.Animation.AnimationPlaceholder;
 import al.animation.AnimationTreeBuilder;
 import gl.sets.ColorSet;
 import graphics.shapes.Bar;
 class WonderQuad extends BarWidget<ColorSet>  implements Animatable {
-    var tree:AnimWidget;
+    var tree:AnimationPlaceholder;
     var text:String;
     @:once var stage:Stage;
     public function new(w:Placeholder2D, c ){

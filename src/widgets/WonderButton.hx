@@ -2,7 +2,7 @@ package widgets;
 import widgets.Label.AnimatedLabel;
 import widgets.ButtonBase.ClickViewProcessor;
 import widgets.ColouredQuad;
-import al.animation.Animation.AnimWidget;
+import al.animation.Animation.AnimationPlaceholder;
 import al.animation.AnimationTreeBuilder;
 import data.aliases.AttribAliases;
 import gl.AttribSet;
@@ -13,7 +13,7 @@ import graphics.shapes.Bar;
 import graphics.ShapesBuffer;
 import mesh.providers.AttrProviders.SolidColorProvider;
 class WonderButton extends ButtonBase {
-    var tree:AnimWidget;
+    var tree:AnimationPlaceholder;
 
     public function new(w, h, text, style) {
         super(w, h);

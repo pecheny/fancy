@@ -3,9 +3,9 @@ import al.animation.AnimationTreeBuilder;
 import al.ec.WidgetSwitcher;
 import widgets.Widget;
 import utils.Updatable;
-import al.animation.Animation.AnimWidget;
+import al.animation.Animation.AnimationPlaceholder;
 class Screens implements Updatable {
-    var tree:AnimWidget;
+    var tree:AnimationPlaceholder;
     var time:Float = 0;
     var e1 = (t:Float) -> {
         var a1 = Math.abs((Math.sin(Math.PI * t / 2)));
@@ -70,7 +70,7 @@ class Screens implements Updatable {
 
 
 class Screen extends Widget {
-    var tree:AnimWidget;
+    var tree:AnimationPlaceholder;
 
     public function setT(t:Float) {
         if (tree == null)
