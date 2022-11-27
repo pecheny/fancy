@@ -13,7 +13,7 @@ import input.core.InputSystemsContainer;
 import input.core.SwitchableInputTarget;
 import input.core.SwitchableInputTargets;
 import input.ec.binders.SwitchableInputBinder;
-import input.Point;
+import input.core.Point;
 import scroll.ScrollboxInput;
 
 

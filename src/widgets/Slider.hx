@@ -11,7 +11,7 @@ import input.al.WidgetHitTester;
 import input.core.HitTester;
 import input.core.SwitchableInputTarget;
 import input.ec.binders.SwitchableInputBinder;
-import input.Point;
+import input.core.Point;
 import mesh.MeshUtilss;
 import mesh.providers.AttrProviders.SolidColorProvider;
 import utils.Mathu;

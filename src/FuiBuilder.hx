@@ -23,7 +23,7 @@ import gl.ShaderRegistry;
 import input.core.InputSystemsContainer;
 import input.core.InputTarget;
 import input.ec.binders.SwitchableInputBinder;
-import input.Point;
+import input.core.Point;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
 import openfl.events.Event;

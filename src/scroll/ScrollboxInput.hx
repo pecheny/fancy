@@ -1,5 +1,5 @@
 package scroll;
-import input.Point;
+import input.core.Point;
 import scroll.Scrollbar;
 import scroll.ScrollableContent;
 import input.core.SwitchableInputTarget;
@@ -17,7 +17,7 @@ import Math.abs as abs;
     var open = "open";
     var dragged = "dragged";
 }
-typedef TPos = input.Point;
+typedef TPos = input.core.Point;
 
 
 class ScrollboxInput extends FSM<ScrollboxStateName, ScrollboxInput> implements SwitchableInputTarget<TPos> {
