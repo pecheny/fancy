@@ -4,8 +4,8 @@
     <set name="builds_folder" value="/AndroidBuilds" if="android"/>
 
     <meta title="Sample" package="com.sample.buttons" version="1.0.0" company="Company Name"/>
-<!--    <app main="ClickAndButt" path="${builds_folder}/Export" file="fgui"/>-->
-    <app main="FancyPg" path="${builds_folder}/Export" file="fgui"/>
+    <app main="ClickAndButt" path="${builds_folder}/Export" file="fgui"/>
+<!--    <app main="FancyPg" path="${builds_folder}/Export" file="fgui"/>-->
 
     <window antialiasing="4"/>
     <window background="#303030" fps="60" width="1280" height="960" unless="html5"/>
@@ -25,7 +25,6 @@
     <haxelib name="format"/>
     <haxelib name="openfl"/>
     <haxelib name="hxColorToolkit"/>
-    <haxelib name="utils"/>
 
     <haxelib name="hxcpp-debugger"/>
     <haxedef name = "openfl_disable_context_cache" value = "true" />
