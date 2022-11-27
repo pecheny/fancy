@@ -5,7 +5,7 @@ import data.IndexCollection;
 import font.GLGlyphData.TileRecord;
 import font.GLGlyphData;
 import gl.AttribSet;
-import gl.RenderTargets;
+import gl.RenderTarget;
 import gl.ValueWriter.AttributeWriters;
 import gl.ValueWriter;
 import htext.TextLayouter;
@@ -86,7 +86,7 @@ class TextRender<T:AttribSet> implements ITextRender<T> {
         dirty = false;
     }
 
-    public function render(targets:RenderTargets<T>):Void {
+    public function render(targets:RenderTarget<T>):Void {
         if (dirty) fillBuffer();
         targets.blitIndices(indices, efficientLen * 6);
         targets.blitVerts(bytes.bytes, efficientLen * 4);

@@ -8,7 +8,7 @@ import gl.AttribSet;
 import gl.ec.DrawcallDataProvider;
 import gl.ec.Drawcalls;
 import gl.Renderable;
-import gl.RenderTargets;
+import gl.RenderTarget;
 import graphics.shapes.Shape;
 import a2d.AspectRatioProvider;
 import transform.LiquidTransformer;
@@ -52,7 +52,7 @@ class ShapeWidget<T:AttribSet> extends Widget implements Renderable<T> {
         return shapeRenderer;
     }
 
-    public function render(targets:RenderTargets<T>):Void {
+    public function render(targets:RenderTarget<T>):Void {
         shapeRenderer.render(targets);
     }
 
