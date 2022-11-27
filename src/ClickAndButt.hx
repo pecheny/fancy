@@ -4,11 +4,9 @@ import a2d.Stage;
 import a2d.WindowSizeProvider;
 import al.al2d.Widget2DContainer;
 import al.animation.Animation.AnimContainer;
-import al.animation.Animation.AnimWidget;
 import al.animation.AnimationTreeBuilder;
 import al.Builder;
-import al.core.Placeholder;
-import al.core.WidgetContainer.AxisKeyBase;
+import al.ec.WidgetSwitcher;
 import al.layouts.OffsetLayout;
 import al.openfl.StageAspectResizer;
 import algl.Builder.PlaceholderBuilderGl;
@@ -20,9 +18,9 @@ import htext.style.TextStyleContext;
 import input.al.ButtonPanel;
 import openfl.display.Sprite;
 import openfl.events.Event;
+import ui.Screens;
 import utils.Updatable.Updater;
 import utils.Updatable;
-import widgets.Widget;
 import widgets.WonderButton;
 import widgets.WonderQuad;
 
@@ -107,123 +105,9 @@ class ClickAndButt extends FuiAppBase implements Updater {
         upds.remove(e.update);
     }
 }
-class WidgetSwitcher<T:AxisKeyBase> {
-    var root:Placeholder<T>;
-    var current:Placeholder<T>;
-
-    public function new(root:Placeholder<T>) {
-        this.root = root;
-    }
-
-    public function switchTo(target:Placeholder<T>) {
-        if (current != null) {
-            unbind(current);
-            current = null;
-        }
-
-        if (target != null) {
-            bind(target);
-            current = target;
-        }
-    }
-
-    public function bind(target:Placeholder<T>) {
-        for (a in root.axisStates.axes()) {
-            var state = root.axisStates[a];
-            var chState = target.axisStates[a];
-            state.addSibling(chState);
-            chState.apply(state.getPos(), state.getSize());
-        }
-        root.entity.addChild(target.entity);
-    }
-
-    public function unbind(target:Placeholder<T>) {
-        for (a in root.axisStates.axes()) {
-            var state = root.axisStates[a];
-            var chState = target.axisStates[a];
-            state.removeSibling(chState);
-        }
-        root.entity.removeChild(target.entity);
-    }
-}
-class Screens implements Updatable {
-    var tree:AnimWidget;
-    var time:Float = 0;
-    var e1 = (t:Float) -> {
-        var a1 = Math.abs((Math.sin(Math.PI * t / 2)));
-        return Math.pow(a1, 2);
-    }
-
-    var e2 = t -> {
-        var a1 = Math.abs((Math.sin(Math.PI * t / 2)));
-        return Math.pow(a1, 2);
-    }
-
-    var duration = 2.;
-    public inline static var ONE:String = "one";
-    public inline static var TWO:String = "TWO";
-
-    public var screens:Map<String, Screen> = new Map();
-    public var switcher:WidgetSwitcher<Axis2D>;
-    var prev:Screen;
-//    var next:Screen;
-    var current:Screen;
-
-    public function new(switcher) {
-        this.switcher = switcher;
-        tree = new AnimationTreeBuilder().build(
-            {
-                layout:"portion",
-                children:[
-                    {size:{value:1. }},
-                    {size:{value:1. }},
-                ]
-            }
-        );
-        tree.bindAnimation(0, t -> {if (prev != null) prev.setT(1 - t);});
-        tree.bindAnimation(1, t -> {if (current != null) current.setT(t);});
-    }
-
-    public function add(name, screen) {
-        screens[name] = screen;
-        switcher.bind(screen.widget());
-        switcher.unbind(screen.widget());
-    }
-
-    public function switchTo(name) {
-        time = current != null ? 0 : 0.5;
-        prev = current;
-        current = screens[name];
-        switcher.bind(current.widget());
-    }
-
-    public function update(dt:Float):Void {
-        if (time == 1 || current == null)
-            return;
-        time += dt / duration;
-        if (time >= 1) time = 1;
-        tree.setTime(time);
-        if (time == 1 && prev != null) {
-            switcher.unbind(prev.widget());
-            prev = null;
-        }
-    }
-}
 
 
-class Screen extends Widget {
-    var tree:AnimWidget;
 
-    public function setT(t:Float) {
-        if (tree == null)
-            return;
-        tree.setTime(t);
-        for (a in Axis2D) {
-            var axis = w.axisStates[a];
-            axis.apply(axis.getPos(), axis.getSize());
-        }
-    }
-}
 class ScreenOne extends Screen {
 
     @:once var b:PlaceholderBuilderGl;
