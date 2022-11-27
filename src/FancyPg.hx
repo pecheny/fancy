@@ -89,7 +89,7 @@ class FancyPg extends FuiAppBase {
 
         function cqFac() {
             var attrs = ColorSet.instance;
-            var cq = new BarWidget(attrs, b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getFactorsRef()),  elements());
+            var cq = new BarWidget(attrs, b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()),  elements());
             var colors = new ShapesColorAssigner(attrs, 0, cq.getBuffer());
             return cq;
         }
@@ -97,12 +97,12 @@ class FancyPg extends FuiAppBase {
 //        quads.push(new Label(b.b(), pcStyle).withText(sampleText).widget());
 //        quads.push(new Label(b.b(), pcStyleC).withText(sampleText).widget());
 //        quads.push(new Label(b.b(), pcStyleR).withText(sampleText).widget());
-        quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getFactorsRef()), null, "Button caption", fitStyle).widget());
-        quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getFactorsRef()), null, "Button caption", fitStyle).widget());
-        quads.push(new Button(pxW.withLiquidTransform(ar.getFactorsRef()), null, "Button caption", fitStyle).widget());
+        quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "Button caption", fitStyle).widget());
+        quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "Button caption", fitStyle).widget());
+        quads.push(new Button(pxW.withLiquidTransform(ar.getAspectRatio()), null, "Button caption", fitStyle).widget());
 
 
-//        quads.push(new ColouredQuad(b.b().withLiquidTransform(ar.getFactorsRef()), 0x303090).widget());
+//        quads.push(new ColouredQuad(b.b().withLiquidTransform(ar.getAspectRatio()), 0x303090).widget());
 
 
         var container1 = Builder.v().withChildren(quads);
@@ -115,7 +115,7 @@ class FancyPg extends FuiAppBase {
         );
 
         placeholder.entity.name = "placeholder";
-        var scroller = new ScrollboxItem(placeholder, scroll, ar.getFactorsRef());
+        var scroller = new ScrollboxItem(placeholder, scroll, ar.getAspectRatio());
         fuiBuilder.addScissors(scroller.widget());
         fuiBuilder.createContainer(scroller.widget().entity, Xml.parse(dl).firstElement());
 

@@ -37,7 +37,7 @@ class StageAspectKeeper implements Stage {
         return aspects[cmp];
     }
 
-    public function getFactorsRef():ReadOnlyAVector2D<Float> {
+    public function getAspectRatio():ReadOnlyAVector2D<Float> {
         return aspects;
     }
 

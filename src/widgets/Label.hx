@@ -58,7 +58,7 @@ class LabelBase<T:AttribSet> extends Widget {
 
     override function init() {
         var l = textStyleContext.createLayouter();
-        TextTransformer.withTextTransform(w, stage.getFactorsRef(), textStyleContext);
+        TextTransformer.withTextTransform(w, stage.getAspectRatio(), textStyleContext);
         var tt = w.entity.getComponent(TextTransformer);
         var aw = new TextAutoWidth(w, l, tt, textStyleContext);
         render = createTextRender(attrs, l, tt);

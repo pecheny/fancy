@@ -153,11 +153,11 @@ class FuiBuilder {
         var aspects = root.getComponent(AspectRatioProvider);
         var s = new InputSystemsContainer(new Point(), null);
         root.addComponent(new SwitchableInputBinder<Point>(s));
-        new InputRoot(s, aspects.getFactorsRef());
+        new InputRoot(s, aspects.getAspectRatio());
     }
 
     public function addScissors(w:Placeholder2D) {
-        var sc = new ScissorAspect(w, ar.getFactorsRef());
+        var sc = new ScissorAspect(w, ar.getAspectRatio());
         sharedAspects.push(sc);
     }
 }

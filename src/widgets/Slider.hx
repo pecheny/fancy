@@ -43,7 +43,7 @@ class Slider extends ShapeWidget<ColorSet> {
     }
 
     override function createShapes() {
-        var aspectRatio = ratioProvider.getFactorsRef();
+        var aspectRatio = ratioProvider.getAspectRatio();
         q = new ProgressBar(ColorSet.instance, transformer.transformValue);
         q.setVal(mainAxis, progress);
         children.push(q);

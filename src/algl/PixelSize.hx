@@ -17,6 +17,6 @@ class PixelSize implements ISize {
     }
 
     public function getFixed() {
-        return 2 * screen.getFactorsRef()[a] * value / screen.getWindowSize()[a];
+        return 2 * screen.getAspectRatio()[a] * value / screen.getWindowSize()[a];
     }
 }

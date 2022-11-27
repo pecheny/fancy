@@ -19,7 +19,7 @@ class BarWidget<T:AttribSet> extends ShapeWidget<T> {
     }
 
     override function createShapes() {
-        var aspectRatio = ratioProvider.getFactorsRef();
+        var aspectRatio = ratioProvider.getAspectRatio();
         var lineCalc = new LineThicknessCalculator(aspectRatio);
         var aa = new Axis2DApplier(lineCalc);
         for (a in Axis2D)
