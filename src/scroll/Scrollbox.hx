@@ -6,7 +6,7 @@ import al.Builder;
 import al.layouts.data.LayoutData.FixedSize;
 import al.layouts.PortionLayout;
 import Axis2D;
-import widgets.Widgetable;
+import widgets.Widget;
 import ec.CtxWatcher;
 import input.al.WidgetHitTester;
 import input.core.InputSystemsContainer;
@@ -17,7 +17,7 @@ import input.Point;
 import scroll.ScrollboxInput;
 
 
-class ScrollboxWidget extends Widgetable implements VisibleSizeProvider {
+class ScrollboxWidget extends Widget implements VisibleSizeProvider {
 
     var scrollbars:AVector2D<WidgetScrollbar> ;
 

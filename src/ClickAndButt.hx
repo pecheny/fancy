@@ -22,7 +22,7 @@ import openfl.display.Sprite;
 import openfl.events.Event;
 import utils.Updatable.Updater;
 import utils.Updatable;
-import widgets.Widgetable;
+import widgets.Widget;
 import widgets.WonderButton;
 import widgets.WonderQuad;
 
@@ -211,7 +211,7 @@ class Screens implements Updatable {
 }
 
 
-class Screen extends Widgetable {
+class Screen extends Widget {
     var tree:AnimWidget;
 
     public function setT(t:Float) {

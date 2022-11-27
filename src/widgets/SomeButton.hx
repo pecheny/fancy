@@ -1,7 +1,7 @@
 package widgets;
 import Axis2D;
 import al.al2d.Placeholder2D;
-import widgets.Widgetable;
+import widgets.Widget;
 import ec.CtxWatcher;
 import ec.Entity;
 import input.al.WidgetHitTester;
@@ -10,7 +10,7 @@ import input.core.ClicksInputSystem.ClickTargetViewState;
 import input.ec.binders.ClickInputBinder;
 import input.Point;
 import mesh.providers.AttrProviders.SolidColorProvider;
-class SomeButton implements ClickTarget<Point> extends Widgetable {
+class SomeButton implements ClickTarget<Point> extends Widget {
     var hittester:WidgetHitTester;
     public var clickHandler:Void -> Void;
     var colors:Map<ClickTargetViewState, Int>;

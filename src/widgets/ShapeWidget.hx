@@ -2,7 +2,7 @@ package widgets;
 import graphics.ShapesBuffer;
 import graphics.ShapeRenderer;
 import al.al2d.Placeholder2D;
-import widgets.Widgetable;
+import widgets.Widget;
 import ec.CtxWatcher;
 import gl.AttribSet;
 import gl.ec.DrawcallDataProvider;
@@ -13,7 +13,7 @@ import graphics.shapes.Shape;
 import a2d.AspectRatioProvider;
 import transform.LiquidTransformer;
 
-class ShapeWidget<T:AttribSet> extends Widgetable implements Renderable<T> {
+class ShapeWidget<T:AttribSet> extends Widget implements Renderable<T> {
 
     var attrs:T;
     var inited = false;

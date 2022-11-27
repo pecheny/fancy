@@ -1,11 +1,11 @@
 package scroll;
 import Axis2D;
 import al.al2d.Placeholder2D;
-import widgets.Widgetable;
+import widgets.Widget;
 import ec.CtxWatcher;
 import graphics.shapes.RectWeights;
 import a2d.AspectRatio;
-class FlatScrollbar extends Widgetable implements WidgetScrollbar {
+class FlatScrollbar extends Widget implements WidgetScrollbar {
 //    var handler:QuadGraphicElement<ColorSet>;
 //    var axis:Axis2D;
 //    var handlerSize:Float = 0.5;

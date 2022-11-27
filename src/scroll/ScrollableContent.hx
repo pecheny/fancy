@@ -6,11 +6,11 @@ import al.al2d.Placeholder2D;
 import al.al2d.Widget2DContainer;
 import al.core.AxisApplier;
 import al.core.WidgetContainer.ContentSizeProvider;
-import widgets.Widgetable;
+import widgets.Widget;
 import ec.Signal;
 
 // provides content size, store ofset, apply offset
-class ScrollableContent extends Widgetable {
+class ScrollableContent extends Widget {
     var axis:AVector2D<ScrollableAxisState> = AVConstructor.create(null, null);
 
     public function new(placeholder:Placeholder2D) {

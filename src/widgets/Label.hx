@@ -14,7 +14,7 @@ import htext.animation.VUnfoldAnimTextRender;
 import htext.SmothnessWriter;
 import htext.style.TextStyleContext;
 import htext.TextRender;
-import widgets.Widgetable;
+import widgets.Widget;
 using htext.TextTransformer;
 
 typedef Label = MSDFLabel;
@@ -32,7 +32,7 @@ class MSDFLabel extends LabelBase<MSDFSet> {
     }
 }
 
-class LabelBase<T:AttribSet> extends Widgetable {
+class LabelBase<T:AttribSet> extends Widget {
     var textStyleContext:TextStyleContext;
     var text:String = "";
     var render:ITextRender<T>;

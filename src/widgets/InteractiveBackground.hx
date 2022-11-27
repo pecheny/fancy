@@ -3,8 +3,8 @@ import al.al2d.Placeholder2D;
 import Axis2D;
 import input.core.ClicksInputSystem.ClickTargetViewState;
 import mesh.providers.AttrProviders.SolidColorProvider;
-import widgets.Widgetable;
-class InteractiveBackground extends Widgetable {
+import widgets.Widget;
+class InteractiveBackground extends Widget {
     var colors:Map<ClickTargetViewState, Int>;
     var bg:ColouredQuad;
 

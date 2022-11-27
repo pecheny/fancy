@@ -52,7 +52,7 @@ class InteractiveColors {
     }
 }
 
-class InteractiveTransform extends Widgetable {
+class InteractiveTransform extends Widget {
     @:once var transformer:LiquidTransformer;
     var state:ClickTargetViewState = Idle;
 

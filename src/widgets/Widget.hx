@@ -2,7 +2,7 @@ package widgets;
 import al.al2d.Placeholder2D;
 import ec.Entity;
 @:autoBuild(ec.macros.InitMacro.build())
-class Widgetable {
+class Widget {
     var w:Placeholder2D;
     var entity:Entity;
 
