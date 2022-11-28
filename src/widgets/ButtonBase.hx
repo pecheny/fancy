@@ -2,7 +2,7 @@ package widgets;
 import al.al2d.Placeholder2D;
 import ec.CtxWatcher;
 import ec.Entity;
-import input.al.WidgetHitTester;
+import widgets.utils.WidgetHitTester;
 import input.core.ClicksInputSystem.ClickTarget;
 import input.core.ClicksInputSystem.ClickTargetViewState;
 import ecbind.ClickInputBinder;

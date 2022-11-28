@@ -1,6 +1,6 @@
 package ;
 import ec.CtxWatcher;
-import input.al.WidgetHitTester;
+import widgets.utils.WidgetHitTester;
 import ecbind.ClickInputBinder;
 import input.core.ClicksInputSystem;
 import a2d.AspectRatio;

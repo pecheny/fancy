@@ -8,7 +8,7 @@ import al.layouts.PortionLayout;
 import Axis2D;
 import widgets.Widget;
 import ec.CtxWatcher;
-import input.al.WidgetHitTester;
+import widgets.utils.WidgetHitTester;
 import input.core.InputSystemsContainer;
 import input.core.InputSystem;
 import ecbind.InputBinder;

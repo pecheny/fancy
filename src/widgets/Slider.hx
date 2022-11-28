@@ -7,7 +7,7 @@ import gl.sets.ColorSet;
 import graphics.shapes.ProgressBar;
 import widgets.ShapeWidget;
 import haxe.io.Bytes;
-import input.al.WidgetHitTester;
+import widgets.utils.WidgetHitTester;
 import input.core.HitTester;
 import input.core.InputSystemTarget;
 import ecbind.InputBinder;
