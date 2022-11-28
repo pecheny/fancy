@@ -11,18 +11,18 @@ import Axis2D;
 import bindings.GLTexture;
 import bindings.WebGLRenderContext;
 import ec.Entity;
+import ecbind.RenderableBinder;
 import font.bmf.BMFont.BMFontFactory;
 import font.FontStorage;
 import gl.aspects.RenderingAspect;
 import gl.AttribSet;
-import ecbind.Drawcalls;
 import gl.GLDisplayObject;
 import gl.sets.ColorSet;
 import gl.sets.MSDFSet;
 import gl.ShaderRegistry;
 import htext.style.TextContextBuilder;
-import input.core.InputSystemsContainer;
 import input.core.InputSystem;
+import input.core.InputSystemsContainer;
 import input.core.Point;
 import input.ec.binders.SwitchableInputBinder;
 import openfl.display.DisplayObjectContainer;
@@ -246,8 +246,8 @@ class GldoBuilder {
     }
 
     public function getDrawcalls(e:Entity) {
-        if (e.hasComponent(Drawcalls)) return e.getComponent(Drawcalls);
-        var dc = new Drawcalls();
+        if (e.hasComponent(RenderableBinder)) return e.getComponent(RenderableBinder);
+        var dc = new RenderableBinder();
         e.addComponent(dc);
         return dc;
     }

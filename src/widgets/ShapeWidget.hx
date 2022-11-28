@@ -1,17 +1,17 @@
 package widgets;
-import graphics.ShapesBuffer;
-import graphics.ShapeRenderer;
+import a2d.AspectRatioProvider;
 import al.al2d.Placeholder2D;
-import widgets.Widget;
 import ec.CtxWatcher;
+import ecbind.RenderableBinder;
+import ecbind.RenderablesComponent;
 import gl.AttribSet;
-import ecbind.DrawcallDataProvider;
-import ecbind.Drawcalls;
 import gl.Renderable;
 import gl.RenderTarget;
+import graphics.ShapeRenderer;
 import graphics.shapes.Shape;
-import a2d.AspectRatioProvider;
+import graphics.ShapesBuffer;
 import transform.LiquidTransformer;
+import widgets.Widget;
 
 class ShapeWidget<T:AttribSet> extends Widget implements Renderable<T> {
 
@@ -23,9 +23,9 @@ class ShapeWidget<T:AttribSet> extends Widget implements Renderable<T> {
         this.attrs = attrs;
         shapeRenderer = new ShapeRenderer(attrs);
         super(w);
-        var drawcallsData = DrawcallDataProvider.get(attrs, w.entity);
+        var drawcallsData = RenderablesComponent.get(attrs, w.entity);
         drawcallsData.views.push(this);
-        new CtxWatcher(Drawcalls, w.entity);
+        new CtxWatcher(RenderableBinder, w.entity);
     }
 
     public function addChild(shape:Shape) {

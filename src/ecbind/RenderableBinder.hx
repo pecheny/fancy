@@ -1,11 +1,10 @@
 package ecbind;
-import Type;
-import gl.Renderable;
-import gl.GLDisplayObject;
-import gl.AttribSet;
 import ec.CtxWatcher.CtxBinder;
 import ec.Entity;
-class Drawcalls implements CtxBinder {
+import gl.AttribSet;
+import gl.GLDisplayObject;
+import Type;
+class RenderableBinder implements CtxBinder {
     var map = new GLDisplayObjectsCollection();
 
     public function new() {}
@@ -17,22 +16,10 @@ class Drawcalls implements CtxBinder {
         map.set(id, layer);
     }
 
-//    public function addView<T:AttribSet>(set:T, view:Renderable<T>, layerName = "") {
-//        trace("add view " + view);
-//        var id = getLayerId(set, layerName);
-//        if (map.exists(id))
-//            map.get(id).addView(view);
-//        else
-//            trace("WARN: no gl-layer withid " + id);
-//    }
-
-
     public function bind(e:Entity) {
-//        trace("bind");
         var keys = map.keys();
         for (key in keys) {
-            var ddp:DrawcallDataProvider<AttribSet> = e.getComponentByName(key);
-//            trace(key + " " + ddp);
+            var ddp:RenderablesComponent<AttribSet> = e.getComponentByName(key);
             if (ddp == null)
                 continue;
             var l = map.get(cast key);
@@ -42,11 +29,9 @@ class Drawcalls implements CtxBinder {
     }
 
     public function unbind(e:Entity) {
-//        trace("unbind");
         var keys = map.keys();
         for (key in keys) {
-            var ddp:DrawcallDataProvider<AttribSet> = e.getComponentByName(key);
-//            trace(key + " " + ddp);
+            var ddp:RenderablesComponent<AttribSet> = e.getComponentByName(key);
             if (ddp == null)
                 continue;
             var l = map.get(cast key);
@@ -69,6 +54,7 @@ abstract LayerId<T:AttribSet>(String) to String {
         this = Type.getClassName(Type.getClass(set)) + "_" + n;
     }
 }
+
 @:forward(keys, exists)
 abstract GLDisplayObjectsCollection(Map<String, GLDisplayObject<AttribSet>>) {
     public function new() {

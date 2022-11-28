@@ -1,19 +1,19 @@
 package widgets;
-import htext.ITextRender;
-import gl.AttribSet;
-import transform.TransformerBase;
-import htext.TextAutoWidth;
-import htext.TextTransformer;
 import a2d.Stage;
 import al.animation.Animation.Animatable;
 import ec.CtxWatcher;
-import ecbind.DrawcallDataProvider;
-import ecbind.Drawcalls;
+import ecbind.RenderableBinder;
+import ecbind.RenderablesComponent;
+import gl.AttribSet;
 import gl.sets.MSDFSet;
 import htext.animation.VUnfoldAnimTextRender;
+import htext.ITextRender;
 import htext.SmothnessWriter;
 import htext.style.TextStyleContext;
+import htext.TextAutoWidth;
 import htext.TextRender;
+import htext.TextTransformer;
+import transform.TransformerBase;
 import widgets.Widget;
 using htext.TextTransformer;
 
@@ -63,9 +63,9 @@ class LabelBase<T:AttribSet> extends Widget {
         var aw = new TextAutoWidth(w, l, tt, textStyleContext);
         render = createTextRender(attrs, l, tt);
         render.setText(this.text);
-        var drawcallsData = DrawcallDataProvider.get(attrs, w.entity, textStyleContext.getDrawcallName());
+        var drawcallsData = RenderablesComponent.get(attrs, w.entity, textStyleContext.getDrawcallName());
         drawcallsData.views.push(render);
-        new CtxWatcher(Drawcalls, w.entity);
+        new CtxWatcher(RenderableBinder, w.entity);
     }
 }
 
