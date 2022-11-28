@@ -15,7 +15,7 @@ import font.bmf.BMFont.BMFontFactory;
 import font.FontStorage;
 import gl.aspects.RenderingAspect;
 import gl.AttribSet;
-import gl.ec.Drawcalls;
+import ecbind.Drawcalls;
 import gl.GLDisplayObject;
 import gl.sets.ColorSet;
 import gl.sets.MSDFSet;
