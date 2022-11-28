@@ -37,6 +37,8 @@ import shaderbuilder.SnaderBuilder.PosPassthrough;
 import shaderbuilder.SnaderBuilder.Uv0Passthrough;
 import a2d.AspectRatioProvider;
 
+
+import openfl.StageAspectKeeper;
 class DummyFrag implements ShaderElement {
     public static var instance = new DummyFrag();
 
