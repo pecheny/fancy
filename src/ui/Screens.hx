@@ -1,8 +1,8 @@
 package ui;
+import update.Updatable;
 import al.animation.AnimationTreeBuilder;
 import al.ec.WidgetSwitcher;
 import widgets.Widget;
-import utils.Updatable;
 import al.animation.Animation.AnimationPlaceholder;
 class Screens implements Updatable {
     var tree:AnimationPlaceholder;

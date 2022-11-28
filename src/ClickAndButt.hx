@@ -1,13 +1,10 @@
 package ;
-import a2d.AspectRatioProvider;
 import a2d.Stage;
-import a2d.WindowSizeProvider;
 import al.al2d.Widget2DContainer;
 import al.animation.Animation.AnimContainer;
 import al.animation.AnimationTreeBuilder;
 import al.Builder;
 import al.ec.WidgetSwitcher;
-import al.layouts.OffsetLayout;
 import al.openfl.StageAspectResizer;
 import algl.Builder.PlaceholderBuilderGl;
 import algl.ScreenMeasureUnit;
@@ -17,32 +14,26 @@ import FuiBuilder;
 import htext.style.TextStyleContext;
 import input.al.ButtonPanel;
 import openfl.display.Sprite;
-import openfl.events.Event;
 import ui.Screens;
-import utils.Updatable.Updater;
-import utils.Updatable;
 import widgets.WonderButton;
 import widgets.WonderQuad;
 
 using FancyPg.Utils;
 using transform.LiquidTransformer;
 using al.Builder;
-class ClickAndButt extends FuiAppBase implements Updater {
+class ClickAndButt extends FuiAppBase {
     public inline static var OFFSET:String = "offset";
-    var upds:Array<Float -> Void> = [];
 
     public function new() {
         super();
         var sampleText = "FoEo Bar AbAb Aboo Distance Field texture Ad Ae Af Bd Be Bf Bb Ab Dd De Df Cd Ce Cf";
         var root:Entity = new Entity();
         var ar = fuiBuilder.ar;
-        var b = new PlaceholderBuilderGl(ar);
 //        fuiBuilder.addBmFont("", "Assets/heaps-fonts/monts.fnt"); // todo
         fuiBuilder.addBmFont("", "Assets/heaps-fonts/robo.fnt"); // todo
-        root.addComponentByType(AspectRatioProvider, fuiBuilder.ar);
-        root.addComponentByType(WindowSizeProvider, fuiBuilder.ar);
-        root.addComponentByType(Stage, fuiBuilder.ar);
         fuiBuilder.configureInput(root);
+        fuiBuilder.configureScreen(root);
+        fuiBuilder.configureAnimation(root);
 
         var dl =
         '<container>
@@ -54,29 +45,19 @@ class ClickAndButt extends FuiAppBase implements Updater {
         addChild(container);
 
         var fitStyle = fuiBuilder.textStyles.newStyle("fit")
-//        .withSizeInPixels(48)
         .withSize(pfr, .5)
         .withAlign(horizontal, Forward)
         .withAlign(vertical, Backward)
         .withPadding(horizontal, pfr, 0.33)
         .withPadding(vertical, pfr, 0.33)
         .build();
-
-
         root.addComponent(fitStyle);
 
-
-        var stage = ar;
-
-        root.addComponentByType(Updater, this);
-        var animBuilder = new AnimationTreeBuilder();
-        animBuilder.addLayout(OFFSET, new OffsetLayout(0.1));
-        root.addComponent(animBuilder);
-        root.addComponent(new algl.Builder.PlaceholderBuilderGl(stage));
         var rw = Builder.widget();
         root.addChild(rw.entity);
+
         var screens = new Screens(new WidgetSwitcher(rw));
-        upds.push(screens.update);
+        fuiBuilder.updater.addUpdatable(screens);
         root.addComponent(screens);
 
         var s1 = new ScreenOne(Builder.widget());
@@ -87,22 +68,6 @@ class ClickAndButt extends FuiAppBase implements Updater {
 //        b.addWidget(rw.entity.getComponent(Widget2DContainer), s1.widget());
 
         var v = new StageAspectResizer(rw, 2);
-//        v.onResize(null);
-        openfl.Lib.current.stage.addEventListener(Event.ENTER_FRAME, update);
-    }
-
-
-    function update(e) {
-        for (u in upds)
-            u(1 / 60);
-    }
-
-    public function addUpdatable(e:Updatable):Void {
-        upds.push(e.update);
-    }
-
-    public function removeUpdatable(e:Updatable):Void {
-        upds.remove(e.update);
     }
 }
 
@@ -210,99 +175,4 @@ class ScreenTwo extends Screen {
         animationTreeBuilder.addChild(animContainer, anim);
         anim.animations.channels.push(h);
     }
-
-
-//    @:once var b:Builder;
-//    @:once var screens:Screens;
-//
-//    override public function init() {
-//        trace("INIT");
-//        var gap = b.widget.bind(portion, 0.1, fixed, 0.1);
-//        var pnl:Widget2D = b.widget();
-//        var b1 = new WonderButton(b.widget(portion, 1, fixed, 0.5), () -> screens.switchTo(Screens.ONE));
-//        var b2 = new WonderButton(b.widget(portion, 1, fixed, 0.5), () -> screens.switchTo(Screens.ONE));
-//        b.align(vertical).makeContainer(pnl, [
-//            gap(),
-//            b1.widget(),
-//            gap(),
-//            b2.widget(),
-////            new WonderButton(b.widget(portion, 1, fixed, 0.5), ()->screens.switchTo(Screens.ONE)).widget(),
-//        ]);
-//        ButtonPanel.make(pnl);
-//        var wc = b.makeContainer(w, [
-//            gap(),
-//            pnl,
-//            gap()
-//        ]);
-//
-//
-//        tree = new AnimationTreeBuilder().build(
-//            {
-//                layout:"portion",
-//                children:[
-//                    {size:{value:1. }},
-//                    {size:{value:1. }},
-//                ]
-//            }
-//        );
-//
-//        function bindAnimation(id, handler:Float -> Void) {
-//            tree.entity.getChildren()[id].getComponent(AnimWidget).animations.channels.push(handler);
-//        }
-//        bindAnimation(0, b1.setTime);
-//        bindAnimation(1, b2.setTime);
-//    }
 }
-
-//class Panel extends Widgetable {
-//    public function new (w:Widget2D) {
-//        super (w);
-//    }
-//}
-//
-//
-//
-//class ScrollbarView {
-//
-//    static var bgColor = new RGB(200,200,200);
-//    static var hndColor = new RGB(250,250,250);
-//    static var colors = new ColorArrayProvider([for (i in 0...8) if (i < 4) bgColor else hndColor]);
-//
-//    public function new(w:Widget2D, ar) {
-//        var hndlSlot = new BarAxisSlot ({start:0., end:0.5}, null);
-//        var elements = [
-//            new BarContainer(FixedThikness(new BarAxisSlot ({pos:1., thikness:1.}, null)), Portion(new BarAxisSlot ({start:0., end:1.}, null))),
-//            new BarContainer(FixedThikness(new BarAxisSlot ({pos:1., thikness:1.}, null)), Portion(hndlSlot)),
-//        ];
-//        var bars = new BarsItem(w, elements, ar, colors.getValue);
-//    }
-//}
-
-
-//class WheelGlOffset {
-//    public var target:Float -> Void;
-//
-//    public function new(t) {
-//        this.target = t;
-//        openfl.Lib.current.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onWheel);
-//    }
-//
-//    function onWheel(e:MouseEvent) {
-//        target(e.delta);
-//    }
-//}
-
-
-//class BoundsRO {
-//    public var size(default, null):ReadOnlyArray<Float>;
-//    public var pos(default, null):ReadOnlyArray<Float>;
-//
-//    function new(x, y, w, h) {
-//        pos = [x, y];
-//        size = [w, h];
-//    }
-//
-//    public static var CENTER = new BoundsRO(-0.5, -0.5, 1, 1);
-//    public static var TOP_LEFT = new BoundsRO(0, 0, 1, 1);
-//}
-

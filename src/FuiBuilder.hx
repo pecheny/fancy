@@ -1,13 +1,13 @@
 package ;
-import a2d.Stage;
-import Axis2D;
-import shaderbuilder.MSDFShader;
-import shaderbuilder.SnaderBuilder.GeneralPassthrough;
-import algl.Builder.PlaceholderBuilderGl;
-import scroll.ScissorAspect;
-import al.al2d.Placeholder2D;
-import htext.style.TextContextBuilder;
 import a2d.AspectRatio;
+import a2d.AspectRatioProvider;
+import a2d.Stage;
+import a2d.WindowSizeProvider;
+import al.al2d.Placeholder2D;
+import al.animation.AnimationTreeBuilder;
+import al.layouts.OffsetLayout;
+import algl.Builder.PlaceholderBuilderGl;
+import Axis2D;
 import bindings.GLTexture;
 import bindings.WebGLRenderContext;
 import ec.Entity;
@@ -20,25 +20,29 @@ import gl.GLDisplayObject;
 import gl.sets.ColorSet;
 import gl.sets.MSDFSet;
 import gl.ShaderRegistry;
+import htext.style.TextContextBuilder;
 import input.core.InputSystemsContainer;
 import input.core.InputTarget;
-import input.ec.binders.SwitchableInputBinder;
 import input.core.Point;
+import input.ec.binders.SwitchableInputBinder;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
+import openfl.StageAspectKeeper;
+import scroll.ScissorAspect;
 import shaderbuilder.MSDFShader.MSDFFrag;
 import shaderbuilder.MSDFShader.MSDFRenderingElement;
+import shaderbuilder.MSDFShader;
 import shaderbuilder.ShaderElement;
 import shaderbuilder.SnaderBuilder.ColorPassthroughFrag;
 import shaderbuilder.SnaderBuilder.ColorPassthroughVert;
+import shaderbuilder.SnaderBuilder.GeneralPassthrough;
 import shaderbuilder.SnaderBuilder.PosPassthrough;
 import shaderbuilder.SnaderBuilder.Uv0Passthrough;
-import a2d.AspectRatioProvider;
+import update.RealtimeUpdater;
+import update.Updater;
 
-
-import openfl.StageAspectKeeper;
 class DummyFrag implements ShaderElement {
     public static var instance = new DummyFrag();
 
@@ -91,6 +95,7 @@ class FuiBuilder {
     public var fonts(default, null) = new FontStorage(new BMFontFactory());
     public var placeholderBuilder(default, null):PlaceholderBuilderGl;
     public var textStyles:TextContextBuilder;
+    public var updater(default, null):Updater;
     var gldoBuilder:GldoBuilder ;
     var pos:ShaderElement = PosPassthrough.instance;
     var xmlProc:XmlProc;
@@ -104,6 +109,12 @@ class FuiBuilder {
         gldoBuilder = new GldoBuilder(shaderRegistry);
         xmlProc = new XmlProc(gldoBuilder);
         textStyles = new TextContextBuilder(fonts, ar);
+        var updater = new RealtimeUpdater();
+        updater.update();
+        this.updater = updater;
+        #if openfl
+        openfl.Lib.current.stage.addEventListener(openfl.events.Event.ENTER_FRAME, _->updater.update());
+        #end
         setAspects([]);
     }
 
@@ -152,10 +163,27 @@ class FuiBuilder {
     }
 
     public function configureInput(root:Entity) {
-        var aspects = root.getComponent(AspectRatioProvider);
         var s = new InputSystemsContainer(new Point(), null);
         root.addComponent(new SwitchableInputBinder<Point>(s));
-        new InputRoot(s, aspects.getAspectRatio());
+        new InputRoot(s, ar.getAspectRatio());
+    }
+
+    public function configureScreen(root:Entity) {
+        root.addComponentByType(Stage, ar);
+        root.addComponentByType(AspectRatioProvider, ar);
+        root.addComponentByType(WindowSizeProvider, ar);
+        root.addComponentByType(PlaceholderBuilderGl, placeholderBuilder);
+
+        return root;
+    }
+
+
+    public function configureAnimation(root:Entity) {
+        root.addComponentByType(Updater, updater);
+        var animBuilder = new AnimationTreeBuilder();
+        animBuilder.addLayout("offset", new OffsetLayout(0.1));
+        root.addComponent(animBuilder);
+        return root;
     }
 
     public function addScissors(w:Placeholder2D) {
@@ -253,6 +281,7 @@ class TextureStorage {
         return tex;
     }
 }
+
 class InputRoot {
     var factors:AspectRatio;
     var input:InputTarget<Point>;
