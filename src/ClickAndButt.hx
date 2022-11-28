@@ -65,7 +65,6 @@ class ClickAndButt extends FuiAppBase {
         screens.add(Screens.ONE, s1);
         screens.add(Screens.TWO, s2);
         screens.switchTo(Screens.ONE);
-//        b.addWidget(rw.entity.getComponent(Widget2DContainer), s1.widget());
 
         var v = new StageAspectResizer(rw, 2);
     }

@@ -29,7 +29,7 @@ import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
-import openfl.StageAspectKeeper;
+import openfl.OpenflStage;
 import scroll.ScissorAspect;
 import shaderbuilder.MSDFShader.MSDFFrag;
 import shaderbuilder.MSDFShader.MSDFRenderingElement;
@@ -88,7 +88,7 @@ class FuiAppBase extends Sprite {
 }
 
 class FuiBuilder {
-    public var ar:Stage = new StageAspectKeeper(1);
+    public var ar:Stage = new OpenflStage(1);
     public var renderAspectBuilder(default, null):RenderAspectBuilder;
     public var textureStorage:TextureStorage;
     public var shaderRegistry:ShaderRegistry;

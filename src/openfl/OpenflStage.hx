@@ -3,7 +3,7 @@ import a2d.Stage;
 import macros.AVConstructor;
 import Axis2D;
 import openfl.events.Event;
-class StageAspectKeeper implements Stage {
+class OpenflStage implements Stage {
     var base:Float;
     public var aspects = AVConstructor.create(Axis2D, 1., 1.);
     public var size = AVConstructor.create(Axis2D, 1, 1);
