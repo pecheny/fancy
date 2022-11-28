@@ -10,7 +10,7 @@ import haxe.io.Bytes;
 import input.al.WidgetHitTester;
 import input.core.HitTester;
 import input.core.InputSystemTarget;
-import ecbind.SwitchableInputBinder;
+import ecbind.InputBinder;
 import input.core.Point;
 import mesh.MeshUtilss;
 import mesh.providers.AttrProviders.SolidColorProvider;
@@ -49,7 +49,7 @@ class Slider extends ShapeWidget<ColorSet> {
         children.push(q);
         var inp = new SliderInput(w, cast ratioProvider, mainAxis, (v) -> withProgress(v));
         w.entity.addComponentByType(InputSystemTarget, inp);
-        new CtxWatcher(SwitchableInputBinder, w.entity);
+        new CtxWatcher(InputBinder, w.entity);
     }
 
     override function onShapesDone() {

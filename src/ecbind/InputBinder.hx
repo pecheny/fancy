@@ -4,7 +4,7 @@ import ec.CtxWatcher.CtxBinder;
 import ec.Entity;
 import input.core.IPos;
 import input.core.InputSystem;
-class SwitchableInputBinder<T:IPos<T>> implements CtxBinder {
+class InputBinder<T:IPos<T>> implements CtxBinder {
     var system:InputSystem<T>;
 
     public function new(s) {

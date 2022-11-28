@@ -11,7 +11,7 @@ import ec.CtxWatcher;
 import input.al.WidgetHitTester;
 import input.core.InputSystemsContainer;
 import input.core.InputSystem;
-import ecbind.SwitchableInputBinder;
+import ecbind.InputBinder;
 import input.core.Point;
 import scroll.ScrollboxInput;
 
@@ -24,11 +24,11 @@ class ScrollboxWidget extends Widget implements VisibleSizeProvider {
         super(w);
         trace(w.entity.getChildren().length);
         var hitester = new WidgetHitTester(w);
-        new CtxWatcher(SwitchableInputBinder, w.entity, true); // send upstream to scrollbox
+        new CtxWatcher(InputBinder, w.entity, true); // send upstream to scrollbox
         var inputPassthrough = new InputSystemsContainer(new Point(), hitester);
         inputPassthrough.verbose = true;
         w.entity.addComponentByType(InputSystem, inputPassthrough);
-        var binder = new SwitchableInputBinder(inputPassthrough);
+        var binder = new InputBinder(inputPassthrough);
         content.widget().entity.addComponent(binder);
         wireAxis( ar);
         var scrollbox = new ScrollboxInput(content, this, cast scrollbars, hitester, inputPassthrough);

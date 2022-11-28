@@ -24,7 +24,7 @@ import htext.style.TextContextBuilder;
 import input.core.InputSystem;
 import input.core.InputSystemsContainer;
 import input.core.Point;
-import ecbind.SwitchableInputBinder;
+import ecbind.InputBinder;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -164,7 +164,7 @@ class FuiBuilder {
 
     public function configureInput(root:Entity) {
         var s = new InputSystemsContainer(new Point(), null);
-        root.addComponent(new SwitchableInputBinder<Point>(s));
+        root.addComponent(new InputBinder<Point>(s));
         new InputRoot(s, ar.getAspectRatio());
     }
 
