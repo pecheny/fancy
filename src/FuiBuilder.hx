@@ -1,4 +1,5 @@
 package ;
+import widgets.utils.WidgetHitTester.Point;
 import ec.CtxWatcher;
 import widgets.utils.WidgetHitTester;
 import ecbind.ClickInputBinder;
@@ -27,7 +28,6 @@ import gl.ShaderRegistry;
 import htext.style.TextContextBuilder;
 import input.core.InputSystem;
 import input.core.InputSystemsContainer;
-import input.core.Point;
 import ecbind.InputBinder;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;

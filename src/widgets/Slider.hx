@@ -1,20 +1,18 @@
 package widgets;
-import al.al2d.Axis2D;
 import al.al2d.Placeholder2D;
+import widgets.utils.WidgetHitTester.Point;
 import data.aliases.AttribAliases;
 import ec.CtxWatcher;
+import ecbind.InputBinder;
 import gl.sets.ColorSet;
 import graphics.shapes.ProgressBar;
-import widgets.ShapeWidget;
 import haxe.io.Bytes;
-import widgets.utils.WidgetHitTester;
-import input.core.HitTester;
-import input.core.InputSystemTarget;
-import ecbind.InputBinder;
-import input.core.Point;
+import widgets.utils.WidgetHitTester.Point;
 import mesh.MeshUtilss;
 import mesh.providers.AttrProviders.SolidColorProvider;
 import utils.Mathu;
+import widgets.ShapeWidget;
+import widgets.utils.WidgetHitTester;
 class Slider extends ShapeWidget<ColorSet> {
     public var q:ProgressBar<ColorSet>;
     var color:Int;

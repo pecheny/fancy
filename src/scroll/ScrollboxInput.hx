@@ -1,5 +1,5 @@
 package scroll;
-import input.core.Point;
+import widgets.utils.WidgetHitTester.Point;
 import Axis2D;
 import fsm.FSM;
 import fsm.State;
@@ -16,7 +16,7 @@ import scroll.Scrollbar;
     var open = "open";
     var dragged = "dragged";
 }
-typedef TPos = input.core.Point;
+typedef TPos = Point;
 
 
 class ScrollboxInput extends FSM<ScrollboxStateName, ScrollboxInput> implements InputSystemTarget<TPos> {

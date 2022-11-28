@@ -1,4 +1,5 @@
 package widgets;
+import widgets.utils.WidgetHitTester.Point;
 import al.al2d.Placeholder2D;
 import ec.CtxWatcher;
 import ec.Entity;
@@ -6,7 +7,6 @@ import widgets.utils.WidgetHitTester;
 import input.core.ClicksInputSystem.ClickTarget;
 import input.core.ClicksInputSystem.ClickTargetViewState;
 import ecbind.ClickInputBinder;
-import input.core.Point;
 import widgets.Widget;
 class ButtonBase implements ClickTarget<Point> extends Widget implements ClickViewProcessor {
     var hittester:WidgetHitTester;

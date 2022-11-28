@@ -8,7 +8,7 @@ import widgets.utils.WidgetHitTester;
 import input.core.ClicksInputSystem.ClickTarget;
 import input.core.ClicksInputSystem.ClickTargetViewState;
 import ecbind.ClickInputBinder;
-import input.core.Point;
+import widgets.utils.WidgetHitTester.Point;
 import mesh.providers.AttrProviders.SolidColorProvider;
 class SomeButton implements ClickTarget<Point> extends Widget {
     var hittester:WidgetHitTester;

@@ -12,7 +12,7 @@ import widgets.utils.WidgetHitTester;
 import input.core.InputSystemsContainer;
 import input.core.InputSystem;
 import ecbind.InputBinder;
-import input.core.Point;
+import widgets.utils.WidgetHitTester.Point;
 import scroll.ScrollboxInput;
 
 
