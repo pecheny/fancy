@@ -1,13 +1,12 @@
 package scroll;
 import input.core.Point;
-import scroll.Scrollbar;
-import scroll.ScrollableContent;
-import input.core.SwitchableInputTarget;
-import input.core.HitTester;
 import Axis2D;
 import fsm.FSM;
 import fsm.State;
+import input.core.InputSystem;
 import Math.abs as abs;
+import scroll.ScrollableContent;
+import scroll.Scrollbar;
 
 
 // handles input and indicators
@@ -20,12 +19,12 @@ import Math.abs as abs;
 typedef TPos = input.core.Point;
 
 
-class ScrollboxInput extends FSM<ScrollboxStateName, ScrollboxInput> implements SwitchableInputTarget<TPos> {
+class ScrollboxInput extends FSM<ScrollboxStateName, ScrollboxInput> implements InputSystemTarget<TPos> {
     public static inline var THRESHOLD = 0.05;
     var content:ScrollableContent;
     var scrollbars:AVector2D<Scrollbar>;
     var hitester:HitTester<TPos>;
-    var inputPassthrough:SwitchableInputTarget<TPos>;
+    var inputPassthrough:InputSystemTarget<TPos>;
     var pressOrigin:TPos = new TPos();
     var pos = new TPos();
     var visSize:VisibleSizeProvider;

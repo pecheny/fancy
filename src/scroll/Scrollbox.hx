@@ -10,8 +10,7 @@ import widgets.Widget;
 import ec.CtxWatcher;
 import input.al.WidgetHitTester;
 import input.core.InputSystemsContainer;
-import input.core.SwitchableInputTarget;
-import input.core.SwitchableInputTargets;
+import input.core.InputSystem;
 import input.ec.binders.SwitchableInputBinder;
 import input.core.Point;
 import scroll.ScrollboxInput;
@@ -28,12 +27,12 @@ class ScrollboxWidget extends Widget implements VisibleSizeProvider {
         new CtxWatcher(SwitchableInputBinder, w.entity, true); // send upstream to scrollbox
         var inputPassthrough = new InputSystemsContainer(new Point(), hitester);
         inputPassthrough.verbose = true;
-        w.entity.addComponentByType(SwitchableInputTargets, inputPassthrough);
+        w.entity.addComponentByType(InputSystem, inputPassthrough);
         var binder = new SwitchableInputBinder(inputPassthrough);
         content.widget().entity.addComponent(binder);
         wireAxis( ar);
         var scrollbox = new ScrollboxInput(content, this, cast scrollbars, hitester, inputPassthrough);
-        w.entity.addComponentByType(SwitchableInputTarget, scrollbox);
+        w.entity.addComponentByType(InputSystemTarget, scrollbox);
     }
 
     function wireAxis(ar) {

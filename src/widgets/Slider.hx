@@ -9,7 +9,7 @@ import widgets.ShapeWidget;
 import haxe.io.Bytes;
 import input.al.WidgetHitTester;
 import input.core.HitTester;
-import input.core.SwitchableInputTarget;
+import input.core.InputSystemTarget;
 import input.ec.binders.SwitchableInputBinder;
 import input.core.Point;
 import mesh.MeshUtilss;
@@ -48,7 +48,7 @@ class Slider extends ShapeWidget<ColorSet> {
         q.setVal(mainAxis, progress);
         children.push(q);
         var inp = new SliderInput(w, cast ratioProvider, mainAxis, (v) -> withProgress(v));
-        w.entity.addComponentByType(SwitchableInputTarget, inp);
+        w.entity.addComponentByType(InputSystemTarget, inp);
         new CtxWatcher(SwitchableInputBinder, w.entity);
     }
 
@@ -63,7 +63,7 @@ class Slider extends ShapeWidget<ColorSet> {
     }
 }
 
-class SliderInput implements SwitchableInputTarget<Point> {
+class SliderInput implements InputSystemTarget<Point> {
     var hitTester:HitTester<Point>;
     var pos:Point;
     var pressed = false;

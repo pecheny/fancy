@@ -22,7 +22,7 @@ import gl.sets.MSDFSet;
 import gl.ShaderRegistry;
 import htext.style.TextContextBuilder;
 import input.core.InputSystemsContainer;
-import input.core.InputTarget;
+import input.core.InputSystem;
 import input.core.Point;
 import input.ec.binders.SwitchableInputBinder;
 import openfl.display.DisplayObjectContainer;
