@@ -17,7 +17,6 @@ import Axis2D;
 import ec.Entity;
 import FuiBuilder;
 import htext.Align;
-import input.al.ButtonPanel;
 import openfl.display.Sprite;
 import scroll.ScrollableContent.W2CScrollableContent;
 import scroll.ScrollboxItem;
@@ -106,7 +105,7 @@ class FancyPg extends FuiAppBase {
 
 
         var container1 = Builder.v().withChildren(quads);
-        ButtonPanel.make(container1);
+        fuiBuilder.makeClickInput(container1);
         container1.entity.name = "c1";
         var placeholder = b.b();
         var scroll = new W2CScrollableContent(

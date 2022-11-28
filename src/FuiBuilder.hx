@@ -1,4 +1,8 @@
 package ;
+import ec.CtxWatcher;
+import input.al.WidgetHitTester;
+import ecbind.ClickInputBinder;
+import input.core.ClicksInputSystem;
 import a2d.AspectRatio;
 import a2d.AspectRatioProvider;
 import a2d.Stage;
@@ -166,6 +170,17 @@ class FuiBuilder {
         var s = new InputSystemsContainer(new Point(), null);
         root.addComponent(new InputBinder<Point>(s));
         new InputRoot(s, ar.getAspectRatio());
+    }
+
+    public function makeClickInput(w:Placeholder2D) {
+        var input = new ClicksInputSystem(new Point());
+        w.entity.addComponent(new ClickInputBinder(input));
+        var outside = new Point();
+        outside.x = -9999999;
+        outside.y = -9999999;
+        w.entity.addComponentByType(InputSystemTarget, new SwitchableInputAdapter(input, new WidgetHitTester(w), new Point(), outside));
+        new CtxWatcher(InputBinder, w.entity);
+        return w;
     }
 
     public function configureScreen(root:Entity) {

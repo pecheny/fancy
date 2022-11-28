@@ -12,7 +12,6 @@ import Axis2D;
 import ec.Entity;
 import FuiBuilder;
 import htext.style.TextStyleContext;
-import input.al.ButtonPanel;
 import openfl.display.Sprite;
 import ui.Screens;
 import widgets.WonderButton;
@@ -34,6 +33,7 @@ class ClickAndButt extends FuiAppBase {
         fuiBuilder.configureInput(root);
         fuiBuilder.configureScreen(root);
         fuiBuilder.configureAnimation(root);
+        root.addComponent(fuiBuilder);
 
         var dl =
         '<container>
@@ -71,7 +71,6 @@ class ClickAndButt extends FuiAppBase {
 }
 
 
-
 class ScreenOne extends Screen {
 
     @:once var b:PlaceholderBuilderGl;
@@ -79,6 +78,7 @@ class ScreenOne extends Screen {
     @:once var animationTreeBuilder:AnimationTreeBuilder;
     @:once var textStyleContext:TextStyleContext;
     @:once var stage:Stage;
+    @:once var fuiBuilder:FuiBuilder;
 
     var pnl:Widget2DContainer;
     var animContainer:AnimContainer;
@@ -96,7 +96,7 @@ class ScreenOne extends Screen {
 
         var content = new WonderQuad(Builder.widget().withLiquidTransform(stage.getAspectRatio()), 0x505050);
 
-        ButtonPanel.make(pnl.widget());
+        fuiBuilder.makeClickInput(pnl.widget());
         var wc = Builder.createContainer(w, horizontal).withChildren([
             gap(),
             pnl.widget(),
@@ -134,6 +134,7 @@ class ScreenTwo extends Screen {
     @:once var screens:Screens;
     @:once var animationTreeBuilder:AnimationTreeBuilder;
     @:once var textStyleContext:TextStyleContext;
+    @:once var fuiBuilder:FuiBuilder;
     var pnl:Widget2DContainer;
     var animContainer:AnimContainer;
 
@@ -149,7 +150,7 @@ class ScreenTwo extends Screen {
         );
         animContainer = tree.entity.getComponent(AnimContainer);
 
-        ButtonPanel.make(pnl.widget());
+        fuiBuilder.makeClickInput(pnl.widget());
 
         var wc = Builder.createContainer(w, horizontal).withChildren([
             gap(),
