@@ -10,7 +10,7 @@ import haxe.io.Bytes;
 import input.al.WidgetHitTester;
 import input.core.HitTester;
 import input.core.InputSystemTarget;
-import input.ec.binders.SwitchableInputBinder;
+import ecbind.SwitchableInputBinder;
 import input.core.Point;
 import mesh.MeshUtilss;
 import mesh.providers.AttrProviders.SolidColorProvider;

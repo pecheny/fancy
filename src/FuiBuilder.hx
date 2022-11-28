@@ -24,7 +24,7 @@ import htext.style.TextContextBuilder;
 import input.core.InputSystem;
 import input.core.InputSystemsContainer;
 import input.core.Point;
-import input.ec.binders.SwitchableInputBinder;
+import ecbind.SwitchableInputBinder;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
 import openfl.events.Event;

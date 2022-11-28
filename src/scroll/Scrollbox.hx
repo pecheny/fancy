@@ -11,7 +11,7 @@ import ec.CtxWatcher;
 import input.al.WidgetHitTester;
 import input.core.InputSystemsContainer;
 import input.core.InputSystem;
-import input.ec.binders.SwitchableInputBinder;
+import ecbind.SwitchableInputBinder;
 import input.core.Point;
 import scroll.ScrollboxInput;
 

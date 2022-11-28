@@ -5,7 +5,7 @@ import ec.Entity;
 import input.al.WidgetHitTester;
 import input.core.ClicksInputSystem.ClickTarget;
 import input.core.ClicksInputSystem.ClickTargetViewState;
-import input.ec.binders.ClickInputBinder;
+import ecbind.ClickInputBinder;
 import input.core.Point;
 import widgets.Widget;
 class ButtonBase implements ClickTarget<Point> extends Widget implements ClickViewProcessor {
