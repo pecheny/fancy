@@ -1,8 +1,8 @@
 package widgets.utils;
 import al.al2d.Placeholder2D;
 import Axis2D;
-import input.core.InputSystem.HitTester;
-import input.core.IPos;
+import shimp.InputSystem.HitTester;
+import shimp.IPos;
 import macros.AVConstructor;
 class WidgetHitTester implements HitTester<Point> {
     var w:Placeholder2D;

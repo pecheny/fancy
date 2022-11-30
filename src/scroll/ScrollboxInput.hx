@@ -3,7 +3,7 @@ import widgets.utils.WidgetHitTester.Point;
 import Axis2D;
 import fsm.FSM;
 import fsm.State;
-import input.core.InputSystem;
+import shimp.InputSystem;
 import Math.abs as abs;
 import scroll.ScrollableContent;
 import scroll.Scrollbar;

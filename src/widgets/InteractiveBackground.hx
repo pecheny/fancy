@@ -1,7 +1,7 @@
 package widgets;
 import al.al2d.Placeholder2D;
 import Axis2D;
-import input.core.ClicksInputSystem.ClickTargetViewState;
+import shimp.ClicksInputSystem.ClickTargetViewState;
 import mesh.providers.AttrProviders.SolidColorProvider;
 import widgets.Widget;
 class InteractiveBackground extends Widget {

@@ -2,8 +2,8 @@ package ecbind;
 
 import ec.CtxWatcher.CtxBinder;
 import ec.Entity;
-import input.core.IPos;
-import input.core.InputSystem;
+import shimp.IPos;
+import shimp.InputSystem;
 class InputBinder<T:IPos<T>> implements CtxBinder {
     var system:InputSystem<T>;
 

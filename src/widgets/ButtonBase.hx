@@ -4,8 +4,8 @@ import al.al2d.Placeholder2D;
 import ec.CtxWatcher;
 import ec.Entity;
 import widgets.utils.WidgetHitTester;
-import input.core.ClicksInputSystem.ClickTarget;
-import input.core.ClicksInputSystem.ClickTargetViewState;
+import shimp.ClicksInputSystem.ClickTarget;
+import shimp.ClicksInputSystem.ClickTargetViewState;
 import ecbind.ClickInputBinder;
 import widgets.Widget;
 class ButtonBase implements ClickTarget<Point> extends Widget implements ClickViewProcessor {

@@ -5,7 +5,7 @@ import al.al2d.Placeholder2D;
 import gl.sets.ColorSet;
 import graphics.shapes.QuadGraphicElement;
 import graphics.ShapesColorAssigner;
-import input.core.ClicksInputSystem.ClickTargetViewState;
+import shimp.ClicksInputSystem.ClickTargetViewState;
 import widgets.ShapeWidget;
 import Axis2D;
 import widgets.ButtonBase;

@@ -1,9 +1,9 @@
 package ecbind;
 
-import input.core.IPos;
-import input.core.ClicksInputSystem.ClickTarget;
+import shimp.IPos;
+import shimp.ClicksInputSystem.ClickTarget;
 import ec.Entity;
-import input.core.ClicksInputSystem.ClicksSystem;
+import shimp.ClicksInputSystem.ClicksSystem;
 import ec.CtxWatcher.CtxBinder;
 class ClickInputBinder<T:IPos<T>> implements CtxBinder {
     var system:ClicksSystem<T>;
