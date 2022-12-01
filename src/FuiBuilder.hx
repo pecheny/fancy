@@ -1,4 +1,5 @@
 package ;
+import openfl.InputRoot;
 import a2d.AspectRatio;
 import a2d.AspectRatioProvider;
 import a2d.Stage;
@@ -283,41 +284,5 @@ class TextureStorage {
         gl.bindTexture(gl.TEXTURE_2D, null);
         locations[filename] = tex;
         return tex;
-    }
-}
-
-class InputRoot {
-    var factors:AspectRatio;
-    var input:InputTarget<Point>;
-    var pos = new Point();
-    var stg:openfl.display.Stage;
-
-
-    public function new(input, fac) {
-        this.input = input;
-        this.factors = fac;
-        stg = openfl.Lib.current.stage;
-        stg.addEventListener(Event.ENTER_FRAME, onEnterFrame);
-        stg.addEventListener(MouseEvent.MOUSE_UP, onUp);
-        stg.addEventListener(MouseEvent.MOUSE_DOWN, onDown);
-    }
-
-    function onEnterFrame(e) {
-        updatePos();
-    }
-
-    inline function updatePos() {
-        pos.x = 2 * (stg.mouseX / stg.stageWidth) * factors[horizontal];
-        pos.y = 2 * (stg.mouseY / stg.stageHeight) * factors[vertical];
-        input.setPos(pos);
-    }
-
-    function onDown(e) {
-        updatePos();
-        input.press();
-    }
-
-    function onUp(e) {
-        input.release();
     }
 }
