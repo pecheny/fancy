@@ -10,7 +10,6 @@ import ec.CtxWatcher;
 import ec.Entity;
 import ecbind.ClickInputBinder;
 import ecbind.InputBinder;
-import ecbind.RenderableBinder;
 import font.bmf.BMFont.BMFontFactory;
 import font.FontStorage;
 import gl.aspects.RenderingAspect;
@@ -20,8 +19,7 @@ import gl.sets.ColorSet;
 import gl.sets.MSDFSet;
 import gl.ShaderRegistry;
 import htext.style.TextContextBuilder;
-import openfl.display.DisplayObjectContainer;
-import openfl.display.Sprite;
+import openfl.GLDisplayObjectConstruction;
 import openfl.InputRoot;
 import openfl.OpenflStage;
 import scroll.ScissorAspect;
@@ -191,77 +189,3 @@ class FuiBuilder {
         sharedAspects.push(sc);
     }
 }
-
-typedef GldoFactory<T:AttribSet> = Entity -> Xml -> GLDisplayObject<T>;
-class XmlProc {
-    var ctx:FuiBuilder;
-    var handlers:Map<String, GldoFactory<Dynamic>> = new Map();
-    var gldoBuilder:GldoBuilder;
-
-
-    public function new(gb) {
-        this.gldoBuilder = gb;
-    }
-
-
-    public function processNode(e:Entity, node:Xml, ?container:Null<DisplayObjectContainer>):Entity {
-        return switch (node.nodeName) {
-            case "container" : {
-                var c = new Sprite();
-                e.addComponent(c);
-                if (container != null) container.addChild(c);
-                var dc = gldoBuilder.getDrawcalls(e);
-                for (child in node.elements()) {
-                    processNode(e, child, c);
-                }
-                e;
-            }
-            case "drawcall" : {
-                var gldo = handlers[node.get("type")](e, node);
-                if (container != null)
-                    container.addChild(gldo);
-                else {
-                    var dc = gldoBuilder.getDrawcalls(e);
-                    e.addComponent(gldo);
-                }
-                e;
-            }
-            case _ :
-                throw "wrong " + node.nodeName;
-        }
-    }
-
-
-    public function regHandler(t, h) {
-        handlers[t] = h;
-    }
-
-}
-
-class GldoBuilder {
-    var shaders:IShaderRegistry ;
-
-    public function new(s) {
-        this.shaders = s;
-    }
-
-    public function getDrawcalls(e:Entity) {
-        if (e.hasComponent(RenderableBinder)) return e.getComponent(RenderableBinder);
-        var dc = new RenderableBinder();
-        e.addComponent(dc);
-        return dc;
-    }
-
-    public function getGldo(e:Entity, type, aspect, name) {
-        var attrs = shaders.getAttributeSet(type);
-        var dc = getDrawcalls(e);
-        var gldo = dc.findLayer(attrs, name);
-        if (gldo != null) return gldo;
-        var gldo = new GLDisplayObject(attrs, shaders.getState.bind(attrs, _, type), aspect);
-        gldo.name = name;
-        var dc = getDrawcalls(e);
-        dc.addLayer(attrs, gldo, name);
-        return gldo;
-    }
-}
-
