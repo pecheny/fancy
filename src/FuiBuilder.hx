@@ -1,9 +1,4 @@
 package ;
-import widgets.utils.WidgetHitTester.Point;
-import ec.CtxWatcher;
-import widgets.utils.WidgetHitTester;
-import ecbind.ClickInputBinder;
-import shimp.ClicksInputSystem;
 import a2d.AspectRatio;
 import a2d.AspectRatioProvider;
 import a2d.Stage;
@@ -15,7 +10,10 @@ import algl.Builder.PlaceholderBuilderGl;
 import Axis2D;
 import bindings.GLTexture;
 import bindings.WebGLRenderContext;
+import ec.CtxWatcher;
 import ec.Entity;
+import ecbind.ClickInputBinder;
+import ecbind.InputBinder;
 import ecbind.RenderableBinder;
 import font.bmf.BMFont.BMFontFactory;
 import font.FontStorage;
@@ -26,26 +24,21 @@ import gl.sets.ColorSet;
 import gl.sets.MSDFSet;
 import gl.ShaderRegistry;
 import htext.style.TextContextBuilder;
-import shimp.InputSystem;
-import shimp.InputSystemsContainer;
-import ecbind.InputBinder;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.OpenflStage;
 import scroll.ScissorAspect;
-import shaderbuilder.MSDFShader.MSDFFrag;
-import shaderbuilder.MSDFShader.MSDFRenderingElement;
 import shaderbuilder.MSDFShader;
 import shaderbuilder.ShaderElement;
-import shaderbuilder.SnaderBuilder.ColorPassthroughFrag;
-import shaderbuilder.SnaderBuilder.ColorPassthroughVert;
-import shaderbuilder.SnaderBuilder.GeneralPassthrough;
-import shaderbuilder.SnaderBuilder.PosPassthrough;
-import shaderbuilder.SnaderBuilder.Uv0Passthrough;
+import shaderbuilder.SnaderBuilder;
+import shimp.ClicksInputSystem;
+import shimp.InputSystem;
+import shimp.InputSystemsContainer;
 import update.RealtimeUpdater;
 import update.Updater;
+import widgets.utils.WidgetHitTester;
 
 class DummyFrag implements ShaderElement {
     public static var instance = new DummyFrag();
@@ -58,36 +51,6 @@ class DummyFrag implements ShaderElement {
 
     public function getExprs():String {
         return 'gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);';
-    }
-}
-
-class FuiAppBase extends Sprite {
-    var fuiBuilder:FuiBuilder;
-    static var smoothShaderEl = new GeneralPassthrough(MSDFSet.NAME_DPI, MSDFShader.smoothness);
-
-    public function new() {
-        super();
-        fuiBuilder = new FuiBuilder();
-        fuiBuilder.regDrawcallType(
-            "color",
-            {
-                type:"color",
-                attrs:ColorSet.instance,
-                vert:[ColorPassthroughVert.instance, PosPassthrough.instance],
-                frag:[cast ColorPassthroughFrag.instance],
-            }, (e, xml) -> fuiBuilder.createGldo(ColorSet.instance, e, "color", null, "")
-        );
-
-        fuiBuilder.regDrawcallType(
-            "text",
-            {
-                type:"msdf",
-                attrs:MSDFSet.instance,
-                vert:[Uv0Passthrough.instance, PosPassthrough.instance, smoothShaderEl],
-                frag:[cast MSDFFrag.instance],
-                uniforms: ["color" ]
-            }, fuiBuilder.createTextGldo
-        );
     }
 }
 
@@ -120,6 +83,32 @@ class FuiBuilder {
         openfl.Lib.current.stage.addEventListener(openfl.events.Event.ENTER_FRAME, _->updater.update());
         #end
         setAspects([]);
+    }
+
+
+    static var smoothShaderEl = new GeneralPassthrough(MSDFSet.NAME_DPI, MSDFShader.smoothness);
+
+    public function regDefaultDrawcalls():Void {
+        regDrawcallType(
+            "color",
+            {
+                type:"color",
+                attrs:ColorSet.instance,
+                vert:[ColorPassthroughVert.instance, PosPassthrough.instance],
+                frag:[cast ColorPassthroughFrag.instance],
+            }, (e, xml) -> createGldo(ColorSet.instance, e, "color", null, "")
+        );
+
+        regDrawcallType(
+            "text",
+            {
+                type:"msdf",
+                attrs:MSDFSet.instance,
+                vert:[Uv0Passthrough.instance, PosPassthrough.instance, smoothShaderEl],
+                frag:[cast MSDFFrag.instance],
+                uniforms: ["color" ]
+            }, createTextGldo
+        );
     }
 
     public function regDrawcallType<T:AttribSet>(drawcallType:String, shaderDesc:ShaderDescr<T>, gldoFactory:GldoFactory<T>) {

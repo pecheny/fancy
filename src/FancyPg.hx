@@ -1,39 +1,40 @@
 package ;
 
-import graphics.ShapesColorAssigner;
-import gl.sets.ColorSet;
-import graphics.shapes.Bar;
+import a2d.AspectRatioProvider;
 import a2d.Stage;
 import a2d.WindowSizeProvider;
-import al.al2d.Widget2DContainer;
 import al.al2d.Placeholder2D;
-import algl.TransformatorAxisApplier;
+import al.al2d.Widget2DContainer;
 import al.Builder;
 import al.openfl.StageAspectResizer;
 import algl.Builder.PlaceholderBuilderGl;
 import algl.PixelSize;
 import algl.ScreenMeasureUnit;
+import algl.TransformatorAxisApplier;
 import Axis2D;
 import ec.Entity;
-import FuiBuilder;
+import gl.sets.ColorSet;
+import graphics.shapes.Bar;
+import graphics.ShapesColorAssigner;
 import htext.Align;
 import openfl.display.Sprite;
 import scroll.ScrollableContent.W2CScrollableContent;
 import scroll.ScrollboxItem;
-import a2d.AspectRatioProvider;
 import utils.DummyEditorField;
-import widgets.Button;
 import widgets.BarWidget;
+import widgets.Button;
 import widgets.Label;
 using transform.LiquidTransformer;
 using FancyPg.Utils;
 using al.Builder;
 
-class FancyPg extends FuiAppBase {
+class FancyPg extends Sprite {
     public function new() {
         super();
         var sampleText = "FoEo Bar AbAb Aboo Distance Field texture Ad Ae Af Bd Be Bf Bb Ab Dd De Df Cd Ce Cf";
         var root:Entity = new Entity();
+        var fuiBuilder =  new FuiBuilder();
+        fuiBuilder.regDefaultDrawcalls();
         var ar = fuiBuilder.ar;
         var b = new PlaceholderBuilderGl(ar);
 //        fuiBuilder.addBmFont("", "Assets/heaps-fonts/monts.fnt"); // todo

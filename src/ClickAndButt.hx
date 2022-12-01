@@ -20,13 +20,15 @@ import widgets.WonderQuad;
 using FancyPg.Utils;
 using transform.LiquidTransformer;
 using al.Builder;
-class ClickAndButt extends FuiAppBase {
+class ClickAndButt extends Sprite {
     public inline static var OFFSET:String = "offset";
 
     public function new() {
         super();
         var sampleText = "FoEo Bar AbAb Aboo Distance Field texture Ad Ae Af Bd Be Bf Bb Ab Dd De Df Cd Ce Cf";
         var root:Entity = new Entity();
+        var fuiBuilder =  new FuiBuilder();
+        fuiBuilder.regDefaultDrawcalls();
         var ar = fuiBuilder.ar;
 //        fuiBuilder.addBmFont("", "Assets/heaps-fonts/monts.fnt"); // todo
         fuiBuilder.addBmFont("", "Assets/heaps-fonts/robo.fnt"); // todo
