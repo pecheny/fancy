@@ -1,6 +1,4 @@
 package ;
-import openfl.InputRoot;
-import a2d.AspectRatio;
 import a2d.AspectRatioProvider;
 import a2d.Stage;
 import a2d.WindowSizeProvider;
@@ -8,9 +6,6 @@ import al.al2d.Placeholder2D;
 import al.animation.AnimationTreeBuilder;
 import al.layouts.OffsetLayout;
 import algl.Builder.PlaceholderBuilderGl;
-import Axis2D;
-import bindings.GLTexture;
-import bindings.WebGLRenderContext;
 import ec.CtxWatcher;
 import ec.Entity;
 import ecbind.ClickInputBinder;
@@ -27,8 +22,7 @@ import gl.ShaderRegistry;
 import htext.style.TextContextBuilder;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
-import openfl.events.Event;
-import openfl.events.MouseEvent;
+import openfl.InputRoot;
 import openfl.OpenflStage;
 import scroll.ScissorAspect;
 import shaderbuilder.MSDFShader;
@@ -39,6 +33,7 @@ import shimp.InputSystem;
 import shimp.InputSystemsContainer;
 import update.RealtimeUpdater;
 import update.Updater;
+import utils.TextureStorage;
 import widgets.utils.WidgetHitTester;
 
 class DummyFrag implements ShaderElement {
@@ -270,19 +265,3 @@ class GldoBuilder {
     }
 }
 
-class TextureStorage {
-    var locations:Map<String, GLTexture> = new Map();
-
-    public function new() {}
-
-    public function get(gl:WebGLRenderContext, filename:String) {
-        if (locations.exists(filename)) return locations.get(filename);
-        var tex = gl.createTexture();
-        var image = lime.utils.Assets.getImage(filename);
-        gl.bindTexture(gl.TEXTURE_2D, tex);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, image.buffer.width, image.buffer.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, image.data);
-        gl.bindTexture(gl.TEXTURE_2D, null);
-        locations[filename] = tex;
-        return tex;
-    }
-}
