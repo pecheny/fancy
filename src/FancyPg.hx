@@ -25,7 +25,7 @@ import widgets.BarWidget;
 import widgets.Button;
 import widgets.Label;
 using transform.LiquidTransformer;
-using FancyPg.Utils;
+using widgets.utils.Utils;
 using al.Builder;
 
 class FancyPg extends Sprite {
@@ -73,14 +73,22 @@ class FancyPg extends Sprite {
         .withAlign(horizontal, Center)
         .build();
 
+//        var fitStyle = fuiBuilder.textStyles.newStyle("fit")
+//        .withSize(pfr, .75)
+//        .withAlign(horizontal, Center)
+//        .withAlign(vertical, Center)
+//        .build();
+
         var fitStyle = fuiBuilder.textStyles.newStyle("fit")
-        .withSize(pfr, .75)
-        .withAlign(horizontal, Center)
-        .withAlign(vertical, Center)
+        .withSize(pfr, .5)
+        .withAlign(horizontal, Forward)
+        .withAlign(vertical, Backward)
+        .withPadding(horizontal, pfr, 0.33)
+        .withPadding(vertical, pfr, 0.33)
         .build();
 
         var pxW = b.b();
-        @:privateAccess pxW.axisStates[vertical].size = new PixelSize(vertical, ar, 600);
+        @:privateAccess pxW.axisStates[vertical].size = new PixelSize(vertical, ar, 60);
 
         var elements = () -> [
             new BarContainer(FixedThikness(new BarAxisSlot ({pos:.5, thikness:1.}, null)), Portion(new BarAxisSlot ({start:0., end:1.}, null))),
@@ -97,9 +105,11 @@ class FancyPg extends Sprite {
 //        quads.push(new Label(b.b(), pcStyle).withText(sampleText).widget());
 //        quads.push(new Label(b.b(), pcStyleC).withText(sampleText).widget());
 //        quads.push(new Label(b.b(), pcStyleR).withText(sampleText).widget());
-        quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "Button caption", fitStyle).widget());
-        quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "Button caption", fitStyle).widget());
+        quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "<font lineHeight=\"0.1\">Button </font>", fitStyle).widget());
+        quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "Button", fitStyle).widget());
         quads.push(new Button(pxW.withLiquidTransform(ar.getAspectRatio()), null, "Button caption", fitStyle).widget());
+        quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "Button", fitStyle).widget());
+        quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "Button", fitStyle).widget());
 
 
 //        quads.push(new ColouredQuad(b.b().withLiquidTransform(ar.getAspectRatio()), 0x303090).widget());
@@ -109,6 +119,17 @@ class FancyPg extends Sprite {
         fuiBuilder.makeClickInput(container1);
         container1.entity.name = "c1";
         var placeholder = b.b();
+        createScrollbox(fuiBuilder, container1, placeholder, ar, dl);
+
+
+        var rw = Builder.h().withChildren([ placeholder, new Label(b.b(), pcStyleR).withText(sampleText).widget()]);
+        root.addChild(rw.entity);
+        new StageAspectResizer(rw, 2);
+        new DummyEditorField();
+    }
+
+
+    function createScrollbox(fuiBuilder, container1:Placeholder2D, placeholder:Placeholder2D, ar, dl) {
         var scroll = new W2CScrollableContent(
         container1.entity.getComponent(Widget2DContainer),
         placeholder
@@ -118,29 +139,12 @@ class FancyPg extends Sprite {
         var scroller = new ScrollboxItem(placeholder, scroll, ar.getAspectRatio());
         fuiBuilder.addScissors(scroller.widget());
         fuiBuilder.createContainer(scroller.widget().entity, Xml.parse(dl).firstElement());
-
         var spr:Sprite = scroller.widget().entity.getComponent(Sprite);
         addChild(spr);
-        var rw = Builder.h().withChildren([ scroller.widget(), new Label(b.b(), pcStyleR).withText(sampleText).widget()]);
-        root.addChild(rw.entity);
-        new StageAspectResizer(rw, 2);
-        new DummyEditorField();
     }
 
     function getSampleText() {
         return lime.utils.Assets.getText("Assets/heaps-fonts/Rich-text-sample.xml");
-    }
-}
-
-class Utils {
-    public static function withLiquidTransform(w:Placeholder2D, aspectRatio) {
-        var transformer = new LiquidTransformer(aspectRatio);
-        for (a in Axis2D) {
-            var applier2 = new TransformatorAxisApplier(transformer, a);
-            w.axisStates[a].addSibling(applier2);
-        }
-        w.entity.addComponent(transformer);
-        return w;
     }
 }
 

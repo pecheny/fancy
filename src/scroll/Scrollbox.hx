@@ -52,8 +52,8 @@ class ScrollboxWidget extends Widget implements VisibleSizeProvider {
 //        child1.axisStates[vertical].addSibling(content.widget().axisStates[vertical]);
 
 //        w.entity.addChild(content.widget().entity);
-//        w.entity.addChild(hscroll.widget().entity); // todo bind to one entity instead
-//        w.entity.addChild(vscroll.widget().entity);
+        w.entity.addChild(hscroll.widget().entity); // todo bind to one entity instead
+        w.entity.addChild(vscroll.widget().entity);
         makeContainer(w, [child1, child2]);
     }
 
