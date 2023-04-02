@@ -4,7 +4,7 @@
     <set name="builds_folder" value="/AndroidBuilds" if="android"/>
 
     <meta title="Sample" package="com.sample.buttons" version="1.0.0" company="Company Name"/>
-<!--    <app main="ClickAndButt" path="${builds_folder}/Export" file="fgui"/>-->
+   <!-- <app main="ClickAndButt" path="${builds_folder}/Export" file="fgui"/> -->
     <app main="FancyPg" path="${builds_folder}/Export" file="fgui"/>
 
     <window antialiasing="4"/>
@@ -33,16 +33,11 @@
     <haxelib name="htext"/>
     <haxelib name="taxis"/>
 
-    <haxelib name="hxcpp-debugger"/>
     <haxedef name = "openfl_disable_context_cache" value = "true" />
     <haxedef name = "openfl_always_render" value = "true" />
 
-    <haxedef name = "HXCPP_DEBUGGER"  />
 <!--    <haxedef name = "dump" value="pretty"  />-->
 <!--    <haxeflag name = "&#45;&#45;dump" value="pretty"  />-->
-
-    <haxelib name="extension-hub"/>
-
 <!--    <haxeflag name="-dce" value="full" />-->
     <assets path="Assets" include="*"/>
 
