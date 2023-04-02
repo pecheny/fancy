@@ -11,11 +11,11 @@ import Axis2D;
 import widgets.ButtonBase;
 class ColouredQuad {
 
-    public static function flatClolorQuad(w:Placeholder2D):ShapeWidget<ColorSet> {
+    public static function flatClolorQuad(w:Placeholder2D, color = 0):ShapeWidget<ColorSet> {
         var attrs = ColorSet.instance;
         var shw = new ShapeWidget(attrs, w);
         shw.addChild(new QuadGraphicElement(attrs));
-        var colors = new ShapesColorAssigner(attrs, 0, shw.getBuffer());
+        var colors = new ShapesColorAssigner(attrs, color, shw.getBuffer());
         var viewProc:ClickViewProcessor = w.entity.getComponent(ClickViewProcessor);
         if (viewProc != null) {
             viewProc.addHandler(new InteractiveColors(colors.setColor).viewHandler);
