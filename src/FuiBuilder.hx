@@ -126,6 +126,8 @@ class FuiBuilder {
     }
 
     public function createGldo<T:AttribSet>(attrs:T, e:Entity, type:String, aspect:RenderingAspect, name:String):GLDisplayObject<T> {
+        if (aspect == null)
+            aspect = renderAspectBuilder.newChain().build();
         return cast gldoBuilder.getGldo(e, type, aspect, name);
     }
 
