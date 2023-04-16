@@ -147,9 +147,10 @@ class FuiBuilder {
     }
 
     public function createGldo<T:AttribSet>(attrs:T, e:Entity, type:String, aspect:RenderingAspect, name:String):GLDisplayObject<T> {
-        if (aspect == null)
-            aspect = renderAspectBuilder.newChain().build();
-        return cast gldoBuilder.getGldo(e, type, aspect, name);
+        renderAspectBuilder.newChain();
+        if (aspect != null)
+            renderAspectBuilder.add(aspect);
+        return cast gldoBuilder.getGldo(e, type, renderAspectBuilder.build(), name);
     }
 
     public function createTextGldo(e, descr:Xml) {
@@ -158,8 +159,7 @@ class FuiBuilder {
         var font = fonts.getFont(fontName);
         if (font == null)
             throw 'there is no font $fontName';
-        var aspect = renderAspectBuilder.newChain().add(new MSDFRenderingElement(textureStorage, font.texturePath, color)).build();
-        return createGldo(MSDFSet.instance, e, "msdf", aspect, font.getId());
+        return createGldo(MSDFSet.instance, e, "msdf", new MSDFRenderingElement(textureStorage, font.texturePath, color), font.getId());
     }
 
     public function createContainer(e:Entity, descr):Entity {
