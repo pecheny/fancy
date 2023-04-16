@@ -1,4 +1,4 @@
-package ;
+package;
 
 import data.aliases.AttribAliases;
 import gl.sets.TexSet;
@@ -28,6 +28,7 @@ import utils.DummyEditorField;
 import widgets.BarWidget;
 import widgets.Button;
 import widgets.Label;
+
 using transform.LiquidTransformer;
 using widgets.utils.Utils;
 using al.Builder;
@@ -37,19 +38,18 @@ class FancyPg extends Sprite {
         super();
         var sampleText = "FoEo Bar AbAb Aboo Distance Field texture Ad Ae Af Bd Be Bf Bb Ab Dd De Df Cd Ce Cf";
         var root:Entity = new Entity();
-        var fuiBuilder =  new FuiBuilder();
+        var fuiBuilder = new FuiBuilder();
         fuiBuilder.regDefaultDrawcalls();
         var ar = fuiBuilder.ar;
         var b = new PlaceholderBuilderGl(ar);
-//        fuiBuilder.addBmFont("", "Assets/heaps-fonts/monts.fnt"); // todo
+        //        fuiBuilder.addBmFont("", "Assets/heaps-fonts/monts.fnt"); // todo
         fuiBuilder.addBmFont("", "Assets/heaps-fonts/robo.fnt"); // todo
         root.addComponentByType(AspectRatioProvider, fuiBuilder.ar);
         root.addComponentByType(WindowSizeProvider, fuiBuilder.ar);
         root.addComponentByType(Stage, fuiBuilder.ar);
         fuiBuilder.configureInput(root);
 
-        var dl =
-        '<container>
+        var dl = '<container>
         <drawcall type="color"/>
         <drawcall type="text" font=""/>
         </container>';
@@ -58,67 +58,58 @@ class FancyPg extends Sprite {
         var container:Sprite = root.getComponent(Sprite);
         addChild(container);
 
+        var pxStyle = fuiBuilder.textStyles.newStyle("px").withSize(px, 64).build();
 
-        var pxStyle = fuiBuilder.textStyles.newStyle("px")
-        .withSize(px, 64)
-        .build();
+        var pcStyle = fuiBuilder.textStyles.newStyle("pc") //        .withAlign(vertical, Center)
+            .withSize(sfr, .1)
+            .withPadding(horizontal, sfr, 0.3)
+            .build();
 
-        var pcStyle = fuiBuilder.textStyles.newStyle("pc")
-//        .withAlign(vertical, Center)
-        .withSize(sfr, .1)
-        .withPadding(horizontal, sfr, 0.3)
-        .build();
+        var pcStyleR = fuiBuilder.textStyles.newStyle("pc").withAlign(horizontal, Backward).build();
 
-        var pcStyleR = fuiBuilder.textStyles.newStyle("pc")
-        .withAlign(horizontal, Backward)
-        .build();
+        var pcStyleC = fuiBuilder.textStyles.newStyle("pc").withAlign(horizontal, Center).build();
 
-        var pcStyleC = fuiBuilder.textStyles.newStyle("pc")
-        .withAlign(horizontal, Center)
-        .build();
-
-//        var fitStyle = fuiBuilder.textStyles.newStyle("fit")
-//        .withSize(pfr, .75)
-//        .withAlign(horizontal, Center)
-//        .withAlign(vertical, Center)
-//        .build();
+        //        var fitStyle = fuiBuilder.textStyles.newStyle("fit")
+        //        .withSize(pfr, .75)
+        //        .withAlign(horizontal, Center)
+        //        .withAlign(vertical, Center)
+        //        .build();
 
         var fitStyle = fuiBuilder.textStyles.newStyle("fit")
-        .withSize(pfr, .5)
-        .withAlign(horizontal, Forward)
-        .withAlign(vertical, Backward)
-        .withPadding(horizontal, pfr, 0.33)
-        .withPadding(vertical, pfr, 0.33)
-        .build();
+            .withSize(pfr, .5)
+            .withAlign(horizontal, Forward)
+            .withAlign(vertical, Backward)
+            .withPadding(horizontal, pfr, 0.33)
+            .withPadding(vertical, pfr, 0.33)
+            .build();
 
         var pxW = b.b();
         @:privateAccess pxW.axisStates[vertical].size = new PixelSize(vertical, ar, 60);
 
         var elements = () -> [
-            new BarContainer(FixedThikness(new BarAxisSlot ({pos:.5, thikness:1.}, null)), Portion(new BarAxisSlot ({start:0., end:1.}, null))),
-            new BarContainer(FixedThikness(new BarAxisSlot ({pos:0., thikness:1.}, null)), Portion(new BarAxisSlot ({start:0., end:1.}, null)) ),
+            new BarContainer(FixedThikness(new BarAxisSlot({pos: .5, thikness: 1.}, null)), Portion(new BarAxisSlot({start: 0., end: 1.}, null))),
+            new BarContainer(FixedThikness(new BarAxisSlot({pos: 0., thikness: 1.}, null)), Portion(new BarAxisSlot({start: 0., end: 1.}, null))),
         ];
 
         function cqFac() {
             var attrs = ColorSet.instance;
-            var cq = new BarWidget(attrs, b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()),  elements());
+            var cq = new BarWidget(attrs, b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), elements());
             var colors = new ShapesColorAssigner(attrs, 0, cq.getBuffer());
             return cq;
         }
-        var quads = [for (i in 0...1)cqFac().widget()];
-//        quads.push(new Label(b.b(), pcStyle).withText(sampleText).widget());
-//        quads.push(new Label(b.b(), pcStyleC).withText(sampleText).widget());
-//        quads.push(new Label(b.b(), pcStyleR).withText(sampleText).widget());
-        quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "<font lineHeight=\"0.1\">Button </font>", fitStyle).widget());
+        var quads = [for (i in 0...1) cqFac().widget()];
+        //        quads.push(new Label(b.b(), pcStyle).withText(sampleText).widget());
+        //        quads.push(new Label(b.b(), pcStyleC).withText(sampleText).widget());
+        //        quads.push(new Label(b.b(), pcStyleR).withText(sampleText).widget());
+        quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "<font lineHeight=\"0.1\">Button </font>",
+            fitStyle).widget());
         quads.push(texturedQuad(fuiBuilder, b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio())).widget());
         quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "Button", fitStyle).widget());
         quads.push(new Button(pxW.withLiquidTransform(ar.getAspectRatio()), null, "Button caption", fitStyle).widget());
         quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "Button", fitStyle).widget());
         quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "Button", fitStyle).widget());
 
-
-//        quads.push(new ColouredQuad(b.b().withLiquidTransform(ar.getAspectRatio()), 0x303090).widget());
-
+        //        quads.push(new ColouredQuad(b.b().withLiquidTransform(ar.getAspectRatio()), 0x303090).widget());
 
         var container1 = Builder.v().withChildren(quads);
         fuiBuilder.makeClickInput(container1);
@@ -126,19 +117,14 @@ class FancyPg extends Sprite {
         var placeholder = b.b();
         createScrollbox(fuiBuilder, container1, placeholder, ar, dl);
 
-
-        var rw = Builder.h().withChildren([ placeholder, new Label(b.b(), pcStyleR).withText(sampleText).widget()]);
+        var rw = Builder.h().withChildren([placeholder, new Label(b.b(), pcStyleR).withText(sampleText).widget()]);
         root.addChild(rw.entity);
         new StageAspectResizer(rw, 2);
         new DummyEditorField();
     }
 
-
     function createScrollbox(fuiBuilder:FuiBuilder, container1:Placeholder2D, placeholder:Placeholder2D, ar, dl) {
-        var scroll = new W2CScrollableContent(
-        container1.entity.getComponent(Widget2DContainer),
-        placeholder
-        );
+        var scroll = new W2CScrollableContent(container1.entity.getComponent(Widget2DContainer), placeholder);
 
         placeholder.entity.name = "placeholder";
         var scroller = new ScrollboxItem(placeholder, scroll, ar.getAspectRatio());
@@ -154,8 +140,8 @@ class FancyPg extends Sprite {
         shw.addChild(new QuadGraphicElement(attrs));
         var uvs = new graphics.DynamicAttributeAssigner(attrs, shw.getBuffer());
         uvs.fillBuffer = (attrs:TexSet, buffer) -> {
-                var writer = attrs.getWriter(AttribAliases.NAME_UV_0);
-                QuadGraphicElement.writeQuadPostions(buffer.getBuffer(), writer, 0, (a,wg) -> wg );
+            var writer = attrs.getWriter(AttribAliases.NAME_UV_0);
+            QuadGraphicElement.writeQuadPostions(buffer.getBuffer(), writer, 0, (a, wg) -> wg);
         };
         fuiBuilder.createContainer(w.entity, Xml.parse('<container><drawcall type="image" path="Assets/bunie.png" /></container>').firstElement());
         var spr:Sprite = w.entity.getComponent(Sprite);
@@ -168,8 +154,8 @@ class FancyPg extends Sprite {
         // }
         return shw;
     }
+
     function getSampleText() {
         return lime.utils.Assets.getText("Assets/heaps-fonts/Rich-text-sample.xml");
     }
 }
-
