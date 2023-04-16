@@ -1,5 +1,9 @@
 package ;
 
+import data.aliases.AttribAliases;
+import gl.sets.TexSet;
+import graphics.shapes.QuadGraphicElement;
+import widgets.ShapeWidget;
 import a2d.AspectRatioProvider;
 import a2d.Stage;
 import a2d.WindowSizeProvider;
@@ -106,6 +110,7 @@ class FancyPg extends Sprite {
 //        quads.push(new Label(b.b(), pcStyleC).withText(sampleText).widget());
 //        quads.push(new Label(b.b(), pcStyleR).withText(sampleText).widget());
         quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "<font lineHeight=\"0.1\">Button </font>", fitStyle).widget());
+        quads.push(texturedQuad(fuiBuilder, b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio())).widget());
         quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "Button", fitStyle).widget());
         quads.push(new Button(pxW.withLiquidTransform(ar.getAspectRatio()), null, "Button caption", fitStyle).widget());
         quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "Button", fitStyle).widget());
@@ -129,7 +134,7 @@ class FancyPg extends Sprite {
     }
 
 
-    function createScrollbox(fuiBuilder, container1:Placeholder2D, placeholder:Placeholder2D, ar, dl) {
+    function createScrollbox(fuiBuilder:FuiBuilder, container1:Placeholder2D, placeholder:Placeholder2D, ar, dl) {
         var scroll = new W2CScrollableContent(
         container1.entity.getComponent(Widget2DContainer),
         placeholder
@@ -143,6 +148,26 @@ class FancyPg extends Sprite {
         addChild(spr);
     }
 
+    public function texturedQuad(fuiBuilder:FuiBuilder, w:Placeholder2D):ShapeWidget<TexSet> {
+        var attrs = TexSet.instance;
+        var shw = new ShapeWidget(attrs, w);
+        shw.addChild(new QuadGraphicElement(attrs));
+        var uvs = new graphics.DynamicAttributeAssigner(attrs, shw.getBuffer());
+        uvs.fillBuffer = (attrs:TexSet, buffer) -> {
+                var writer = attrs.getWriter(AttribAliases.NAME_UV_0);
+                QuadGraphicElement.writeQuadPostions(buffer.getBuffer(), writer, 0, (a,wg) -> wg );
+        };
+        fuiBuilder.createContainer(w.entity, Xml.parse('<container><drawcall type="image" path="Assets/bunie.png" /></container>').firstElement());
+        var spr:Sprite = w.entity.getComponent(Sprite);
+        addChild(spr);
+        // var colors = new ShapesColorAssigner(attrs, color, shw.getBuffer());
+        // var viewProc:ClickViewProcessor = w.entity.getComponent(ClickViewProcessor);
+        // if (viewProc != null) {
+        //     viewProc.addHandler(new InteractiveColors(colors.setColor).viewHandler);
+        //     viewProc.addHandler(new InteractiveTransform(w).viewHandler);
+        // }
+        return shw;
+    }
     function getSampleText() {
         return lime.utils.Assets.getText("Assets/heaps-fonts/Rich-text-sample.xml");
     }
