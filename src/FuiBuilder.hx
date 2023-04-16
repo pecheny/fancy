@@ -1,4 +1,7 @@
 package ;
+import gl.aspects.TextureBinder;
+import shaderbuilder.TextureFragment;
+import gl.sets.TexSet;
 import a2d.AspectRatioProvider;
 import a2d.Stage;
 import a2d.WindowSizeProvider;
@@ -84,6 +87,20 @@ class FuiBuilder {
 
     public function regDefaultDrawcalls():Void {
         regDrawcallType(
+            "image",
+            {
+                type:"texture",
+                attrs:TexSet.instance,
+                vert:[Uv0Passthrough.instance, PosPassthrough.instance],
+                frag:[cast TextureFragment.get(0,0)],
+            }, (e, xml) -> {
+                if(!xml.exists("path"))
+                    throw '<image /> gldo should have path property';
+                 return createGldo(TexSet.instance, e, "texture", new TextureBinder(textureStorage, xml.get("path")), "") ;
+                }
+        );
+
+        regDrawcallType(
             "color",
             {
                 type:"color",
@@ -92,6 +109,10 @@ class FuiBuilder {
                 frag:[cast ColorPassthroughFrag.instance],
             }, (e, xml) -> createGldo(ColorSet.instance, e, "color", null, "")
         );
+        
+        // first "color" – alias in xml
+        // descr.type: "color" – alias for shader registry. should be same with next one
+        // createGldo(_,_, "color") – alias by which shader will be requeseted during gl init
 
         regDrawcallType(
             "text",
