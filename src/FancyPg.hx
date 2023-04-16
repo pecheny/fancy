@@ -97,25 +97,27 @@ class FancyPg extends Sprite {
             var colors = new ShapesColorAssigner(attrs, 0, cq.getBuffer());
             return cq;
         }
-        var quads = [for (i in 0...1) cqFac().widget()];
-        //        quads.push(new Label(b.b(), pcStyle).withText(sampleText).widget());
-        //        quads.push(new Label(b.b(), pcStyleC).withText(sampleText).widget());
-        //        quads.push(new Label(b.b(), pcStyleR).withText(sampleText).widget());
-        quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "<font lineHeight=\"0.1\">Button </font>",
-            fitStyle).widget());
-        quads.push(texturedQuad(fuiBuilder, b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio())).widget());
-        quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "Button", fitStyle).widget());
-        quads.push(new Button(pxW.withLiquidTransform(ar.getAspectRatio()), null, "Button caption", fitStyle).widget());
-        quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "Button", fitStyle).widget());
-        quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "Button", fitStyle).widget());
-
+        function createContent(fuiBuilder) {
+            var quads = [for (i in 0...1) cqFac().widget()];
+            //        quads.push(new Label(b.b(), pcStyle).withText(sampleText).widget());
+            //        quads.push(new Label(b.b(), pcStyleC).withText(sampleText).widget());
+            //        quads.push(new Label(b.b(), pcStyleR).withText(sampleText).widget());
+            quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "<font lineHeight=\"0.1\">Button </font>",
+                fitStyle).widget());
+            quads.push(texturedQuad(fuiBuilder, b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), "bunie.png", false).widget());
+            quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "Button", fitStyle).widget());
+            quads.push(new Button(pxW.withLiquidTransform(ar.getAspectRatio()), null, "Button caption", fitStyle).widget());
+            quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "Button", fitStyle).widget());
+            quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "Button", fitStyle).widget());
+            return quads;
+        }
         //        quads.push(new ColouredQuad(b.b().withLiquidTransform(ar.getAspectRatio()), 0x303090).widget());
 
-        var container1 = Builder.v().withChildren(quads);
+        var container1 = Builder.v().widget();
         fuiBuilder.makeClickInput(container1);
         container1.entity.name = "c1";
         var placeholder = b.b();
-        createScrollbox(fuiBuilder, container1, placeholder, ar, dl);
+        createScrollbox(fuiBuilder, container1, placeholder, ar, dl, createContent);
 
         var rw = Builder.h().withChildren([placeholder, new Label(b.b(), pcStyleR).withText(sampleText).widget()]);
         root.addChild(rw.entity);
@@ -123,18 +125,23 @@ class FancyPg extends Sprite {
         new DummyEditorField();
     }
 
-    function createScrollbox(fuiBuilder:FuiBuilder, container1:Placeholder2D, placeholder:Placeholder2D, ar, dl) {
-        var scroll = new W2CScrollableContent(container1.entity.getComponent(Widget2DContainer), placeholder);
+    function createScrollbox(fuiBuilder:FuiBuilder, container1:Placeholder2D, placeholder:Placeholder2D, ar, dl,
+            childrenFactory:FuiBuilder->Array<Placeholder2D>) {
+        var cont = container1.entity.getComponent(Widget2DContainer);
+        var scroll = new W2CScrollableContent(cont, placeholder);
 
         placeholder.entity.name = "placeholder";
         var scroller = new ScrollboxItem(placeholder, scroll, ar.getAspectRatio());
         fuiBuilder.addScissors(scroller.widget());
         fuiBuilder.createContainer(scroller.widget().entity, Xml.parse(dl).firstElement());
+        for (ch in childrenFactory(fuiBuilder))
+            cont.addWidget(ch);
         var spr:Sprite = scroller.widget().entity.getComponent(Sprite);
         addChild(spr);
+        fuiBuilder.setAspects([]);
     }
 
-    public function texturedQuad(fuiBuilder:FuiBuilder, w:Placeholder2D):ShapeWidget<TexSet> {
+    public function texturedQuad(fuiBuilder:FuiBuilder, w:Placeholder2D, filename, createGldo = true):ShapeWidget<TexSet> {
         var attrs = TexSet.instance;
         var shw = new ShapeWidget(attrs, w);
         shw.addChild(new QuadGraphicElement(attrs));
@@ -143,15 +150,11 @@ class FancyPg extends Sprite {
             var writer = attrs.getWriter(AttribAliases.NAME_UV_0);
             QuadGraphicElement.writeQuadPostions(buffer.getBuffer(), writer, 0, (a, wg) -> wg);
         };
-        fuiBuilder.createContainer(w.entity, Xml.parse('<container><drawcall type="image" path="Assets/bunie.png" /></container>').firstElement());
-        var spr:Sprite = w.entity.getComponent(Sprite);
-        addChild(spr);
-        // var colors = new ShapesColorAssigner(attrs, color, shw.getBuffer());
-        // var viewProc:ClickViewProcessor = w.entity.getComponent(ClickViewProcessor);
-        // if (viewProc != null) {
-        //     viewProc.addHandler(new InteractiveColors(colors.setColor).viewHandler);
-        //     viewProc.addHandler(new InteractiveTransform(w).viewHandler);
-        // }
+        if (createGldo) {
+            fuiBuilder.createContainer(w.entity, Xml.parse('<container><drawcall type="image" path="Assets/$filename" /></container>').firstElement());
+            var spr:Sprite = w.entity.getComponent(Sprite);
+            addChild(spr);
+        }
         return shw;
     }
 
