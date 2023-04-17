@@ -64,8 +64,8 @@ class PlaceholderBuilderBase<T:AxisFactory> {
     var factories:AVector2D<T>;
     var keepStateAfterBuild = false;
 
-    public function b():Placeholder2D {
-        var entity = new Entity();
+    public function b(name:String = null):Placeholder2D {
+        var entity = new Entity(name);
         var axisStates = AVConstructor.factoryCreate(Axis2D, a -> factories[a].create());
 
         var w = new Placeholder2D(axisStates);
