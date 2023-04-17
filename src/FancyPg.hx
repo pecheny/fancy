@@ -93,7 +93,7 @@ class FancyPg extends Sprite {
 
         function cqFac() {
             var attrs = ColorSet.instance;
-            var cq = new BarWidget(attrs, b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), elements());
+            var cq = new BarWidget(attrs, b.h(sfr, 1).v(sfr, 0.5).b("bars").withLiquidTransform(ar.getAspectRatio()), elements());
             var colors = new ShapesColorAssigner(attrs, 0, cq.getBuffer());
             return cq;
         }
@@ -104,7 +104,7 @@ class FancyPg extends Sprite {
             //        quads.push(new Label(b.b(), pcStyleR).withText(sampleText).widget());
             quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "<font lineHeight=\"0.1\">Button </font>",
                 fitStyle).widget());
-            quads.push(texturedQuad(fuiBuilder, b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), "bunie.png", false).widget());
+            quads.push(texturedQuad(fuiBuilder, b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), "bunie.png").widget());
             quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "Button", fitStyle).widget());
             quads.push(new Button(pxW.withLiquidTransform(ar.getAspectRatio()), null, "Button caption", fitStyle).widget());
             quads.push(new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "Button", fitStyle).widget());
@@ -119,7 +119,12 @@ class FancyPg extends Sprite {
         var placeholder = b.b();
         createScrollbox(fuiBuilder, container1, placeholder, ar, dl, createContent);
 
-        var rw = Builder.h().withChildren([placeholder, new Label(b.b(), pcStyleR).withText(sampleText).widget()]);
+        var cright = Builder.v().withChildren([
+            new Label(b.b(), pcStyleR).withText(sampleText).widget(),
+            new widgets.Slider(b.v(sfr, 0.1).b("slider r").withLiquidTransform(ar.getAspectRatio()), horizontal, f -> trace("" + f)).withProgress(0.5).widget(),
+            texturedQuad(fuiBuilder, b.h(pfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), "bunie.png").widget(),
+        ]);
+        var rw = Builder.h().withChildren([placeholder, cright]);
         root.addChild(rw.entity);
         new StageAspectResizer(rw, 2);
         new DummyEditorField();

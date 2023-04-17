@@ -1,4 +1,5 @@
 package widgets;
+import shimp.InputSystem;
 import al.al2d.Placeholder2D;
 import widgets.utils.WidgetHitTester.Point;
 import data.aliases.AttribAliases;
@@ -25,9 +26,7 @@ class Slider extends ShapeWidget<ColorSet> {
         this.handler = h;
         this.color = 0xffffff;
         this.mainAxis = direction;
-        buffer = Bytes.alloc(4 * ColorSet.instance.stride);
-        posWriter = ColorSet.instance.getWriter(AttribAliases.NAME_POSITION);
-        cp = SolidColorProvider.fromInt(color, 128);
+        cp = SolidColorProvider.fromInt(color, 255);
         super(ColorSet.instance, w);
     }
 
@@ -42,12 +41,12 @@ class Slider extends ShapeWidget<ColorSet> {
 
     override function createShapes() {
         var aspectRatio = ratioProvider.getAspectRatio();
-        q = new ProgressBar(ColorSet.instance, transformer.transformValue);
+        q = new ProgressBar(ColorSet.instance);
         q.setVal(mainAxis, progress);
-        children.push(q);
+        addChild(q);
         var inp = new SliderInput(w, cast ratioProvider, mainAxis, (v) -> withProgress(v));
         w.entity.addComponentByType(InputSystemTarget, inp);
-        new CtxWatcher(InputBinder, w.entity);
+        new CtxWatcher(InputBinder, w.entity, false, true);
     }
 
     override function onShapesDone() {
@@ -57,7 +56,7 @@ class Slider extends ShapeWidget<ColorSet> {
 
     public function setColor(c:Int) {
         cp.setColor(c);
-        MeshUtilss.writeInt8Attribute(attrs, buffer, AttribAliases.NAME_COLOR_IN, 0, vertsCount, cp.getValue);
+        MeshUtilss.writeInt8Attribute(attrs, getBuffer().getBuffer(), AttribAliases.NAME_COLOR_IN, 0, getBuffer().getVertCount(), cp.getValue);
     }
 }
 
