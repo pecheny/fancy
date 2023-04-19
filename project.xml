@@ -8,7 +8,7 @@
     <app main="FancyPg" path="${builds_folder}/Export" file="fgui"/>
 
     <window antialiasing="4"/>
-    <window background="#303030" fps="60" width="1280" height="960" unless="html5"/>
+    <window background="#303030" fps="60" width="1280" height="760" unless="html5"/>
     <window background="#303030" fps="60"  if="html5"/>
     <!--<window background="#303030" fps="60" orientation="portrait"/>-->
     <source path="src"/>
