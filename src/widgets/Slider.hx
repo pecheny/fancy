@@ -46,7 +46,7 @@ class Slider extends ShapeWidget<ColorSet> {
         addChild(q);
         var inp = new SliderInput(w, cast ratioProvider, mainAxis, (v) -> withProgress(v));
         w.entity.addComponentByType(InputSystemTarget, inp);
-        new CtxWatcher(InputBinder, w.entity, false, true);
+        new CtxWatcher(InputBinder, w.entity);
     }
 
     override function onShapesDone() {
