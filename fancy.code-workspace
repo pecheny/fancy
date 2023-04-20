@@ -1,21 +1,33 @@
 {
-	"folders": [
-		{
-			"path": "."
-		},
-		{
-			"path": "..\\alayout"
-		},
-		{
-			"path": "..\\flgl"
-		},
-		{
-			"path": "..\\fsm"
-		},
-		{
-			"path": "..\\htext"
-		},
-		{
-			"path": "..\\shimp"
-		}
-	]}
+    "folders": [
+        {
+            "path": "."
+        },
+        {
+            "path": "..\\alayout"
+        },
+        {
+            "path": "..\\flgl"
+        },
+        {
+            "path": "..\\fsm"
+        },
+        {
+            "path": "..\\htext"
+        },
+        {
+            "path": "..\\shimp"
+        }
+    ],
+    "settings": {
+        "search.exclude": {
+            "**/Export": true,
+            "**/out": true,
+            "**/.history": true,
+        },
+        "files.exclude": {
+            "**/Export": true,
+            "**/out": true,
+            "**/.history": true,
+        }
+    }
