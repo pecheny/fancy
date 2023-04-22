@@ -1,37 +1,36 @@
 package;
 
-import data.aliases.AttribAliases;
-import gl.sets.TexSet;
-import graphics.shapes.QuadGraphicElement;
-import widgets.ShapeWidget;
+import a2d.Boundbox;
+import macros.AVConstructor;
+import al.core.AxisApplier;
+import openfl.Lib;
+import Axis2D;
 import a2d.AspectRatioProvider;
 import a2d.Stage;
 import a2d.WindowSizeProvider;
 import al.al2d.Placeholder2D;
 import al.al2d.Widget2DContainer;
-import al.Builder;
 import al.openfl.StageAspectResizer;
 import algl.Builder.PlaceholderBuilderGl;
-import algl.PixelSize;
-import algl.ScreenMeasureUnit;
-import algl.TransformatorAxisApplier;
-import Axis2D;
+import data.aliases.AttribAliases;
 import ec.Entity;
 import gl.sets.ColorSet;
-import graphics.shapes.Bar;
+import gl.sets.TexSet;
 import graphics.ShapesColorAssigner;
-import htext.Align;
+import graphics.shapes.Bar;
+import graphics.shapes.QuadGraphicElement;
 import openfl.display.Sprite;
 import scroll.ScrollableContent.W2CScrollableContent;
 import scroll.ScrollboxItem;
-import utils.DummyEditorField;
 import widgets.BarWidget;
 import widgets.Button;
 import widgets.Label;
+import widgets.ShapeWidget;
+import widgets.Widget;
 
+using al.Builder;
 using transform.LiquidTransformer;
 using widgets.utils.Utils;
-using al.Builder;
 
 class FancyPg extends Sprite {
     var fuiBuilder = new FuiBuilder();
@@ -153,6 +152,9 @@ class FancyPg extends Sprite {
 
     function createMixedContentArray(fuiBuilder) {
         return [
+            new Button(b.h(sfr, 1).v(px, 60).b().withLiquidTransform(ar.getAspectRatio()), null, "Button caption", sty("fit")).widget(),
+            spriteAdapter(b.h(pfr, 1).v(sfr, 0.1).b()).widget(),
+            new Button(b.h(pfr, 1).v(px, 60).b().withLiquidTransform(ar.getAspectRatio()), null, "Button caption", sty("fit")).widget(),
             new Label(b.h(sfr, 1).v(sfr, 0.4).b(), sty("pcl")).withText(sampleText).widget(),
             new Label(b.h(sfr, 1).v(sfr, 0.4).b(), sty("pcc")).withText(sampleText).widget(),
             new Label(b.h(sfr, 1).v(sfr, 0.4).b(), sty("pcr")).withText(sampleText).widget(),
@@ -178,5 +180,97 @@ class FancyPg extends Sprite {
 
     function getSampleText() {
         return lime.utils.Assets.getText("Assets/heaps-fonts/Rich-text-sample.xml");
+    }
+
+    function spriteAdapter(w) {
+        var spr = new Sprite();
+        spr.graphics.beginFill(0xff0000);
+        spr.graphics.drawRect(0, 0, 30, 30);
+        spr.graphics.endFill();
+        Lib.current.addChild(spr);
+        return new AspectKeeper(w, spr);
+        // return new SpriteAdapter(w, spr);
+    }
+}
+
+class AspectKeeper extends Widget {
+    var spr:Sprite;
+    var bounds:a2d.Boundbox;
+    var size = AVConstructor.create(Axis2D, 1., 1.);
+    var pos = AVConstructor.create(Axis2D, 0., 0.);
+    var ownSizeAppliers:AVector2D<AxisApplier>;
+    @:once var s:Stage;
+
+    public function new(w:Placeholder2D, spr:Sprite, bounds = null) {
+        super(w);
+        this.spr = spr;
+        this.bounds = if (bounds == null) {
+            var b = spr.getBounds(spr);
+            new Boundbox(b.left, b.top, b.width, b.height);
+        } else bounds;
+
+        for (a in Axis2D) {
+            w.axisStates[a].addSibling(new KeeperAxisApplier(pos, size, this, a));
+        }
+    }
+
+    public function refresh() {
+        if (!_inited)
+            return;
+        var scale = 9999.;
+        for (a in Axis2D) {
+            var _scale = size[a] / bounds.size[a];
+            if (_scale < scale)
+                scale = _scale;
+        }
+
+        for (a in Axis2D) {
+            var free = size[a] - bounds.size[a] * scale;
+            var pos = pos[a] + free / 2;
+            trace(a, pos, scale);
+            apply(a, pos, scale);
+        }
+    }
+
+    inline function apply(a:Axis2D, pos:Float, scale:Float) {
+        switch a {
+            case horizontal:
+                spr.x = w2scr(a, pos);
+                spr.scaleX = w2scr(a, scale);
+            case vertical:
+                spr.y = w2scr(a, pos);
+                spr.scaleY = w2scr(a, scale);
+        }
+        // trace(this.pos[a]  + " " + size[a]);
+        // trace(spr.x  +" " + spr.scaleX  + " " + spr.width);
+    }
+
+    inline function w2scr(a, val:Float) {
+        return val * s.getWindowSize()[a] / s.getAspectRatio()[a] / 2;
+    }
+
+    public function getApplier(a:Axis2D) {
+        return ownSizeAppliers[a];
+    }
+}
+
+class KeeperAxisApplier implements AxisApplier {
+    var key:Axis2D;
+    var keeper:AspectKeeper;
+
+    var size:AVector2D<Float>;
+    var pos:AVector2D<Float>;
+
+    public function new(p, s, k, a) {
+        this.pos = p;
+        this.size = s;
+        this.keeper = k;
+        this.key = a;
+    }
+
+    public function apply(pos:Float, size:Float):Void {
+        this.pos[key] = pos;
+        this.size[key] = size;
+        keeper.refresh();
     }
 }
