@@ -99,7 +99,7 @@ class ScreenOne extends Screen {
         var content = new WonderQuad(Builder.widget().withLiquidTransform(stage.getAspectRatio()), 0x505050);
 
         fuiBuilder.makeClickInput(pnl.widget());
-        var wc = Builder.createContainer(w, horizontal).withChildren([
+        var wc = Builder.createContainer(w, horizontal, Forward).withChildren([
             gap(),
             pnl.widget(),
             gap(),
@@ -115,7 +115,7 @@ class ScreenOne extends Screen {
     }
 
     function addButton(text) {
-        var b1 = new WonderButton(b.h(pfr, 1).v(sfr, 0.3).b().withLiquidTransform(stage.getAspectRatio()), () -> screens.switchTo(Screens.TWO), text, textStyleContext);
+        var b1 = new WonderButton(b.h(pfr, 1).v(sfr, 0.15).b().withLiquidTransform(stage.getAspectRatio()), () -> screens.switchTo(Screens.TWO), text, textStyleContext);
         Builder.addWidget(pnl, b1.widget());
         Builder.addWidget(pnl, b.h(pfr, 0.1).v(sfr, 0.1).b());
         addAnim(b1.setTime);
@@ -154,7 +154,7 @@ class ScreenTwo extends Screen {
 
         fuiBuilder.makeClickInput(pnl.widget());
 
-        var wc = Builder.createContainer(w, horizontal).withChildren([
+        var wc = Builder.createContainer(w, horizontal, Forward).withChildren([
             gap(),
             pnl.widget(),
             gap(),
@@ -166,7 +166,7 @@ class ScreenTwo extends Screen {
     }
 
     function addButton(text) {
-        var b1 = new WonderButton(b.h(pfr, 1).v(sfr, 0.5).b().withLiquidTransform(stage.getAspectRatio()), () -> screens.switchTo(Screens.ONE), text, textStyleContext);
+        var b1 = new WonderButton(b.h(pfr, 1).v(sfr, 0.25).b().withLiquidTransform(stage.getAspectRatio()), () -> screens.switchTo(Screens.ONE), text, textStyleContext);
         Builder.addWidget(pnl, b1.widget());
         Builder.addWidget(pnl, b.h(pfr, 0.1).v(sfr, 0.1).b());
         addAnim(b1.setTime);
