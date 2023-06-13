@@ -1,4 +1,7 @@
 package ;
+import al.openfl.StageAspectResizer;
+import al.ec.WidgetSwitcher;
+import al.Builder;
 import gl.aspects.TextureBinder;
 import shaderbuilder.TextureFragment;
 import gl.sets.TexSet;
@@ -37,18 +40,11 @@ import update.Updater;
 import utils.TextureStorage;
 import widgets.utils.WidgetHitTester;
 
-class DummyFrag implements ShaderElement {
-    public static var instance = new DummyFrag();
-
-    public function new() {}
-
-    public function getDecls():String {
-        return "";
-    }
-
-    public function getExprs():String {
-        return 'gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);';
-    }
+class XmlLayerLayouts {
+    public static final COLOR_AND_TEXT = '<container>
+    <drawcall type="color"/>
+    <drawcall type="text" font=""/>
+    </container>';
 }
 
 class FuiBuilder {
@@ -81,6 +77,37 @@ class FuiBuilder {
         #end
         setAspects([]);
     }
+
+    public function createDefaultRoot(dl, font = "Assets/fonts/robo.fnt") {
+        var rw = Builder.widget();
+        var rootEntity = rw.entity; 
+		this.regDefaultDrawcalls();
+		var ar = this.ar;
+		this.addBmFont("", font); // todo
+		this.configureInput(rootEntity);
+		this.configureScreen(rootEntity);
+		this.configureAnimation(rootEntity);
+		rootEntity.addComponent(this);
+
+        this.createContainer(rootEntity, Xml.parse(dl).firstElement());
+
+		var fitStyle = this.textStyles.newStyle("fit")
+			.withSize(pfr, .5)
+			.withAlign(horizontal, Forward)
+			.withAlign(vertical, Backward)
+			.withPadding(horizontal, pfr, 0.33)
+			.withPadding(vertical, pfr, 0.33)
+			.build();
+		rootEntity.addComponent(fitStyle);
+
+		// var rw = Builder.widget();
+		// rootEntity.addChild(rw.entity);
+
+		var v = new StageAspectResizer(rw, 2);
+        var switcher = new WidgetSwitcher(rw);
+        rootEntity.addComponent(switcher);
+        return rootEntity;      
+	}
 
 
     static var smoothShaderEl = new GeneralPassthrough(MSDFSet.NAME_DPI, MSDFShader.smoothness);
@@ -210,5 +237,19 @@ class FuiBuilder {
     public function addScissors(w:Placeholder2D) {
         var sc = new ScissorAspect(w, ar.getAspectRatio());
         sharedAspects.push(sc);
+    }
+}
+
+class DummyFrag implements ShaderElement {
+    public static var instance = new DummyFrag();
+
+    public function new() {}
+
+    public function getDecls():String {
+        return "";
+    }
+
+    public function getExprs():String {
+        return 'gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);';
     }
 }
