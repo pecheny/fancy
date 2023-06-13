@@ -1,35 +1,13 @@
 package openfl;
 
 import Axis2D;
-import a2d.AspectRatioProvider;
 import a2d.Boundbox;
 import a2d.Stage;
-import a2d.WindowSizeProvider;
 import al.al2d.Placeholder2D;
-import al.al2d.Widget2DContainer;
 import al.core.AxisApplier;
-import al.core.AxisApplier;
-import al.openfl.StageAspectResizer;
-import al.view.AspectKeeper;
-import algl.Builder.PlaceholderBuilderGl;
-import data.aliases.AttribAliases;
 import ec.Entity;
-import gl.sets.ColorSet;
-import gl.sets.TexSet;
-import graphics.ShapesColorAssigner;
-import graphics.shapes.Bar;
-import graphics.shapes.QuadGraphicElement;
 import macros.AVConstructor;
-import openfl.Lib;
-import openfl.SpriteAspectKeeper;
 import openfl.display.Sprite;
-import scroll.ScrollableContent.W2CScrollableContent;
-import scroll.ScrollboxItem;
-import widgets.BarWidget;
-import widgets.Button;
-import widgets.Label;
-import widgets.ShapeWidget;
-import widgets.Widget;
 import widgets.Widget;
 
 class SpriteAspectKeeper extends Widget {
