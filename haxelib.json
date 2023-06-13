@@ -1,14 +1,27 @@
 {
-  "name": "fancy",
-  "url": "https://github.com/pecheny/fancy",
-  "license": "MIT",
-  "tags": ["gui", "ui"],
-  "description": "",
-  "version": "1.0.0",
-  "releasenote": "Initial release. ",
-  "classPath": "src",
-  "contributors": [
-    "pecheny"
-  ]
+    "name": "fancy",
+    "url": "https://github.com/pecheny/fancy",
+    "license": "MIT",
+    "tags": [
+        "gui",
+        "ui"
+    ],
+    "description": "",
+    "version": "1.0.0",
+    "releasenote": "Initial release. ",
+    "classPath": "src",
+    "contributors": [
+        "pecheny"
+    ],
+    "dependencies": {
+        "format": "",
+        "openfl": "",
+        "hxColorToolkit": "",
+        "alayout": "",
+        "fsm": "",
+        "shimp": "",
+        "flgl": "",
+        "slec": "",
+        "htext": ""
+    }
 }
- 
