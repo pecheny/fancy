@@ -229,7 +229,7 @@ class FuiBuilder {
     public function configureAnimation(root:Entity) {
         root.addComponentByType(Updater, updater);
         var animBuilder = new AnimationTreeBuilder();
-        animBuilder.addLayout("offset", new OffsetLayout(0.1));
+        animBuilder.addLayout(OffsetLayout.NAME, new OffsetLayout(0.1));
         root.addComponent(animBuilder);
         return root;
     }
