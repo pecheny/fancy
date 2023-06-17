@@ -1,9 +1,16 @@
 package;
 
 import FuiBuilder;
+import a2d.Stage;
+import al.al2d.ContainerFactory;
 import al.al2d.Widget2DContainer;
 import al.animation.Animation.AnimContainer;
 import al.ec.WidgetSwitcher;
+import al.layouts.PortionLayout;
+import al.layouts.WholefillLayout;
+import al.layouts.data.LayoutData.FixedSize;
+import al.layouts.data.LayoutData.FractionSize;
+import algl.Builder.PlaceholderBuilderGl;
 import ec.Entity;
 import htext.style.TextStyleContext;
 import openfl.display.Sprite;
@@ -29,6 +36,14 @@ class ClickAndButt extends Sprite {
         var container:Sprite = root.getComponent(Sprite);
         addChild(container);
 
+        var conts = new ContainerFactory();
+        conts.regStyle("v", new WholefillLayout(new FractionSize(.2)), new PortionLayout(Forward, new FixedSize(0.1)));
+        conts.regStyle("h", new PortionLayout(Forward, new FixedSize(0.)), new WholefillLayout(new FractionSize(0.)));
+        root.addComponent(conts);
+
+        var buts = new ButtonFactory(fuiBuilder.placeholderBuilder, fuiBuilder.ar, root.getComponent(TextStyleContext));
+        root.addComponent(buts);
+
         var screens = new Screens(root.getComponent(WidgetSwitcher));
         fuiBuilder.updater.addUpdatable(screens);
         root.addComponent(screens);
@@ -41,80 +56,71 @@ class ClickAndButt extends Sprite {
     }
 }
 
+class ButtonFactory {
+    var b:PlaceholderBuilderGl;
+    var stage:Stage;
+    var textStyleContext:TextStyleContext;
+
+    public function new(b, s, t) {
+        this.b = b;
+        this.stage = s;
+        this.textStyleContext = t;
+    }
+
+    public function button(text, cb, w = null) {
+        var b1 = new WonderButton(b.h(pfr, 1).v(sfr, 0.15).b().withLiquidTransform(stage.getAspectRatio()), cb, text, textStyleContext);
+        return b1;
+    }
+}
+
 class ScreenOne extends Screen {
     @:once var screens:Screens;
-    @:once var textStyleContext:TextStyleContext;
+    @:once var containerFactory:ContainerFactory;
+    @:once var buttonFactory:ButtonFactory;
+
     var pnl:Widget2DContainer;
-    var animContainer:AnimContainer;
 
     override public function init() {
         super.init();
-        var gap = () -> b.h(pfr, 0.1).v(sfr, 0.1).b();
-        pnl = Builder.v();
-
-        animContainer = tree.entity.getComponent(AnimContainer);
-
-        var content = new WonderQuad(Builder.widget().withLiquidTransform(stage.getAspectRatio()), 0x505050);
-
+        pnl = containerFactory.create(Builder.widget(), "v");
         fuiBuilder.makeClickInput(pnl.widget());
-        var wc = Builder.createContainer(w, horizontal, Forward).withChildren([gap(), pnl.widget(), gap(), content.widget()]);
 
         addButton("Carrot");
         addButton("Zucchini");
         addButton("Potato");
         addButton("Broccoli");
+
+        var content = new WonderQuad(Builder.widget().withLiquidTransform(stage.getAspectRatio()), 0x505050);
         addAnim(content.setTime);
-        animContainer.refresh();
+
+        containerFactory.create(w, "h").withChildren([pnl.widget(), content.widget()]);
     }
 
     function addButton(text) {
-        var b1 = new WonderButton(b.h(pfr, 1).v(sfr, 0.15).b().withLiquidTransform(stage.getAspectRatio()), () -> screens.switchTo(ScreenNames.TWO), text,
-            textStyleContext);
+        var b1 = buttonFactory.button(text, () -> screens.switchTo(ScreenNames.TWO));
         Builder.addWidget(pnl, b1.widget());
-        Builder.addWidget(pnl, b.h(pfr, 0.1).v(sfr, 0.1).b());
         addAnim(b1.setTime);
-    }
-
-    function addAnim(h) {
-        var anim = animationTreeBuilder.animationWidget(new Entity(), {});
-        animationTreeBuilder.addChild(animContainer, anim);
-        anim.animations.channels.push(h);
     }
 }
 
 class ScreenTwo extends Screen {
     @:once var screens:Screens;
-    @:once var textStyleContext:TextStyleContext;
+    @:once var containerFactory:ContainerFactory;
+    @:once var buttonFactory:ButtonFactory;
     var pnl:Widget2DContainer;
-    var animContainer:AnimContainer;
 
     override public function init() {
         super.init();
-        var gap = () -> b.h(pfr, 0.1).v(sfr, 0.1).b();
-        pnl = Builder.v();
-
-        animContainer = tree.entity.getComponent(AnimContainer);
-
+        pnl = containerFactory.create(w, "v");
         fuiBuilder.makeClickInput(pnl.widget());
-
-        var wc = Builder.createContainer(w, horizontal, Forward).withChildren([gap(), pnl.widget(), gap(),]);
 
         addButton("Pork");
         addButton("Fish");
-        animContainer.refresh();
     }
 
     function addButton(text) {
-        var b1 = new WonderButton(b.h(pfr, 1).v(sfr, 0.25).b().withLiquidTransform(stage.getAspectRatio()), () -> screens.switchTo(ScreenNames.ONE), text,
-            textStyleContext);
+        var b1 = buttonFactory.button(text, () -> screens.switchTo(ScreenNames.ONE));
         Builder.addWidget(pnl, b1.widget());
-        Builder.addWidget(pnl, b.h(pfr, 0.1).v(sfr, 0.1).b());
         addAnim(b1.setTime);
-    }
-
-    function addAnim(h) {
-        var anim = animationTreeBuilder.animationWidget(new Entity(), {});
-        animationTreeBuilder.addChild(animContainer, anim);
-        anim.animations.channels.push(h);
     }
 }

@@ -1,5 +1,7 @@
 package ui;
 
+import ec.Entity;
+import al.animation.Animation.AnimContainer;
 import al.layouts.OffsetLayout;
 import a2d.Stage;
 import algl.Builder.PlaceholderBuilderGl;
@@ -99,5 +101,13 @@ class Screen extends Widget {
             var axis = w.axisStates[a];
             axis.apply(axis.getPos(), axis.getSize());
         }
+    }
+
+    function addAnim(h) {
+        var animContainer = tree.entity.getComponent(AnimContainer);
+        var anim = animationTreeBuilder.animationWidget(new Entity(), {});
+        animationTreeBuilder.addChild(animContainer, anim);
+        anim.animations.channels.push(h);
+        animContainer.refresh();
     }
 }
