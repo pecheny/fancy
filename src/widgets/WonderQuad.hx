@@ -17,7 +17,7 @@ class WonderQuad extends BarWidget<ColorSet>  implements Animatable {
         ];
 
         super(ColorSet.instance, w, elements);
-        var colors = new ShapesColorAssigner(ColorSet.instance, 0, getBuffer());
+        var colors = new ShapesColorAssigner(ColorSet.instance, c, getBuffer());
 //        w.entity.addComponentByName(Entity.getComponentId(ClickTarget), this);
 //        new CtxWatcher(ClickInputBinder, w.entity);
         tree = new AnimationTreeBuilder().build(
