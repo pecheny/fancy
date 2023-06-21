@@ -1,4 +1,5 @@
-package ;
+package;
+
 import al.openfl.StageAspectResizer;
 import al.ec.WidgetSwitcher;
 import al.Builder;
@@ -56,11 +57,11 @@ class FuiBuilder {
     public var placeholderBuilder(default, null):PlaceholderBuilderGl;
     public var textStyles:TextContextBuilder;
     public var updater(default, null):Updater;
-    var gldoBuilder:GldoBuilder ;
+
+    var gldoBuilder:GldoBuilder;
     var pos:ShaderElement = PosPassthrough.instance;
     var xmlProc:XmlProc;
     var sharedAspects:Array<RenderingAspect>;
-
 
     public function new() {
         textureStorage = new TextureStorage();
@@ -73,84 +74,74 @@ class FuiBuilder {
         updater.update();
         this.updater = updater;
         #if openfl
-        openfl.Lib.current.stage.addEventListener(openfl.events.Event.ENTER_FRAME, _->updater.update());
+        openfl.Lib.current.stage.addEventListener(openfl.events.Event.ENTER_FRAME, _ -> updater.update());
         #end
         setAspects([]);
     }
 
     public function createDefaultRoot(dl, font = "Assets/fonts/robo.fnt") {
         var rw = Builder.widget();
-        var rootEntity = rw.entity; 
-		this.regDefaultDrawcalls();
-		var ar = this.ar;
-		this.addBmFont("", font); // todo
-		this.configureInput(rootEntity);
-		this.configureScreen(rootEntity);
-		this.configureAnimation(rootEntity);
-		rootEntity.addComponent(this);
+        var rootEntity = rw.entity;
+        this.regDefaultDrawcalls();
+        var ar = this.ar;
+        this.addBmFont("", font); // todo
+        this.configureInput(rootEntity);
+        this.configureScreen(rootEntity);
+        this.configureAnimation(rootEntity);
+        rootEntity.addComponent(this);
 
         this.createContainer(rootEntity, Xml.parse(dl).firstElement());
 
-		var fitStyle = this.textStyles.newStyle("fit")
-			.withSize(pfr, .5)
-			.withAlign(horizontal, Forward)
-			.withAlign(vertical, Backward)
-			.withPadding(horizontal, pfr, 0.33)
-			.withPadding(vertical, pfr, 0.33)
-			.build();
-		rootEntity.addComponent(fitStyle);
+        var fitStyle = this.textStyles.newStyle("fit")
+            .withSize(pfr, .5)
+            .withAlign(horizontal, Forward)
+            .withAlign(vertical, Backward)
+            .withPadding(horizontal, pfr, 0.33)
+            .withPadding(vertical, pfr, 0.33)
+            .build();
+        rootEntity.addComponent(fitStyle);
 
-		// var rw = Builder.widget();
-		// rootEntity.addChild(rw.entity);
+        // var rw = Builder.widget();
+        // rootEntity.addChild(rw.entity);
 
-		var v = new StageAspectResizer(rw, 2);
+        var v = new StageAspectResizer(rw, 2);
         var switcher = new WidgetSwitcher(rw);
         rootEntity.addComponent(switcher);
-        return rootEntity;      
-	}
-
+        return rootEntity;
+    }
 
     static var smoothShaderEl = new GeneralPassthrough(MSDFSet.NAME_DPI, MSDFShader.smoothness);
 
     public function regDefaultDrawcalls():Void {
-        regDrawcallType(
-            "image",
-            {
-                type:"texture",
-                attrs:TexSet.instance,
-                vert:[Uv0Passthrough.instance, PosPassthrough.instance],
-                frag:[cast TextureFragment.get(0,0)],
-            }, (e, xml) -> {
-                if(!xml.exists("path"))
-                    throw '<image /> gldo should have path property';
-                 return createGldo(TexSet.instance, e, "texture", new TextureBinder(textureStorage, xml.get("path")), "") ;
-                }
-        );
+        regDrawcallType("image", {
+            type: "texture",
+            attrs: TexSet.instance,
+            vert: [Uv0Passthrough.instance, PosPassthrough.instance],
+            frag: [cast TextureFragment.get(0, 0)],
+        }, (e, xml) -> {
+            if (!xml.exists("path"))
+                throw '<image /> gldo should have path property';
+            return createGldo(TexSet.instance, e, "texture", new TextureBinder(textureStorage, xml.get("path")), "");
+        });
 
-        regDrawcallType(
-            "color",
-            {
-                type:"color",
-                attrs:ColorSet.instance,
-                vert:[ColorPassthroughVert.instance, PosPassthrough.instance],
-                frag:[cast ColorPassthroughFrag.instance],
-            }, (e, xml) -> createGldo(ColorSet.instance, e, "color", null, "")
-        );
-        
+        regDrawcallType("color", {
+            type: "color",
+            attrs: ColorSet.instance,
+            vert: [ColorPassthroughVert.instance, PosPassthrough.instance],
+            frag: [cast ColorPassthroughFrag.instance],
+        }, (e, xml) -> createGldo(ColorSet.instance, e, "color", null, ""));
+
         // first "color" – alias in xml
         // descr.type: "color" – alias for shader registry. should be same with next one
         // createGldo(_,_, "color") – alias by which shader will be requeseted during gl init
 
-        regDrawcallType(
-            "text",
-            {
-                type:"msdf",
-                attrs:MSDFSet.instance,
-                vert:[Uv0Passthrough.instance, PosPassthrough.instance, smoothShaderEl],
-                frag:[cast MSDFFrag.instance],
-                uniforms: ["color" ]
-            }, createTextGldo
-        );
+        regDrawcallType("text", {
+            type: "msdf",
+            attrs: MSDFSet.instance,
+            vert: [Uv0Passthrough.instance, PosPassthrough.instance, smoothShaderEl],
+            frag: [cast MSDFFrag.instance],
+            uniforms: ["color"]
+        }, createTextGldo);
     }
 
     public function regDrawcallType<T:AttribSet>(drawcallType:String, shaderDesc:ShaderDescr<T>, gldoFactory:GldoFactory<T>) {
@@ -225,7 +216,6 @@ class FuiBuilder {
         return root;
     }
 
-
     public function configureAnimation(root:Entity) {
         root.addComponentByType(Updater, updater);
         var animBuilder = new AnimationTreeBuilder();
@@ -237,6 +227,11 @@ class FuiBuilder {
     public function addScissors(w:Placeholder2D) {
         var sc = new ScissorAspect(w, ar.getAspectRatio());
         sharedAspects.push(sc);
+    }
+
+    /// Shortcuts
+    public inline function s(name) {
+        return textStyles.getStyle(name);
     }
 }
 
