@@ -101,6 +101,8 @@ class FuiBuilder {
             .build();
         rootEntity.addComponent(fitStyle);
 
+        textStyles.resetToDefaults();
+
         // var rw = Builder.widget();
         // rootEntity.addChild(rw.entity);
 
