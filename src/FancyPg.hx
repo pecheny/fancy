@@ -1,5 +1,7 @@
 package;
 
+import FuiBuilder.XmlLayerLayouts;
+import al.ec.WidgetSwitcher;
 import openfl.SpriteAspectKeeper;
 import a2d.Boundbox;
 import macros.AVConstructor;
@@ -38,16 +40,21 @@ class FancyPg extends Sprite {
     var sampleText = "FoEo Bar AbAb Aboo Distance Field texture Ad Ae Af Bd Be Bf Bb Ab Dd De Df Cd Ce Cf";
     var b:PlaceholderBuilderGl;
     var ar:AspectRatioProvider;
-    var dl = '<container>
-        <drawcall type="color"/>
-        <drawcall type="text" font=""/>
-        </container>';
 
     public function new() {
         super();
-        var rw = prepareRootContainer();
+        
+        ar = fuiBuilder.ar;
+        b = new PlaceholderBuilderGl(fuiBuilder.ar);
+        var root:Entity = fuiBuilder.createDefaultRoot(XmlLayerLayouts.COLOR_AND_TEXT);
+        createTextStyles();
 
-        var scrollPlaceholder = createScrollbox(fuiBuilder.makeClickInput(b.b("c1").createContainer(vertical, Forward).widget()), b.b(), ar, dl,
+        var container:Sprite = root.getComponent(Sprite);
+        addChild(container);
+
+        var rw = Builder.h();
+
+        var scrollPlaceholder = createScrollbox(fuiBuilder.makeClickInput(b.b("c1").createContainer(vertical, Forward).widget()), b.b(), ar, XmlLayerLayouts.COLOR_AND_TEXT,
             createMixedContentArray);
         rw.addWidget(scrollPlaceholder);
 
@@ -56,27 +63,9 @@ class FancyPg extends Sprite {
             texturedQuad(fuiBuilder, b.h(pfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), "bunie.png").widget(),
         ]);
         rw.addWidget(cright);
+        root.getComponent(WidgetSwitcher).switchTo(rw.widget());
     }
 
-    function prepareRootContainer() {
-        var root:Entity = new Entity();
-        fuiBuilder.regDefaultDrawcalls();
-        ar = fuiBuilder.ar;
-        b = new PlaceholderBuilderGl(fuiBuilder.ar);
-        createTextStyles();
-
-        root.addComponentByType(AspectRatioProvider, fuiBuilder.ar);
-        root.addComponentByType(WindowSizeProvider, fuiBuilder.ar);
-        root.addComponentByType(Stage, fuiBuilder.ar);
-        fuiBuilder.configureInput(root);
-        fuiBuilder.createContainer(root, Xml.parse(dl).firstElement());
-        var container:Sprite = root.getComponent(Sprite);
-        addChild(container);
-        var rw = Builder.h();
-        root.addChild(rw.entity);
-        new StageAspectResizer(rw.widget(), 2);
-        return rw;
-    }
 
     function createScrollbox(container1:Placeholder2D, placeholder:Placeholder2D, ar, dl, childrenFactory:FuiBuilder->Array<Placeholder2D>) {
         var cont = container1.entity.getComponent(Widget2DContainer);
@@ -112,7 +101,6 @@ class FancyPg extends Sprite {
     }
 
     function createTextStyles() {
-        fuiBuilder.addBmFont("", "Assets/heaps-fonts/robo.fnt"); // todo
         var pxStyle = fuiBuilder.textStyles.newStyle("px").withSize(px, 64).build();
 
         var pcStyle = fuiBuilder.textStyles.newStyle("pcl") //        .withAlign(vertical, Center)
@@ -121,22 +109,7 @@ class FancyPg extends Sprite {
             .build();
 
         var pcStyleR = fuiBuilder.textStyles.newStyle("pcr").withAlign(horizontal, Backward).build();
-
         var pcStyleC = fuiBuilder.textStyles.newStyle("pcc").withAlign(horizontal, Center).build();
-
-        //        var fitStyle = fuiBuilder.textStyles.newStyle("fit")
-        //        .withSize(pfr, .75)
-        //        .withAlign(horizontal, Center)
-        //        .withAlign(vertical, Center)
-        //        .build();
-
-        var fitStyle = fuiBuilder.textStyles.newStyle("fit")
-            .withSize(pfr, .5)
-            .withAlign(horizontal, Forward)
-            .withAlign(vertical, Backward)
-            .withPadding(horizontal, pfr, 0.33)
-            .withPadding(vertical, pfr, 0.33)
-            .build();
     }
 
     function createBarWidget() {
