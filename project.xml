@@ -4,12 +4,12 @@
     <set name="builds_folder" value="/AndroidBuilds" if="android"/>
 
     <meta title="Sample" package="com.sample.buttons" version="1.0.0" company="Company Name"/>
-   <!-- <app main="ClickAndButt" path="${builds_folder}/Export" file="fgui"/> -->
+    <!-- <app main="ClickAndButt" path="${builds_folder}/Export" file="fgui"/> -->
     <app main="FancyPg" path="${builds_folder}/Export" file="fgui"/>
 
     <window antialiasing="4"/>
     <window background="#303030" fps="60" width="1280" height="760" unless="html5"/>
-    <window background="#303030" fps="60"  if="html5"/>
+    <window background="#303030" fps="60" if="html5"/>
     <!--<window background="#303030" fps="60" orientation="portrait"/>-->
     <source path="src"/>
     <!-- <source path="lib/alayout/src"/>
@@ -20,7 +20,7 @@
     <source path="lib/htext/src"/>
     <source path="lib/taxis/src"/> -->
 
-    <set  name="playServicesVersion" value="11.4.2" if="android"/>
+    <set name="playServicesVersion" value="11.4.2" if="android"/>
 
     <haxelib name="format"/>
     <haxelib name="openfl"/>
@@ -35,10 +35,12 @@
 
     <haxedef name = "openfl_disable_context_cache" value = "true" />
     <haxedef name = "openfl_always_render" value = "true" />
+    <haxeflag name="-D" value="no-deprecation-warnings" />
 
-<!--    <haxedef name = "dump" value="pretty"  />-->
-<!--    <haxeflag name = "&#45;&#45;dump" value="pretty"  />-->
-<!--    <haxeflag name="-dce" value="full" />-->
+
+    <!--    <haxedef name = "dump" value="pretty" />-->
+    <!--    <haxeflag name = "&#45;&#45;dump" value="pretty" />-->
+    <!--    <haxeflag name="-dce" value="full" />-->
     <assets path="Assets" include="*"/>
 
     <!--<template path="Templates" if="android"/>-->
