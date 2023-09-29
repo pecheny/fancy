@@ -11,6 +11,7 @@ class State {
 }
 
 class StateMachine extends StateSwitcher {
+    var verbose = false;
     var states:ClassMap<State> = new ClassMap();
 
     public function addState<T:State>(s:T) {
@@ -18,6 +19,8 @@ class StateMachine extends StateSwitcher {
     }
 
     public function changeState(s:Class<State>) {
+        if (verbose)
+            trace("Switching to " + s);
         var st = states.get(s);
         if (st == null)
             throw 'State $s not defined';
@@ -30,7 +33,7 @@ class StateSwitcher implements Updatable {
 
     public function new() {}
 
-    public function switchState(s) {
+    public function switchState(s:State) {
         if (currentState != null)
             currentState.onExit();
 
