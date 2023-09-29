@@ -123,6 +123,7 @@ class FuiBuilder {
         }, (e, xml) -> {
             if (!xml.exists("path"))
                 throw '<image /> gldo should have path property';
+            //todo image name to gldo
             return createGldo(TexSet.instance, e, "texture", new TextureBinder(textureStorage, xml.get("path")), "");
         });
 
