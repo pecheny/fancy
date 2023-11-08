@@ -2,6 +2,10 @@ package states;
 
 import update.Updatable;
 
+class EmptyState extends State {
+    public function new() {}
+}
+
 class State {
     public function update(t:Float):Void {}
 
@@ -16,6 +20,7 @@ class StateMachine extends StateSwitcher {
 
     public function addState<T:State>(s:T) {
         states.set(Type.getClass(s), s);
+        return s;
     }
 
     public function changeState(s:Class<State>) {
