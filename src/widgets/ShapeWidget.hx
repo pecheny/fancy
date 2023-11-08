@@ -18,9 +18,13 @@ class ShapeWidget<T:AttribSet> extends Widget implements Renderable<T> {
     var attrs:T;
     var inited = false;
     var shapeRenderer:ShapeRenderer<T>;
+    // do not call initialization before manual call in order to construct shapes on placeholder with all deps.
+    var delayInit = false;
 
-    public function new(attrs:T, w:Placeholder2D) {
+    public function new(attrs:T, w:Placeholder2D, delayInit = false) {
+        var drawcallsData = RenderablesComponent.get(attrs, w.entity);
         this.attrs = attrs;
+        this.delayInit = delayInit;
         shapeRenderer = new ShapeRenderer(attrs);
         super(w);
         var drawcallsData = RenderablesComponent.get(attrs, w.entity);
@@ -37,11 +41,21 @@ class ShapeWidget<T:AttribSet> extends Widget implements Renderable<T> {
     @:once var transformer:LiquidTransformer;
 
     override function init() {
+        if (delayInit)
+            return;
+        if(inited)
+            return;
         shapeRenderer.transform = transformer.transformValue;
         createShapes();
         shapeRenderer.initChildren();
         inited = true;
         onShapesDone();
+    }
+
+    public function manInit() {
+        delayInit = false;
+        if(_inited)
+            init();
     }
 
     function createShapes() {}
