@@ -114,7 +114,7 @@ class FuiBuilder {
 
     static var smoothShaderEl = new GeneralPassthrough(MSDFSet.NAME_DPI, MSDFShader.smoothness);
 
-    public function regDefaultDrawcalls():Void {
+    public dynamic function regDefaultDrawcalls():Void {
         regDrawcallType("image", {
             type: "texture",
             attrs: TexSet.instance,
@@ -142,7 +142,7 @@ class FuiBuilder {
             type: "msdf",
             attrs: MSDFSet.instance,
             vert: [Uv0Passthrough.instance, PosPassthrough.instance, smoothShaderEl],
-            frag: [cast MSDFFrag.instance],
+            frag: [cast MSDFFrag.instance, ApplyUnoformColorFrag.instance],
             uniforms: ["color"]
         }, createTextGldo);
     }
