@@ -13,7 +13,7 @@ class ColouredQuad {
 
     public static function flatClolorQuad(w:Placeholder2D, color = 0):ShapeWidget<ColorSet> {
         var attrs = ColorSet.instance;
-        var shw = new ShapeWidget(attrs, w);
+        var shw = new ShapeWidget(attrs, w, true);
         shw.addChild(new QuadGraphicElement(attrs));
         var colors = new ShapesColorAssigner(attrs, color, shw.getBuffer());
         var viewProc:ClickViewProcessor = w.entity.getComponent(ClickViewProcessor);
@@ -21,6 +21,7 @@ class ColouredQuad {
             viewProc.addHandler(new InteractiveColors(colors.setColor).viewHandler);
             viewProc.addHandler(new InteractiveTransform(w).viewHandler);
         }
+        shw.manInit();
         return shw;
     }
 }
