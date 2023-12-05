@@ -1,4 +1,6 @@
 package widgets;
+
+import graphics.ShapesBuffer;
 import macros.AVConstructor;
 import transform.LiquidTransformer;
 import al.al2d.Placeholder2D;
@@ -9,8 +11,8 @@ import shimp.ClicksInputSystem.ClickTargetViewState;
 import widgets.ShapeWidget;
 import Axis2D;
 import widgets.ButtonBase;
-class ColouredQuad {
 
+class ColouredQuad {
     public static function flatClolorQuad(w:Placeholder2D, color = 0):ShapeWidget<ColorSet> {
         var attrs = ColorSet.instance;
         var shw = new ShapeWidget(attrs, w, true);
@@ -24,20 +26,38 @@ class ColouredQuad {
         shw.manInit();
         return shw;
     }
+
+    public static function flatClolorToggleQuad(w:Placeholder2D, color = 0):ShapeWidget<ColorSet> {
+        var attrs = ColorSet.instance;
+        var shw = new ShapeWidget(attrs, w, true);
+        shw.addChild(new QuadGraphicElement(attrs));
+        var viewProc:ClickViewProcessor = w.entity.getComponent(ClickViewProcessor);
+        if (viewProc != null) {
+            var colorToggle = new ColorToggle(shw.getBuffer());
+            colorToggle.withColors(false, InteractiveColors.INACTIVE_COLORS);
+            w.entity.addComponent(colorToggle);
+            viewProc.addHandler(colorToggle.viewHandler);
+            viewProc.addHandler(new InteractiveTransform(w).viewHandler);
+        }
+        shw.manInit();
+        return shw;
+    }
 }
+
 class InteractiveColors {
-    public static var DEFAULT_COLORS(default, null):AVector<ClickTargetViewState, Int> = AVConstructor.create(
-//    Idle =>
-        0xff000000,
-//    Hovered =>
-        0xffd46e00,
-//    Pressed =>
-        0xFFd46e00,
-//    PressedOutside =>
-        0xff000000
-    );
+    public static var INACTIVE_COLORS(default, null):AVector<shimp.ClicksInputSystem.ClickTargetViewState, Int> = AVConstructor.create( //    Idle =>
+        0x40000000, //    Hovered =>
+        0x40d46e00, //    Pressed =>
+        0x40d46e00, //    PressedOutside =>
+        0x40000000);
+    public static var DEFAULT_COLORS(default, null):AVector<ClickTargetViewState, Int> = AVConstructor.create( //    Idle =>
+        0xff000000, //    Hovered =>
+        0xffd46e00, //    Pressed =>
+        0xFFd46e00, //    PressedOutside =>
+        0xff000000);
+
     var colors:AVector<ClickTargetViewState, Int>;
-    var target:Int -> Void;
+    var target:Int->Void;
 
     public function new(target, colors = null) {
         this.target = target;
@@ -65,7 +85,6 @@ class InteractiveTransform extends Widget {
         viewHandler(state);
     }
 
-
     function rewritePos() {
         for (a in Axis2D) {
             var as = w.axisStates[a];
@@ -73,19 +92,21 @@ class InteractiveTransform extends Widget {
         }
     }
 
-
     public function viewHandler(st:ClickTargetViewState):Void {
         state = st;
         if (!_inited)
             return;
         switch st {
-            case Idle : release();
-            case Pressed : press();
-            case PressedOutside : press();
-            case Hovered : release();
+            case Idle:
+                release();
+            case Pressed:
+                press();
+            case PressedOutside:
+                press();
+            case Hovered:
+                release();
         }
     }
-
 
     function press():Void {
         var ox = 0.005 / w.axisStates[horizontal].getSize();
@@ -100,6 +121,33 @@ class InteractiveTransform extends Widget {
     }
 }
 
-class ClickColorSet {
+class ColorToggle {
+    var active:Bool;
+    var activeColors:InteractiveColors;
+    var inactiveColors:InteractiveColors;
 
+    public function new(buff:ShapesBuffer<ColorSet>) {
+        var colors = new ShapesColorAssigner(ColorSet.instance, 0, buff);
+        inactiveColors = new InteractiveColors(colors.setColor);
+        activeColors = new InteractiveColors(colors.setColor);
+    }
+
+    public function setActive(v) {
+        active = v;
+    }
+
+    inline function getIc(v:Bool):InteractiveColors {
+        return if (v) activeColors else inactiveColors;
+    }
+
+    public function withColors(forActive:Bool, colors) {
+        @:privateAccess getIc(forActive).colors = colors;
+        return this;
+    }
+
+    public function viewHandler(st:shimp.ClicksInputSystem.ClickTargetViewState):Void {
+        getIc(active).viewHandler(st);
+    }
 }
+
+class ClickColorSet {}
