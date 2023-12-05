@@ -28,13 +28,13 @@ class ColouredQuad {
 class InteractiveColors {
     public static var DEFAULT_COLORS(default, null):AVector<ClickTargetViewState, Int> = AVConstructor.create(
 //    Idle =>
-        0,
+        0xff000000,
 //    Hovered =>
-        0xd46e00,
+        0xffd46e00,
 //    Pressed =>
-        0xd46e00,
+        0xFFd46e00,
 //    PressedOutside =>
-        0
+        0xff000000
     );
     var colors:AVector<ClickTargetViewState, Int>;
     var target:Int -> Void;
