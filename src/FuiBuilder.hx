@@ -123,7 +123,7 @@ class FuiBuilder {
         }, (e, xml) -> {
             if (!xml.exists("path"))
                 throw '<image /> gldo should have path property';
-            //todo image name to gldo
+            // todo image name to gldo
             return createGldo(TexSet.instance, e, "texture", new TextureBinder(textureStorage, xml.get("path")), "");
         });
 
@@ -233,8 +233,8 @@ class FuiBuilder {
     }
 
     /// Shortcuts
-    public inline function s(name) {
-        return textStyles.getStyle(name);
+    public inline function s(name = null) {
+        return name == null ? textStyles.defaultStyle() : textStyles.getStyle(name);
     }
 }
 
