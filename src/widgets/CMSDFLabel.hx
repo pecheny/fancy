@@ -8,6 +8,7 @@ import htext.TextRender;
 import transform.TransformerBase;
 
 class CMSDFLabel extends LabelBase<CMSDFSet> {
+    var color:Int = 0;
     var cw:TextColorFiller<CMSDFSet>;
     var rend:TextRender<CMSDFSet>;
 
@@ -17,6 +18,7 @@ class CMSDFLabel extends LabelBase<CMSDFSet> {
     }
 
     public function setColor(c:Int) {
+        color = c;
         if (cw == null)
             return;
         cw.color = c;
@@ -28,6 +30,7 @@ class CMSDFLabel extends LabelBase<CMSDFSet> {
         var wrs = new AttFillContainer();
         wrs.addChild(new SmothnessWriter(dpiWriter[0], l, textStyleContext, tt, stage.getWindowSize()));
         cw = new TextColorFiller(CMSDFSet.instance, l);
+        cw.color = color;
         wrs.addChild(cw);
         rend = new TextRender(attrs, l, tt, wrs);
         return rend;
