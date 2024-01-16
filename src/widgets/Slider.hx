@@ -44,9 +44,9 @@ class Slider extends ShapeWidget<ColorSet> {
         q = new ProgressBar(ColorSet.instance);
         q.setVal(mainAxis, progress);
         addChild(q);
-        var inp = new SliderInput(w, cast ratioProvider, mainAxis, (v) -> withProgress(v));
-        w.entity.addComponentByType(InputSystemTarget, inp);
-        new CtxWatcher(InputBinder, w.entity);
+        var inp = new SliderInput(ph, cast ratioProvider, mainAxis, (v) -> withProgress(v));
+        ph.entity.addComponentByType(InputSystemTarget, inp);
+        new CtxWatcher(InputBinder, ph.entity);
     }
 
     override function onShapesDone() {

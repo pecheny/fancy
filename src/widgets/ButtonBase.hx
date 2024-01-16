@@ -20,7 +20,6 @@ class ButtonBase implements ClickTarget<Point> extends Widget implements ClickVi
         w.entity.addComponentByName(Entity.getComponentId(ClickTarget), this);
         w.entity.addComponentByName(Entity.getComponentId(ClickViewProcessor), this);
         new CtxWatcher(ClickInputBinder, w.entity);
-        this.w = w;
     }
 
     public function isUnder(pos:Point):Bool {

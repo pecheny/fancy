@@ -40,13 +40,13 @@ class LabelBase<T:AttribSet> extends Widget {
 
     override function init() {
         var l = textStyleContext.createLayouter();
-        TextTransformer.withTextTransform(w, stage.getAspectRatio(), textStyleContext);
-        var tt = w.entity.getComponent(TextTransformer);
-        var aw = new TextAutoWidth(w, l, tt, textStyleContext);
+        TextTransformer.withTextTransform(ph, stage.getAspectRatio(), textStyleContext);
+        var tt = ph.entity.getComponent(TextTransformer);
+        var aw = new TextAutoWidth(ph, l, tt, textStyleContext);
         render = createTextRender(attrs, l, tt);
         render.setText(this.text);
-        var drawcallsData = RenderablesComponent.get(attrs, w.entity, textStyleContext.getDrawcallName());
+        var drawcallsData = RenderablesComponent.get(attrs, ph.entity, textStyleContext.getDrawcallName());
         drawcallsData.views.push(render);
-        new CtxWatcher(RenderableBinder, w.entity);
+        new CtxWatcher(RenderableBinder, ph.entity);
     }
 }

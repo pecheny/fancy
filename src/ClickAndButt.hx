@@ -93,12 +93,12 @@ class ScreenOne extends Screen {
         var content = new WonderQuad(Builder.widget().withLiquidTransform(stage.getAspectRatio()), 0x505050);
         addAnim(content.setTime);
 
-        containerFactory.create(w, "h").withChildren([pnl.widget(), content.widget()]);
+        containerFactory.create(ph, "h").withChildren([pnl.widget(), content.ph]);
     }
 
     function addButton(text) {
         var b1 = buttonFactory.button(text, () -> screens.switchTo(ScreenNames.TWO));
-        Builder.addWidget(pnl, b1.widget());
+        Builder.addWidget(pnl, b1.ph);
         addAnim(b1.setTime);
     }
 }
@@ -111,7 +111,7 @@ class ScreenTwo extends Screen {
 
     override public function init() {
         super.init();
-        pnl = containerFactory.create(w, "v");
+        pnl = containerFactory.create(ph, "v");
         fuiBuilder.makeClickInput(pnl.widget());
 
         addButton("Pork");
@@ -120,7 +120,7 @@ class ScreenTwo extends Screen {
 
     function addButton(text) {
         var b1 = buttonFactory.button(text, () -> screens.switchTo(ScreenNames.ONE));
-        Builder.addWidget(pnl, b1.widget());
+        Builder.addWidget(pnl, b1.ph);
         addAnim(b1.setTime);
     }
 }

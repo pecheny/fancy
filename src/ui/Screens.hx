@@ -52,15 +52,15 @@ class Screens implements Updatable {
 
     public function add(name, screen) {
         screens[name] = screen;
-        switcher.bind(screen.widget());
-        switcher.unbind(screen.widget());
+        switcher.bind(screen.ph);
+        switcher.unbind(screen.ph);
     }
 
     public function switchTo(name) {
         time = current != null ? 0 : 0.5;
         prev = current;
         current = screens[name];
-        switcher.bind(current.widget());
+        switcher.bind(current.ph);
     }
 
     public function update(dt:Float):Void {
@@ -71,7 +71,7 @@ class Screens implements Updatable {
             time = 1;
         tree.setTime(time);
         if (time == 1 && prev != null) {
-            switcher.unbind(prev.widget());
+            switcher.unbind(prev.ph);
             prev = null;
         }
     }
@@ -98,7 +98,7 @@ class Screen extends Widget {
             return;
         tree.setTime(t);
         for (a in Axis2D) {
-            var axis = w.axisStates[a];
+            var axis = ph.axisStates[a];
             axis.apply(axis.getPos(), axis.getSize());
         }
     }

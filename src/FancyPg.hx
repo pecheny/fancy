@@ -59,8 +59,8 @@ class FancyPg extends Sprite {
         rw.addWidget(scrollPlaceholder);
 
         var cright = Builder.v().withChildren([
-            new Label(b.b(), sty("pcr")).withText(sampleText).widget(),
-            texturedQuad(fuiBuilder, b.h(pfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), "bunie.png").widget(),
+            new Label(b.b(), sty("pcr")).withText(sampleText).ph,
+            texturedQuad(fuiBuilder, b.h(pfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), "bunie.png").ph,
         ]);
         rw.addWidget(cright);
         root.getComponent(WidgetSwitcher).switchTo(rw.widget());
@@ -73,11 +73,11 @@ class FancyPg extends Sprite {
 
         placeholder.entity.name = "placeholder";
         var scroller = new ScrollboxItem(placeholder, scroll, ar.getAspectRatio());
-        fuiBuilder.addScissors(scroller.widget());
-        fuiBuilder.createContainer(scroller.widget().entity, Xml.parse(dl).firstElement());
+        fuiBuilder.addScissors(scroller.ph);
+        fuiBuilder.createContainer(scroller.ph.entity, Xml.parse(dl).firstElement());
         for (ch in childrenFactory(fuiBuilder))
             cont.addWidget(ch);
-        var spr:Sprite = scroller.widget().entity.getComponent(Sprite);
+        var spr:Sprite = scroller.ph.entity.getComponent(Sprite);
         addChild(spr);
         fuiBuilder.setAspects([]);
         return placeholder;
@@ -126,25 +126,25 @@ class FancyPg extends Sprite {
 
     function createMixedContentArray(fuiBuilder) {
         return [
-            new Button(b.h(sfr, 1).v(px, 60).b().withLiquidTransform(ar.getAspectRatio()), null, "Button caption", sty("fit")).widget(),
-            spriteAdapter(b.h(pfr, 1).v(sfr, 0.1).b()).widget(),
-            new Button(b.h(pfr, 1).v(px, 60).b().withLiquidTransform(ar.getAspectRatio()), null, "Button caption", sty("fit")).widget(),
-            new Label(b.h(sfr, 1).v(sfr, 0.4).b(), sty("pcl")).withText(sampleText).widget(),
-            new Label(b.h(sfr, 1).v(sfr, 0.4).b(), sty("pcc")).withText(sampleText).widget(),
-            new Label(b.h(sfr, 1).v(sfr, 0.4).b(), sty("pcr")).withText(sampleText).widget(),
+            new Button(b.h(sfr, 1).v(px, 60).b().withLiquidTransform(ar.getAspectRatio()), null, "Button caption", sty("fit")).ph,
+            spriteAdapter(b.h(pfr, 1).v(sfr, 0.1).b()).ph,
+            new Button(b.h(pfr, 1).v(px, 60).b().withLiquidTransform(ar.getAspectRatio()), null, "Button caption", sty("fit")).ph,
+            new Label(b.h(sfr, 1).v(sfr, 0.4).b(), sty("pcl")).withText(sampleText).ph,
+            new Label(b.h(sfr, 1).v(sfr, 0.4).b(), sty("pcc")).withText(sampleText).ph,
+            new Label(b.h(sfr, 1).v(sfr, 0.4).b(), sty("pcr")).withText(sampleText).ph,
             new widgets.Slider(b.v(sfr, 0.1).b("slider r").withLiquidTransform(ar.getAspectRatio()), horizontal,
-                f -> trace("" + f)).withProgress(0.5).widget(),
-            texturedQuad(fuiBuilder, b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), "bunie.png").widget(),
-            new Button(b.h(sfr, 1).v(px, 60).b().withLiquidTransform(ar.getAspectRatio()), null, "Button caption", sty("fit")).widget(),
-            new Button(b.h(sfr, 1).v(sfr, 0.2).b().withLiquidTransform(ar.getAspectRatio()), null, "Button", sty("fit")).widget(),
-            createBarWidget().widget(),
+                f -> trace("" + f)).withProgress(0.5).ph,
+            texturedQuad(fuiBuilder, b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), "bunie.png").ph,
+            new Button(b.h(sfr, 1).v(px, 60).b().withLiquidTransform(ar.getAspectRatio()), null, "Button caption", sty("fit")).ph,
+            new Button(b.h(sfr, 1).v(sfr, 0.2).b().withLiquidTransform(ar.getAspectRatio()), null, "Button", sty("fit")).ph,
+            createBarWidget().ph,
         ];
     }
 
     function lineHeightSample() {
         // todo
         return new Button(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), null, "<font lineHeight=\"0.1\">Button </font>",
-            sty("fit")).widget();
+            sty("fit")).ph;
     }
 
     function sty(name) {

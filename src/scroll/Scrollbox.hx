@@ -29,7 +29,7 @@ class ScrollboxWidget extends Widget implements VisibleSizeProvider {
         inputPassthrough.verbose = true;
         w.entity.addComponentByType(InputSystem, inputPassthrough);
         var binder = new InputBinder(inputPassthrough);
-        content.widget().entity.addComponent(binder);
+        content.ph.entity.addComponent(binder);
         wireAxis( ar);
         var scrollbox = new ScrollboxInput(content, this, cast scrollbars, hitester, inputPassthrough);
         w.entity.addComponentByType(InputSystemTarget, scrollbox);
@@ -42,19 +42,19 @@ class ScrollboxWidget extends Widget implements VisibleSizeProvider {
         var hscroll = scrollbars[horizontal];
         var vscroll = scrollbars[vertical];
 
-        child1.axisStates[horizontal].addSibling(hscroll.widget().axisStates[horizontal]);
-        child2.axisStates[vertical].addSibling(hscroll.widget().axisStates[vertical]);
+        child1.axisStates[horizontal].addSibling(hscroll.ph.axisStates[horizontal]);
+        child2.axisStates[vertical].addSibling(hscroll.ph.axisStates[vertical]);
 
-        child2.axisStates[horizontal].addSibling(vscroll.widget().axisStates[horizontal]);
-        child1.axisStates[vertical].addSibling(vscroll.widget().axisStates[vertical]);
+        child2.axisStates[horizontal].addSibling(vscroll.ph.axisStates[horizontal]);
+        child1.axisStates[vertical].addSibling(vscroll.ph.axisStates[vertical]);
 
 //        child1.axisStates[horizontal].addSibling(content.widget().axisStates[horizontal]);
 //        child1.axisStates[vertical].addSibling(content.widget().axisStates[vertical]);
 
 //        w.entity.addChild(content.widget().entity);
-        w.entity.addChild(hscroll.widget().entity); // todo bind to one entity instead
-        w.entity.addChild(vscroll.widget().entity);
-        makeContainer(w, [child1, child2]);
+        ph.entity.addChild(hscroll.ph.entity); // todo bind to one entity instead
+        ph.entity.addChild(vscroll.ph.entity);
+        makeContainer(ph, [child1, child2]);
     }
 
     function makeContainer(w:Placeholder2D, children:Array<Placeholder2D>) {
@@ -73,7 +73,7 @@ class ScrollboxWidget extends Widget implements VisibleSizeProvider {
     }
 
     public function getVisibleSize(a:Axis2D):Float {
-        return w.axisStates[a].getSize();
+        return ph.axisStates[a].getSize();
     }
 
 }

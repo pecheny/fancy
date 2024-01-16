@@ -87,7 +87,7 @@ class InteractiveTransform extends Widget {
 
     function rewritePos() {
         for (a in Axis2D) {
-            var as = w.axisStates[a];
+            var as = ph.axisStates[a];
             as.apply(as.getPos(), as.getSize());
         }
     }
@@ -109,8 +109,8 @@ class InteractiveTransform extends Widget {
     }
 
     function press():Void {
-        var ox = 0.005 / w.axisStates[horizontal].getSize();
-        var oy = 0.005 / w.axisStates[vertical].getSize();
+        var ox = 0.005 / ph.axisStates[horizontal].getSize();
+        var oy = 0.005 / ph.axisStates[vertical].getSize();
         transformer.setBounds(ox, oy, 1 + ox * 2, 1 + oy * 2);
         rewritePos();
     }

@@ -20,7 +20,7 @@ class ScrollableContent extends Widget {
     public function setOffset(a:Axis2D, val:Float) {
         if (axis[a] != null) {
             var r = axis[a].setOffset(val);
-            var pha = w.axisStates[a];
+            var pha = ph.axisStates[a];
             axis[a].apply(pha.getPos(), pha.getSize());
             return r;
         }
@@ -88,7 +88,7 @@ class W2DScrollableContent extends ScrollableContent implements ContentSizeProvi
     public override function getContentSize(a:Axis2D):Float {
         // todo check if correct
         if (contentSize[a] == 0)
-            return w.axisStates[a].getSize();
+            return ph.axisStates[a].getSize();
         return contentSize[a];
     }
 }

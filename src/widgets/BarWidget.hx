@@ -23,7 +23,7 @@ class BarWidget<T:AttribSet> extends ShapeWidget<T> {
         var lineCalc = new LineThicknessCalculator(aspectRatio);
         var aa = new Axis2DApplier(lineCalc);
         for (a in Axis2D)
-            w.axisStates[a].addSibling(aa.appliers[a]);
+            ph.axisStates[a].addSibling(aa.appliers[a]);
         var bb = new BarsBuilder(aspectRatio, lineCalc.lineScales());
         bars = [ for (e in elements) {
             var sh = bb.create(attrs, e);
