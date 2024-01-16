@@ -1,3 +1,7 @@
 package widgets;
 
-typedef Widget = al.al2d.Widget;
+class Widget extends al.al2d.Widget {
+    public function widget() {
+        return ph;
+    }
+}
