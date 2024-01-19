@@ -1,0 +1,25 @@
+{
+	"recommendations": [
+        "firefox-devtools.vscode-firefox-debug",
+        "foxhoundn.synthax",
+        "haxefoundation.haxe-hl",
+        "k--kato.intellij-idea-keybindings",
+        "lix.lix",
+        "msjsdiag.debugger-for-chrome",
+        "vscode-icons-team.vscode-icons",
+        "vscodevim.vim",
+        "vshaxe.vshaxe-build",
+        "vshaxe.haxe-checkstyle",
+        "vshaxe.haxe-debug",
+        "vshaxe.haxe-extension-pack",
+        "vshaxe.haxe-test-adapter",
+        "vshaxe.hxcpp-debugger",
+        "duniul.git-stage",
+        "donjayamanne.githistory",
+        "adam-bender.commit-message-editor",
+        "waderyan.gitblame",
+        "usernamehw.commands",
+        "nadako.vshaxe",
+        "openfl.lime-vscode-extension"
+	]
+}

@@ -35,6 +35,12 @@
             "**/Export": true,
             "**/out": true,
             "**/.history": true,
-        }
+        },
+        "haxeTestExplorer.launchConfiguration": "Debug",
+        "haxe.configurations": [
+            {"label": "HashLink/JIT", "args": ["test-common.hxml", "-hl", "export/run.hl", "-cmd", "hl export/run.hl" ]},
+        ],
     }
+
+    
 }
