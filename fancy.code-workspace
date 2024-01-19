@@ -1,22 +1,28 @@
 {
     "folders": [
         {
+            "name": "fancy",
             "path": "."
         },
         {
-            "path": "..\\alayout"
+            "name": "alayout",
+            "path": "../alayout"
         },
         {
-            "path": "..\\flgl"
+            "name": "fsm",
+            "path": "../fsm"
         },
         {
-            "path": "..\\fsm"
+            "name": "htext",
+            "path": "../htext"
         },
         {
-            "path": "..\\htext"
+            "name": "shimp",
+            "path": "../shimp"
         },
         {
-            "path": "..\\shimp"
+            "name": "flgl",
+            "path": "../flgl"
         }
     ],
     "settings": {
@@ -31,3 +37,4 @@
             "**/.history": true,
         }
     }
+}
