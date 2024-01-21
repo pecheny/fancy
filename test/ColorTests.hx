@@ -6,7 +6,7 @@ import ec.Entity;
 import fancy.styles.ColorManagement;
 
 class FakeColor implements Colored {
-    public var color:Int;
+    public var color:Int = -1;
 
     public function setColor(val:Int) {
         color = val;
@@ -16,7 +16,7 @@ class FakeColor implements Colored {
 }
 
 class FakeButton {
-    public var textColor:FakeColor = new FakeColor();
+    public var fgColor:FakeColor = new FakeColor();
     public var bgColor:FakeColor = new FakeColor();
     public var e:Entity;
 
@@ -24,7 +24,7 @@ class FakeButton {
         this.e = e;
         var res = new ColorReceiver();
         res.addColored("bg", bgColor);
-        res.addColored("fg", textColor);
+        res.addColored("fg", fgColor);
         e.addComponent(res);
         new CtxWatcher(ColorBinder, e);
     }
@@ -35,7 +35,6 @@ class ColorTests extends Test {
     var root:Entity;
 
     public function setup() {
-        trace("setup");
         btn = new FakeButton(new Entity("btn"));
         root = new Entity("root");
         var storage = new ColorStorage();

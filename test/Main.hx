@@ -1,7 +1,8 @@
 class Main {
     static function main() {
         utest.UTest.run([
-            new ColorTests()
+            new ColorTests(),
+            new ColorComponentTest()
         ]);
     }
 }
