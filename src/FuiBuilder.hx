@@ -1,5 +1,8 @@
 package;
 
+import graphics.ShapesColorAssigner;
+import graphics.shapes.QuadGraphicElement;
+import widgets.ShapeWidget;
 import al.openfl.StageAspectResizer;
 import al.ec.WidgetSwitcher;
 import al.Builder;
@@ -235,6 +238,21 @@ class FuiBuilder {
     /// Shortcuts
     public inline function s(name = null) {
         return name == null ? textStyles.defaultStyle() : textStyles.getStyle(name);
+    }
+
+    public function lqtr(ph) {
+        return widgets.utils.Utils.withLiquidTransform(ph, ar.getAspectRatio());
+    }
+
+    public function quad(ph:Placeholder2D, color) {
+        lqtr(ph);
+        var attrs = ColorSet.instance;
+        var shw = new ShapeWidget(attrs, ph, true);
+        shw.addChild(new QuadGraphicElement(attrs));
+        var colors = new ShapesColorAssigner(attrs, color, shw.getBuffer());
+        ph.entity.addComponent(colors);
+        shw.manInit();
+        return shw;
     }
 }
 
