@@ -112,6 +112,7 @@ class FuiBuilder {
         var v = new StageAspectResizer(rw, 2);
         var switcher = new WidgetSwitcher(rw);
         rootEntity.addComponent(switcher);
+        rootEntity.addComponentByType(TextContextStorage, textStyles);
         return rootEntity;
     }
 
