@@ -1,5 +1,8 @@
 package algl;
 
+import al.core.Placeholder.MultiparentPlaceholder;
+import ec.MultiparentEntity;
+import al.core.Placeholder.PlainPlaceholder;
 import a2d.Stage;
 import al.al2d.Placeholder2D;
 import al.core.AxisState;
@@ -66,6 +69,7 @@ class PlaceholderBuilderGl extends PlaceholderBuilderBase<GlAxisStateFactory> {
     }
 
     override function reset() {
+        super.reset();
         _l = false;
         for (k in Axis2D)
             factories[k].reset();
@@ -87,17 +91,39 @@ class PlaceholderBuilderBase<T:AxisFactory> {
     public var keepStateAfterBuild = false;
 
     public function b(name:String = null):Placeholder2D {
-        var entity = new Entity(name);
         var axisStates = AVConstructor.factoryCreate(Axis2D, a -> factories[a].create());
+        var w:Placeholder2D;
+        var e:ec.Entity;
 
-        var w = new Placeholder2D(axisStates);
-        entity.addComponent(w);
+        if (_ctx != null) {
+            var entity = new MultiparentEntity(name);
+            e = entity;
+            entity.addParent(_ctx);
+            var mph = new MultiparentPlaceholder(axisStates);
+            mph.setEntity(entity);
+            w = mph;
+            entity.addComponent(w);
+        } else {
+            var entity = new Entity(name);
+            e = entity;
+            w = new PlainPlaceholder(axisStates);
+        }
+        e.addComponentByType(Placeholder2D, w);
         if (!keepStateAfterBuild)
             reset();
         return w;
     }
 
-    function reset() {}
+    var _ctx:Entity;
+
+    public function ctx(e:Entity) {
+        _ctx = e;
+        return this;
+    }
+
+    function reset() {
+        _ctx = null;
+    }
 }
 
 interface AxisFactory {
