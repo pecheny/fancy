@@ -1,5 +1,6 @@
 package;
 
+import update.UpdateBinder;
 import graphics.ShapesColorAssigner;
 import graphics.shapes.QuadGraphicElement;
 import widgets.ShapeWidget;
@@ -94,6 +95,8 @@ class FuiBuilder {
         rootEntity.addComponent(this);
 
         this.createContainer(rootEntity, Xml.parse(dl).firstElement());
+
+        rootEntity.addComponent(new UpdateBinder(updater));
 
         var fitStyle = this.textStyles.newStyle("fit")
             .withSize(pfr, .5)
