@@ -26,7 +26,7 @@ class GameplayPauseScreen extends Widget {
         var b = fb.placeholderBuilder;
         pnl.withChildren([
             b.h(pfr, 1).v(pfr, 1).b(),
-            new Button(b.h(pfr, 1).v(pfr, 1).b().withLiquidTransform(fb.ar.getAspectRatio()), () -> game.pause(false), "||", fb.s("fit")).widget(),
+            new Button(b.h(pfr, 1).v(pfr, 1).b().withLiquidTransform(fb.ar.getAspectRatio()), () -> game.pause(false), "||", fb.s("fit")).ph,
             b.h(pfr, 1).v(pfr, 1).b(),
         ]);
     }
@@ -48,7 +48,7 @@ class GameplayScreen extends Widget {
     function topBar(w:Placeholder2D, fb:FuiBuilder) {
         var b = fb.placeholderBuilder;
         w.createContainer(horizontal, Backward).withChildren([
-            new Button(b.h(sfr, .1).v(pfr, 1).b().withLiquidTransform(fb.ar.getAspectRatio()), () -> game.pause(true), "||", fb.s("fit")).widget(),
+            new Button(b.h(sfr, .1).v(pfr, 1).b().withLiquidTransform(fb.ar.getAspectRatio()), () -> game.pause(true), "||", fb.s("fit")).ph,
         ]);
         return w;
     }
