@@ -1,4 +1,5 @@
 package widgets;
+
 import a2d.AspectRatioProvider;
 import al.al2d.Placeholder2D;
 import ec.CtxWatcher;
@@ -14,7 +15,8 @@ import transform.LiquidTransformer;
 import widgets.Widget;
 
 class ShapeWidget<T:AttribSet> extends Widget implements Renderable<T> {
-
+    @:once var ratioProvider:AspectRatioProvider;
+    @:once var transformer:LiquidTransformer;
     var attrs:T;
     var inited = false;
     var shapeRenderer:ShapeRenderer<T>;
@@ -33,17 +35,15 @@ class ShapeWidget<T:AttribSet> extends Widget implements Renderable<T> {
     }
 
     public function addChild(shape:Shape) {
-        if (inited) throw "Can't add children after initialization";
+        if (inited)
+            throw "Can't add children after initialization";
         shapeRenderer.addChild(shape);
     }
-
-    @:once var ratioProvider:AspectRatioProvider;
-    @:once var transformer:LiquidTransformer;
 
     override function init() {
         if (delayInit)
             return;
-        if(inited)
+        if (inited)
             return;
         shapeRenderer.transform = transformer.transformValue;
         createShapes();
@@ -54,7 +54,7 @@ class ShapeWidget<T:AttribSet> extends Widget implements Renderable<T> {
 
     public function manInit() {
         delayInit = false;
-        if(_inited)
+        if (_inited)
             init();
     }
 
@@ -70,8 +70,8 @@ class ShapeWidget<T:AttribSet> extends Widget implements Renderable<T> {
         shapeRenderer.render(targets);
     }
 
-//    function printVerts(n) {
-//        for (i in 0...n)
-//            trace(i + " " + attrs.printVertex(buffer, i));
-//    }
+    //    function printVerts(n) {
+    //        for (i in 0...n)
+    //            trace(i + " " + attrs.printVertex(buffer, i));
+    //    }
 }
