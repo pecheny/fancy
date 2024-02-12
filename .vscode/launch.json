@@ -13,10 +13,10 @@
 			"args": ["test.hxml", "-lib", "test-adapter"]
 		},
         {
-			"name": "HashLink/JIT",
+			"name": "run tests HashLink/JIT",
 			"type": "hl",
 			"request": "launch",
-			"preLaunchTask": "HL/JIT (debug)",
+			"preLaunchTask": "run tests HL/JIT (debug)",
 			"cwd": "${workspaceFolder}"
 		},
 	]
