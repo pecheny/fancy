@@ -23,9 +23,14 @@
         {
             "name": "flgl",
             "path": "../flgl"
+        },
+        {
+            "name": "slec",
+            "path": "../slec"
         }
     ],
     "settings": {
+        "window.title": "FANCY",
         "search.exclude": {
             "**/Export": true,
             "**/out": true,
