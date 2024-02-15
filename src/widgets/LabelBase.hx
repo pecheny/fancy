@@ -44,6 +44,7 @@ class LabelBase<T:AttribSet> extends Widget {
         var tt = ph.entity.getComponent(TextTransformer);
         var aw = new TextAutoWidth(ph, l, tt, textStyleContext);
         render = createTextRender(attrs, l, tt);
+        var as = new htext.TextAutoScale(ph.entity, tt, render, aw);
         render.setText(this.text);
         var drawcallsData = RenderablesComponent.get(attrs, ph.entity, textStyleContext.getDrawcallName());
         drawcallsData.views.push(render);
