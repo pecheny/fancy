@@ -1,10 +1,14 @@
 package htext;
+
 import al.al2d.Placeholder2D;
 import algl.TransformatorAxisApplier;
 import htext.style.TextStyleContext;
 import transform.TransformerBase;
+
 class TextTransformer extends TransformerBase {
     var textStyleContext:TextStyleContext;
+
+    public var scale:Float = 1;
 
     function new(w, ar, ts) {
         super(ar);
@@ -13,11 +17,7 @@ class TextTransformer extends TransformerBase {
 
     override public function transformValue(c:Axis2D, input:Float):Float {
         var sign = c == 0 ? 1 : -1;
-        var r = sign *
-        (
-            (textStyleContext.getPivot(c, this) +
-            input * textStyleContext.getFontScale(this))
-            / aspects[c] // aspect ratio correction
+        var r = sign * ((textStyleContext.getPivot(c, this) + input * textStyleContext.getFontScale(this) * scale) / aspects[c] // aspect ratio correction
             - 1); // gl offset
         return r;
     }

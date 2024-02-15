@@ -6,23 +6,23 @@ import htext.style.TextStyleContext;
 import transform.TransformerBase;
 class TextAutoWidth implements AxisApplier {
     var textLayouter:TextLayouter;
-    var tr:TransformerBase;
+    var tr:TextTransformer;
     var ctx:TextStyleContext;
 
-    public function new(w:Placeholder2D, l:TextLayouter, tr, ctx) {
+    public function new(w:Placeholder2D, l:TextLayouter, tr:TextTransformer, ctx) {
         this.textLayouter = l;
         this.tr = tr;
         this.ctx = ctx;
         w.axisStates[horizontal].addSibling(this);
     }
 
-    public function apply(pos:Float, size:Float):Void {
+    public function apply(_:Float, _:Float):Void {
         update();
     }
 
     function update() {
-        var val = ctx.getContentSize(horizontal, tr) / ctx.getFontScale(tr);//tr.size[horizontal] / ctx.getFontScale(tr);
-        textLayouter.setWidthConstraint(val);
+        var val = ctx.getContentSize(horizontal, tr) / (ctx.getFontScale(tr) );//tr.size[horizontal] / ctx.getFontScale(tr);
+        textLayouter.setWidthConstraint(val / tr.scale);
     }
 
 }
