@@ -1,5 +1,7 @@
 package algl;
 
+import fancy.ScaleComponent;
+import fancy.ProxyWidgetTransform;
 import al.core.Placeholder.MultiparentPlaceholder;
 import ec.MultiparentEntity;
 import al.core.Placeholder.PlainPlaceholder;
@@ -44,6 +46,7 @@ class PlaceholderBuilderGl extends PlaceholderBuilderBase<GlAxisStateFactory> {
     var s:Stage;
     var addLIquid:Bool; // all the time
     var _l:Bool; // once
+    var scale:Null<Float>;
 
     public function new(s:Stage, addLiquid = false) {
         this.s = s;
@@ -71,14 +74,30 @@ class PlaceholderBuilderGl extends PlaceholderBuilderBase<GlAxisStateFactory> {
     override function reset() {
         super.reset();
         _l = false;
+        scale = null;
         for (k in Axis2D)
             factories[k].reset();
     }
 
+    public function t(s:Float = 1) {
+        scale = s;
+        return this;
+    }
+
+
     override function b(name:String = null):Placeholder2D {
         var _l = this._l;
+        var _s = this.scale;
         var w = super.b(name);
-        return if (_l || addLIquid) widgets.utils.Utils.withLiquidTransform(w, s.getAspectRatio()); else w;
+        if (_l || addLIquid)
+            widgets.utils.Utils.withLiquidTransform(w, s.getAspectRatio());
+        if (_s != null) {
+            var scale = ScaleComponent.getOrCreate(w.entity);
+            scale.value = this.scale;
+            var trans = new ProxyWidgetTransform(w);
+            w.entity.addComponent(trans);
+        }
+        return w;
     }
 }
 
