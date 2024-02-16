@@ -1,7 +1,7 @@
 package htext;
 
 import fancy.ScaleComponent;
-import bootstrap.Component;
+import ec.Component;
 
 class TextAutoScale extends Component {
     @:once var scale:ScaleComponent;
