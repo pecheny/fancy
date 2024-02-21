@@ -55,7 +55,10 @@ class TextRender<T:AttribSet> implements ITextRender<T> {
     }
 
     inline function getVertPos(rec:TileRecord, a:Axis2D, vert:Int) {
-        var locPos = rec.pos[a] + rec.scale * rec.tile.getLocalPosOffset(vert, a);
+        var vo = 0.;
+        if (a == vertical)
+            vo = charsLayouter.calculateVertOffset();
+        var locPos = -vo + rec.pos[a] + rec.scale * rec.tile.getLocalPosOffset(vert, a);
         return transformer.transformValue(a, locPos);
     }
 
