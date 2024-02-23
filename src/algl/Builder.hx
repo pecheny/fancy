@@ -17,6 +17,8 @@ import macros.AVConstructor;
 class GlAxisStateFactory implements AxisFactory {
     public var type:ScreenMeasureUnit;
     public var value:Float;
+    // todo ulcertain compat with keepStateAfterBuild
+    public var customSize:ISize = null;
 
     var screen:Stage;
     var axis:Axis2D;
@@ -28,17 +30,19 @@ class GlAxisStateFactory implements AxisFactory {
     }
 
     public function create() {
-        var size = switch type {
+        var size = if (customSize != null) customSize else switch type {
             case sfr: new FixedSize(value * 2); // todo /2 its fixed size in units of the parent
             case pfr: new FractionSize(value);
             case px: new PixelSize(axis, screen, value);
         }
+        customSize = null;
         return new AxisState(new Position(), size);
     }
 
     public function reset() {
         type = pfr;
         value = 1;
+        customSize = null;
     }
 }
 
@@ -60,9 +64,19 @@ class PlaceholderBuilderGl extends PlaceholderBuilderBase<GlAxisStateFactory> {
         return this;
     }
 
+    public function ch(custom:ISize) {
+        factories[horizontal].customSize = custom;
+        return this;
+    }
+
     public function v(t:ScreenMeasureUnit, v:Float) {
         factories[vertical].type = t;
         factories[vertical].value = v;
+        return this;
+    }
+
+    public function cv(custom:ISize) {
+        factories[vertical].customSize = custom;
         return this;
     }
 
@@ -83,7 +97,6 @@ class PlaceholderBuilderGl extends PlaceholderBuilderBase<GlAxisStateFactory> {
         scale = s;
         return this;
     }
-
 
     override function b(name:String = null):Placeholder2D {
         var _l = this._l;
