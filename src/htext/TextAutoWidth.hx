@@ -14,6 +14,8 @@ class TextAutoWidth implements AxisApplier {
         this.tr = tr;
         this.ctx = ctx;
         w.axisStates[horizontal].addSibling(this);
+        w.axisStates[vertical].addSibling(this);
+        // ? valign-related fix
     }
 
     public function apply(_:Float, _:Float):Void {
