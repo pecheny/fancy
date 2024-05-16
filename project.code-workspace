@@ -5,6 +5,10 @@
             "path": "demo/components"
         },
         {
+            "name": "animation",
+            "path": "demo/animation"
+        },
+        {
             "name": "fancy",
             "path": "."
         },
