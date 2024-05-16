@@ -13,5 +13,6 @@
     <haxelib name="alayout"/>
     <haxelib name="fancy"/>
     <haxelib name="openfl"/>
+    <assets path="Assets" include="*"/>
 
 </project>
