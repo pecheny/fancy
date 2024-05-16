@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension>
+<project xmlns="http://lime.software/project/1.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://lime.software/project/1.0.2 http://lime.software/xsd/project-1.0.2.xsd">
+    <tsource path="src"/>
+    <haxelib name="format"/>
+    <haxelib name="openfl"/>
+    <haxelib name="hxColorToolkit"/>
+    <haxelib name="alayout"/>
+    <haxelib name="fsm"/>
+    <haxelib name="shimp"/>
+    <haxelib name="flgl"/>
+    <haxelib name="slec"/>
+    <haxelib name="htext"/>
+    <haxelib name="taxis"/>
+
+    <haxedef name = "openfl_disable_context_cache" value = "true" />
+    <haxedef name = "openfl_always_render" value = "true" />
+    <haxeflag name="-D" value="no-deprecation-warnings" />
+
+
     <assets path="Assets" include="*"/>
-</extension>
+
+</project>

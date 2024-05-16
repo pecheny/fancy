@@ -1,6 +1,10 @@
 {
     "folders": [
         {
+            "name": "components",
+            "path": "demo/components"
+        },
+        {
             "name": "fancy",
             "path": "."
         },

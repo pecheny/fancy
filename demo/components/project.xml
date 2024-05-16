@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+
+    <meta title="Sample" package="shoo.fancy.FancyPg" version="1.0.0" company="shoo"/>
+    <app main="FancyPg" />
+
+    <window antialiasing="4"/>
+    <window background="#303030" fps="60" />
+    <window background="#303030" fps="60" width="1280" height="760" unless="html5"/>
+    <source path="src"/>
+
+    <haxelib name="flgl"/>
+    <haxelib name="alayout"/>
+    <haxelib name="fancy"/>
+    <haxelib name="openfl"/>
+
+</project>
