@@ -8,7 +8,7 @@ import htext.TextRender;
 import transform.TransformerBase;
 
 class CMSDFLabel extends LabelBase<CMSDFSet> {
-    var color:Int = 0;
+    var color:Int = 0xffffff;
     var cw:TextColorFiller<CMSDFSet>;
     var rend:TextRender<CMSDFSet>;
 
