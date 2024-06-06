@@ -1,5 +1,8 @@
 package openfl;
 
+import al.openfl.display.FlashDisplayRoot;
+import al.openfl.display.DrawcallDataProvider;
+import ec.CtxWatcher;
 import Axis2D;
 import a2d.Boundbox;
 import a2d.Stage;
@@ -19,6 +22,9 @@ class SpriteAspectKeeper extends Widget {
     @:once var s:Stage;
 
     public function new(w:Placeholder2D, spr:Sprite, bounds = null) {
+        var dp = DrawcallDataProvider.get(w.entity);
+        new CtxWatcher(FlashDisplayRoot, w.entity);
+        dp.views.push(spr);
         super(w);
         this.spr = spr;
         this.bounds = if (bounds == null) {
