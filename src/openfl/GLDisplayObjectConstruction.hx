@@ -31,7 +31,12 @@ class XmlProc {
                 e;
             }
             case "drawcall" : {
-                var gldo = handlers[node.get("type")](e, node);
+                var type = node.get("type");
+                if (!handlers.exists(type)) {
+                    trace ( 'No "$type" drawcall type was registered.');
+                    return e;
+                }
+                var gldo = handlers[type](e, node);
                 if (container != null)
                     container.addChild(gldo);
                 else {
