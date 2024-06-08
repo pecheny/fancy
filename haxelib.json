@@ -16,12 +16,13 @@
     "dependencies": {
         "format": "",
         "openfl": "",
-        "hxColorToolkit": "",
-        "alayout": "",
-        "fsm": "",
-        "shimp": "",
-        "flgl": "",
-        "slec": "",
-        "htext": ""
+        "hxColorToolkit": "git:http://github.com/andyli/hxColorToolkit",
+        "domkit": "git:https://github.com/pecheny/domkit#postinit",
+        "slec": "git:https://github.com/pecheny/slec",
+        "taxis": "git:https://github.com/pecheny/taxis",
+        "alayout": "git:https://github.com/pecheny/alayout",
+        "shimp": "git:https://github.com/pecheny/shimp",
+        "flgl": "git:https://github.com/pecheny/flgl",
+        "htext": "git:https://github.com/pecheny/htext"
     }
 }
