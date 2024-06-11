@@ -37,6 +37,11 @@ class SpriteAspectKeeper extends Widget {
         }
     }
 
+    override function init() {
+        super.init();
+        refresh();
+    }
+
     public function refresh() {
         if (!_inited)
             return;
