@@ -1,5 +1,9 @@
 package;
 
+import openfl.display.Sprite;
+import al.openfl.display.FlashDisplayRoot;
+import al.openfl.display.DrawcallDataProvider;
+import data.aliases.AttribAliases;
 import update.UpdateBinder;
 import graphics.ShapesColorAssigner;
 import graphics.shapes.QuadGraphicElement;
@@ -256,6 +260,26 @@ class FuiBuilder {
         var colors = new ShapesColorAssigner(attrs, color, shw.getBuffer());
         ph.entity.addComponent(colors);
         shw.manInit();
+        return shw;
+    }
+
+    public function texturedQuad(w, filename, createGldo = true):ShapeWidget<TexSet> {
+        var attrs = TexSet.instance;
+        var shw = new ShapeWidget(attrs, w);
+        shw.addChild(new QuadGraphicElement(attrs));
+        var uvs = new graphics.DynamicAttributeAssigner(attrs, shw.getBuffer());
+        uvs.fillBuffer = (attrs:TexSet, buffer) -> {
+            var writer = attrs.getWriter(AttribAliases.NAME_UV_0);
+            QuadGraphicElement.writeQuadPostions(buffer.getBuffer(), writer, 0, (a, wg) -> wg);
+            trace(attrs.printVertex(buffer.getBuffer(), 1));
+        };
+        if (createGldo) {
+            createContainer(w.entity, Xml.parse('<container><drawcall type="image" font="" path="$filename" /></container>').firstElement());
+            var spr:Sprite = w.entity.getComponent(Sprite);
+            var dp = DrawcallDataProvider.get(w.entity);
+            new CtxWatcher(FlashDisplayRoot, w.entity);
+            dp.views.push(spr);
+        }
         return shw;
     }
 }
