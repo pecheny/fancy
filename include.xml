@@ -18,6 +18,6 @@
     <haxeflag name="-D" value="no-deprecation-warnings" />
 
 
-    <assets path="Assets" include="*"/>
+    <assets path="Assets" include="*" unless="no_fancy_assets" />
 
 </project>
