@@ -46,11 +46,16 @@ class Point implements IPos<Point> {
     function set_x(value:Float):Float {
         return vec[horizontal] = value;
     }
+
     function get_y():Float {
         return vec[vertical];
     }
 
     function set_y(value:Float):Float {
         return vec[vertical] = value;
+    }
+
+    function toString() {
+        return '[$x, $y]';
     }
 }
