@@ -3,12 +3,13 @@ package fui.input;
 import Axis2D;
 import a2d.AspectRatio;
 import lime.ui.Touch;
-import shimp.MultiInputSystemContainer;
+import shimp.InputSystem;
+import shimp.MultiInputTarget;
 import widgets.utils.WidgetHitTester.Point;
 
 class MultitouchRoot {
     var ar:AspectRatio;
-    var target:MultiInputSystemContainer<Point>;
+    var target:MultiInputTarget<Point>;
     var pos = new Point();
 
     public function new(trg, ar) {
