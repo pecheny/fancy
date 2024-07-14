@@ -32,6 +32,7 @@ class MultiInputBinder implements CtxBinder implements MultiInputTarget<Point> {
     public function bind(e:Entity):Void {
         var ch = e.getComponent(MultiInputTarget);
         if (ch != null) {
+            ch.setActive(true);
             children.push(ch);
         }
     }
@@ -39,7 +40,10 @@ class MultiInputBinder implements CtxBinder implements MultiInputTarget<Point> {
     public function unbind(e:Entity):Void {
         var ch = e.getComponent(MultiInputTarget);
         if (ch != null) {
+            ch.setActive(false);
             children.remove(ch);
         }
     }
+
+	public function setActive(v:Bool) {}
 }
