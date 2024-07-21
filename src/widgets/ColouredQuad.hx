@@ -125,6 +125,7 @@ class ColorToggle {
     var active:Bool;
     var activeColors:InteractiveColors;
     var inactiveColors:InteractiveColors;
+    var st:ClickTargetViewState;
 
     public function new(buff:ShapesBuffer<ColorSet>) {
         var colors = new ShapesColorAssigner(ColorSet.instance, 0, buff);
@@ -134,6 +135,7 @@ class ColorToggle {
 
     public function setActive(v) {
         active = v;
+        viewHandler(st);
     }
 
     inline function getIc(v:Bool):InteractiveColors {
@@ -146,8 +148,8 @@ class ColorToggle {
     }
 
     public function viewHandler(st:shimp.ClicksInputSystem.ClickTargetViewState):Void {
+        this.st = st;
         getIc(active).viewHandler(st);
     }
 }
 
-class ClickColorSet {}
