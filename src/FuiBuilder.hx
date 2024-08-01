@@ -1,6 +1,6 @@
 package;
 
-import algl.PlaceholderBuilder2D;
+import al.al2d.PlaceholderBuilder2D;
 import openfl.display.Sprite;
 import al.openfl.display.FlashDisplayRoot;
 import al.openfl.display.DrawcallDataProvider;
