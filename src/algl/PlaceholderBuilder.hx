@@ -19,7 +19,7 @@ import macros.AVConstructor;
 	Additional feature is optional dependency container injection.
 **/
 
-class PlaceholderBuilderBase<T:AxisFactory> {
+class PlaceholderBuilder<T:AxisFactory> {
 	var factories:AVector2D<T>;
 	var _ctx:Entity;
 

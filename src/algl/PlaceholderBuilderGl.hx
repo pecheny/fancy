@@ -10,7 +10,7 @@ import fancy.ScaleComponent;
 import macros.AVConstructor;
 
 
-class PlaceholderBuilderGl extends PlaceholderBuilderBase<GlAxisStateFactory> {
+class PlaceholderBuilderGl extends PlaceholderBuilder<GlAxisStateFactory> {
     var s:Stage;
     var addLIquid:Bool; // all the time
     var _l:Bool; // once
