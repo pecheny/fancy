@@ -5,7 +5,6 @@ import al.al2d.Placeholder2D;
 import al.core.AxisState;
 import al.layouts.data.LayoutData;
 import algl.PlaceholderBuilder;
-import algl.ScreenMeasureUnit;
 import fancy.ProxyWidgetTransform;
 import fancy.ScaleComponent;
 import macros.AVConstructor;
