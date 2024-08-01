@@ -1,4 +1,4 @@
-package openfl;
+package backends.openfl;
 import a2d.Stage;
 import macros.AVConstructor;
 import Axis2D;

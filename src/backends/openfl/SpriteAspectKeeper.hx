@@ -1,4 +1,4 @@
-package openfl;
+package backends.openfl;
 
 import al.openfl.display.FlashDisplayRoot;
 import al.openfl.display.DrawcallDataProvider;
