@@ -1,5 +1,6 @@
 package;
 
+import algl.PlaceholderBuilderGl;
 import openfl.display.Sprite;
 import al.openfl.display.FlashDisplayRoot;
 import al.openfl.display.DrawcallDataProvider;
@@ -20,7 +21,6 @@ import a2d.WindowSizeProvider;
 import al.al2d.Placeholder2D;
 import al.animation.AnimationTreeBuilder;
 import al.layouts.OffsetLayout;
-import algl.Builder.PlaceholderBuilderGl;
 import ec.CtxWatcher;
 import ec.Entity;
 import ecbind.ClickInputBinder;
