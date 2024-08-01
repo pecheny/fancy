@@ -1,6 +1,6 @@
 package;
 
-import algl.PlaceholderBuilderGl;
+import algl.PlaceholderBuilder2D;
 import openfl.display.Sprite;
 import al.openfl.display.FlashDisplayRoot;
 import al.openfl.display.DrawcallDataProvider;
@@ -62,7 +62,7 @@ class FuiBuilder {
     public var textureStorage:TextureStorage;
     public var shaderRegistry:ShaderRegistry;
     public var fonts(default, null) = new FontStorage(new BMFontFactory());
-    public var placeholderBuilder(default, null):PlaceholderBuilderGl;
+    public var placeholderBuilder(default, null):PlaceholderBuilder2D;
     public var textStyles:TextContextBuilder;
     public var updater(default, null):Updater;
 
@@ -73,7 +73,7 @@ class FuiBuilder {
 
     public function new() {
         textureStorage = new TextureStorage();
-        placeholderBuilder = new PlaceholderBuilderGl(ar);
+        placeholderBuilder = new PlaceholderBuilder2D(ar);
         shaderRegistry = new ShaderRegistry();
         gldoBuilder = new GldoBuilder(shaderRegistry);
         xmlProc = new XmlProc(gldoBuilder);
@@ -225,7 +225,7 @@ class FuiBuilder {
         root.addComponentByType(Stage, ar);
         root.addComponentByType(AspectRatioProvider, ar);
         root.addComponentByType(WindowSizeProvider, ar);
-        root.addComponentByType(PlaceholderBuilderGl, placeholderBuilder);
+        root.addComponentByType(PlaceholderBuilder2D, placeholderBuilder);
 
         return root;
     }

@@ -10,7 +10,7 @@ import fancy.ScaleComponent;
 import macros.AVConstructor;
 
 
-class PlaceholderBuilderGl extends PlaceholderBuilder<GlAxisStateFactory> {
+class PlaceholderBuilder2D extends PlaceholderBuilder<Axis2DStateFactory> {
     var s:Stage;
     var addLIquid:Bool; // all the time
     var _l:Bool; // once
@@ -19,7 +19,7 @@ class PlaceholderBuilderGl extends PlaceholderBuilder<GlAxisStateFactory> {
     public function new(s:Stage, addLiquid = false) {
         this.s = s;
         this.addLIquid = addLiquid;
-        factories = AVConstructor.factoryCreate(a -> new GlAxisStateFactory(a, s));
+        factories = AVConstructor.factoryCreate(a -> new Axis2DStateFactory(a, s));
     }
 
     public function h(t:ScreenMeasureUnit, v:Float) {
@@ -78,7 +78,7 @@ class PlaceholderBuilderGl extends PlaceholderBuilder<GlAxisStateFactory> {
     }
 }
 
-class GlAxisStateFactory implements AxisFactory {
+class Axis2DStateFactory implements AxisFactory {
     public var type:ScreenMeasureUnit;
     public var value:Float;
     // todo ulcertain compat with keepStateAfterBuild
