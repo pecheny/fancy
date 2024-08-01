@@ -1,7 +1,7 @@
 package htext;
 
 import al.al2d.Placeholder2D;
-import algl.TransformatorAxisApplier;
+import transform.TransformatorAxisApplier;
 import htext.style.TextStyleContext;
 import transform.TransformerBase;
 

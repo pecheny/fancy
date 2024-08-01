@@ -1,5 +1,5 @@
 package widgets.utils;
-import algl.TransformatorAxisApplier;
+import transform.TransformatorAxisApplier;
 import transform.LiquidTransformer;
 import al.al2d.Placeholder2D;
 class Utils {
