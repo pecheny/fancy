@@ -5,6 +5,4 @@ class Button extends ButtonBase {
         ColouredQuad.flatClolorQuad(w);
         new Label(w, style).withText(text);
     }
-
-
 }
