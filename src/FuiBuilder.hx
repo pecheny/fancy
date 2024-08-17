@@ -1,5 +1,6 @@
 package;
 
+import fui.graphics.ShapeWidget;
 import gl.GldoBuilder;
 import gl.XmlProc;
 import backends.openfl.OpenflBackend;
@@ -11,7 +12,6 @@ import data.aliases.AttribAliases;
 import update.UpdateBinder;
 import graphics.ShapesColorAssigner;
 import graphics.shapes.QuadGraphicElement;
-import widgets.ShapeWidget;
 import al.openfl.StageAspectResizer;
 import al.ec.WidgetSwitcher;
 import al.Builder;

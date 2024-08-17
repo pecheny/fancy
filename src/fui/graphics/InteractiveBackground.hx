@@ -1,4 +1,4 @@
-package widgets;
+package fui.graphics;
 import al.al2d.Placeholder2D;
 import Axis2D;
 import shimp.ClicksInputSystem.ClickTargetViewState;

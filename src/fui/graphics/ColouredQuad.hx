@@ -1,16 +1,16 @@
-package widgets;
+package fui.graphics;
 
-import graphics.ShapesBuffer;
-import macros.AVConstructor;
-import transform.LiquidTransformer;
-import al.al2d.Placeholder2D;
-import gl.sets.ColorSet;
-import graphics.shapes.QuadGraphicElement;
-import graphics.ShapesColorAssigner;
-import shimp.ClicksInputSystem.ClickTargetViewState;
-import widgets.ShapeWidget;
 import Axis2D;
-import widgets.ButtonBase;
+import al.al2d.Placeholder2D;
+import al.al2d.Widget;
+import fui.ui.ButtonBase.ClickViewProcessor;
+import gl.sets.ColorSet;
+import graphics.ShapesBuffer;
+import graphics.ShapesColorAssigner;
+import graphics.shapes.QuadGraphicElement;
+import macros.AVConstructor;
+import shimp.ClicksInputSystem.ClickTargetViewState;
+import transform.LiquidTransformer;
 
 class ColouredQuad {
     public static function flatClolorQuad(w:Placeholder2D, color = 0):ShapeWidget<ColorSet> {

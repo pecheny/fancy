@@ -1,4 +1,4 @@
-package widgets;
+package fui.ui;
 import al.animation.Animation.Animatable;
 import gl.sets.MSDFSet;
 import htext.ITextRender;

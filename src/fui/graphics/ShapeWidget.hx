@@ -1,4 +1,4 @@
-package widgets;
+package fui.graphics;
 
 import a2d.AspectRatioProvider;
 import al.al2d.Placeholder2D;

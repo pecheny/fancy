@@ -1,4 +1,4 @@
-package widgets;
+package fui.ui;
 
 import gl.sets.CMSDFSet;
 import htext.AttributeFiller;
