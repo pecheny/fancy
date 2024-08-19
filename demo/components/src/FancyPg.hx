@@ -1,8 +1,13 @@
 package;
 
+import backends.openfl.SpriteAspectKeeper;
+import fui.graphics.Slider;
+import fui.ui.Button;
+import fui.graphics.BarWidget;
+import fui.graphics.ShapeWidget;
+import al.al2d.PlaceholderBuilder2D;
 import FuiBuilder.XmlLayerLayouts;
 import al.ec.WidgetSwitcher;
-import openfl.SpriteAspectKeeper;
 import a2d.Boundbox;
 import macros.AVConstructor;
 import al.core.AxisApplier;
@@ -14,7 +19,6 @@ import a2d.WindowSizeProvider;
 import al.al2d.Placeholder2D;
 import al.al2d.Widget2DContainer;
 import al.openfl.StageAspectResizer;
-import algl.Builder.PlaceholderBuilderGl;
 import data.aliases.AttribAliases;
 import ec.Entity;
 import gl.sets.ColorSet;
@@ -25,10 +29,7 @@ import graphics.shapes.QuadGraphicElement;
 import openfl.display.Sprite;
 import scroll.ScrollableContent.W2CScrollableContent;
 import scroll.ScrollboxItem;
-import widgets.BarWidget;
-import widgets.Button;
 import widgets.Label;
-import widgets.ShapeWidget;
 import widgets.Widget;
 
 using al.Builder;
@@ -38,14 +39,14 @@ using widgets.utils.Utils;
 class FancyPg extends Sprite {
     var fuiBuilder = new FuiBuilder();
     var sampleText = "FoEo Bar AbAb Aboo Distance Field texture Ad Ae Af Bd Be Bf Bb Ab Dd De Df Cd Ce Cf";
-    var b:PlaceholderBuilderGl;
+    var b:PlaceholderBuilder2D;
     var ar:AspectRatioProvider;
 
     public function new() {
         super();
         
         ar = fuiBuilder.ar;
-        b = new PlaceholderBuilderGl(fuiBuilder.ar);
+        b = new PlaceholderBuilder2D(fuiBuilder.ar);
         var root:Entity = fuiBuilder.createDefaultRoot(XmlLayerLayouts.COLOR_AND_TEXT);
         createTextStyles();
 
@@ -132,7 +133,7 @@ class FancyPg extends Sprite {
             new Label(b.h(sfr, 1).v(sfr, 0.4).b(), sty("pcl")).withText(sampleText).ph,
             new Label(b.h(sfr, 1).v(sfr, 0.4).b(), sty("pcc")).withText(sampleText).ph,
             new Label(b.h(sfr, 1).v(sfr, 0.4).b(), sty("pcr")).withText(sampleText).ph,
-            new widgets.Slider(b.v(sfr, 0.1).b("slider r").withLiquidTransform(ar.getAspectRatio()), horizontal,
+            new Slider(b.v(sfr, 0.1).b("slider r").withLiquidTransform(ar.getAspectRatio()), horizontal,
                 f -> trace("" + f)).withProgress(0.5).ph,
             texturedQuad(fuiBuilder, b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), "bunie.png").ph,
             new Button(b.h(sfr, 1).v(px, 60).b().withLiquidTransform(ar.getAspectRatio()), null, "Button caption", sty("fit")).ph,

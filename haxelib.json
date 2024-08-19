@@ -16,7 +16,6 @@
     "dependencies": {
         "format": "",
         "openfl": "",
-        "hxColorToolkit": "git:http://github.com/andyli/hxColorToolkit",
         "domkit": "git:https://github.com/pecheny/domkit#postinit",
         "slec": "git:https://github.com/pecheny/slec",
         "taxis": "git:https://github.com/pecheny/taxis",

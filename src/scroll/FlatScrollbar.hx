@@ -1,4 +1,7 @@
 package scroll;
+import fui.graphics.ColouredQuad;
+import fui.ui.ButtonBase.ClickViewProcessor;
+import fui.graphics.ShapeWidget;
 import a2d.AspectRatio;
 import al.al2d.Placeholder2D;
 import Axis2D;
@@ -8,10 +11,6 @@ import graphics.shapes.QuadGraphicElement;
 import graphics.shapes.RectWeights;
 import graphics.ShapesColorAssigner;
 import utils.Mathu;
-import widgets.ButtonBase.ClickViewProcessor;
-import widgets.ColouredQuad.InteractiveColors;
-import widgets.ColouredQuad.InteractiveTransform;
-import widgets.ShapeWidget;
 class FlatScrollbar extends ShapeWidget<ColorSet> implements WidgetScrollbar {
     var handler:QuadGraphicElement<ColorSet>;
     var axis:Axis2D;

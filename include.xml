@@ -4,8 +4,8 @@
     <tsource path="src"/>
     <haxelib name="format"/>
     <haxelib name="openfl"/>
-    <haxelib name="hxColorToolkit"/>
     <haxelib name="alayout"/>
+    <haxelib name="score"/>
     <haxelib name="fsm"/>
     <haxelib name="shimp"/>
     <haxelib name="flgl"/>

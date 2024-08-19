@@ -6,7 +6,6 @@ import gl.AttribSet;
 import graphics.shapes.Bar;
 import macros.AVConstructor;
 import transform.LineThicknessCalculator;
-import widgets.ShapeWidget;
 
 class BarWidget<T:AttribSet> extends ShapeWidget<T> {
     public var q:Bar;

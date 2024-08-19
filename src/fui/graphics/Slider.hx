@@ -12,7 +12,6 @@ import widgets.utils.WidgetHitTester.Point;
 import mesh.MeshUtilss;
 import mesh.providers.AttrProviders.SolidColorProvider;
 import utils.Mathu;
-import widgets.ShapeWidget;
 import widgets.utils.WidgetHitTester;
 class Slider extends ShapeWidget<ColorSet> {
     public var q:ProgressBar<ColorSet>;
