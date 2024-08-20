@@ -29,8 +29,8 @@ import graphics.shapes.QuadGraphicElement;
 import openfl.display.Sprite;
 import scroll.ScrollableContent.W2CScrollableContent;
 import scroll.ScrollboxItem;
-import widgets.Label;
-import widgets.Widget;
+import fui.ui.Label;
+
 
 using al.Builder;
 using transform.LiquidTransformer;
