@@ -37,7 +37,7 @@ import gl.sets.ColorSet;
 import gl.sets.MSDFSet;
 import gl.ShaderRegistry;
 import htext.style.TextContextBuilder;
-import scroll.ScissorAspect;
+import gl.aspects.ScissorAspect;
 import shaderbuilder.MSDFShader;
 import shaderbuilder.ShaderElement;
 import shaderbuilder.SnaderBuilder;
