@@ -1,5 +1,6 @@
 package;
 
+import al.al2d.PlaceholderBuilder2D;
 import FuiBuilder;
 import a2d.Stage;
 import al.al2d.ContainerFactory;
@@ -10,7 +11,6 @@ import al.layouts.PortionLayout;
 import al.layouts.WholefillLayout;
 import al.layouts.data.LayoutData.FixedSize;
 import al.layouts.data.LayoutData.FractionSize;
-import algl.Builder.PlaceholderBuilderGl;
 import ec.Entity;
 import htext.style.TextStyleContext;
 import openfl.display.Sprite;
@@ -57,7 +57,7 @@ class ClickAndButt extends Sprite {
 }
 
 class ButtonFactory {
-    var b:PlaceholderBuilderGl;
+    var b:PlaceholderBuilder2D;
     var stage:Stage;
     var textStyleContext:TextStyleContext;
 

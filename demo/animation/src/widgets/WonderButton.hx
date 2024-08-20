@@ -1,7 +1,8 @@
 package widgets;
-import widgets.Label.AnimatedLabel;
-import widgets.ButtonBase.ClickViewProcessor;
-import widgets.ColouredQuad;
+import fui.ui.AnimatedLabel;
+import fui.graphics.ColouredQuad.InteractiveColors;
+import fui.graphics.BarWidget;
+import fui.ui.ButtonBase;
 import al.animation.Animation.AnimationPlaceholder;
 import al.animation.AnimationTreeBuilder;
 import data.aliases.AttribAliases;
