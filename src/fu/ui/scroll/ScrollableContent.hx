@@ -1,4 +1,4 @@
-package scroll;
+package fu.ui.scroll;
 import macros.AVConstructor;
 import Axis2D;
 import utils.Mathu;

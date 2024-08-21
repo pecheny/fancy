@@ -1,12 +1,12 @@
-package scroll;
+package fu.ui.scroll;
 import widgets.utils.WidgetHitTester.Point;
 import Axis2D;
 import fsm.FSM;
 import fsm.State;
 import shimp.InputSystem;
 import Math.abs as abs;
-import scroll.ScrollableContent;
-import scroll.Scrollbar;
+import fu.ui.scroll.ScrollableContent;
+import fu.ui.scroll.Scrollbar;
 
 
 // handles input and indicators
@@ -84,7 +84,7 @@ class ScrollboxInput extends FSM<ScrollboxStateName, ScrollboxInput> implements 
     }
 }
 
-@:access(scroll.ScrollboxInput)
+@:access(fu.ui.scroll.ScrollboxInput)
 class SBState extends State<ScrollboxStateName, ScrollboxInput> {
     public function new() {}
 
@@ -98,7 +98,7 @@ class SBState extends State<ScrollboxStateName, ScrollboxInput> {
     public function release():Void {
     }
 }
-@:access(scroll.ScrollboxInput)
+@:access(fu.ui.scroll.ScrollboxInput)
 class SBOpenState extends SBState {
 
     override public function onEnter():Void {
@@ -118,7 +118,7 @@ class SBOpenState extends SBState {
     }
 }
 
-@:access(scroll.ScrollboxInput)
+@:access(fu.ui.scroll.ScrollboxInput)
 class SBPressedState extends SBState {
 
     override public function setPos(pos:TPos):Void {
@@ -137,7 +137,7 @@ class SBPressedState extends SBState {
     }
 }
 
-@:access(scroll.ScrollboxInput)
+@:access(fu.ui.scroll.ScrollboxInput)
 class SBDragState extends SBState {
     var initialOffset:Point = new Point();
 

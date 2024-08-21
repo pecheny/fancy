@@ -1,9 +1,9 @@
-package scroll;
+package fu.ui.scroll;
 import macros.AVConstructor;
 import Axis2D;
 import al.al2d.Placeholder2D;
 import al.Builder;
-import scroll.Scrollbox.ScrollboxWidget;
+import fu.ui.scroll.Scrollbox.ScrollboxWidget;
 
 using widgets.utils.Utils;
 class ScrollboxItem extends ScrollboxWidget {

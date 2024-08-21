@@ -1,4 +1,4 @@
-package scroll;
+package fu.ui.scroll;
 
 interface Scrollbar {
     function setHandlerSize(v:Float):Void;

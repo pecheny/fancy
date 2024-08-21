@@ -1,4 +1,4 @@
-package scroll;
+package fu.ui.scroll;
 import al.al2d.Placeholder2D;
 import al.al2d.Widget2DContainer;
 import al.appliers.ContainerRefresher;
@@ -13,7 +13,7 @@ import shimp.InputSystemsContainer;
 import shimp.InputSystem;
 import ecbind.InputBinder;
 import widgets.utils.WidgetHitTester.Point;
-import scroll.ScrollboxInput;
+import fu.ui.scroll.ScrollboxInput;
 
 
 class ScrollboxWidget extends Widget implements VisibleSizeProvider {

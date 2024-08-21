@@ -1,4 +1,4 @@
-package scroll;
+package fu.ui.scroll;
 import fu.graphics.ColouredQuad;
 import fu.ui.ButtonBase.ClickViewProcessor;
 import fu.graphics.ShapeWidget;

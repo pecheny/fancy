@@ -27,8 +27,8 @@ import graphics.ShapesColorAssigner;
 import graphics.shapes.Bar;
 import graphics.shapes.QuadGraphicElement;
 import openfl.display.Sprite;
-import scroll.ScrollableContent.W2CScrollableContent;
-import scroll.ScrollboxItem;
+import fu.ui.scroll.ScrollableContent.W2CScrollableContent;
+import fu.ui.scroll.ScrollboxItem;
 import fu.ui.Label;
 
 
