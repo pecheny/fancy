@@ -1,4 +1,4 @@
-package fui.graphics;
+package fu.graphics;
 import al.al2d.Placeholder2D;
 import Axis2D;
 import shimp.ClicksInputSystem.ClickTargetViewState;

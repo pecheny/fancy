@@ -1,4 +1,4 @@
-package fui.ui;
+package fu.ui;
 
 import al.animation.Animation.Animatable;
 import gl.sets.MSDFSet;

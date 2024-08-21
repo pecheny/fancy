@@ -1,4 +1,4 @@
-package fui.ui;
+package fu.ui;
 
 import gl.sets.CMSDFSet;
 import htext.AttributeFiller;

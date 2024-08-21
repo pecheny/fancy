@@ -1,7 +1,7 @@
 package scroll;
-import fui.graphics.ColouredQuad;
-import fui.ui.ButtonBase.ClickViewProcessor;
-import fui.graphics.ShapeWidget;
+import fu.graphics.ColouredQuad;
+import fu.ui.ButtonBase.ClickViewProcessor;
+import fu.graphics.ShapeWidget;
 import a2d.AspectRatio;
 import al.al2d.Placeholder2D;
 import Axis2D;

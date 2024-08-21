@@ -1,6 +1,6 @@
 package;
 
-import fui.graphics.ShapeWidget;
+import fu.graphics.ShapeWidget;
 import gl.GldoBuilder;
 import gl.XmlProc;
 import backends.openfl.OpenflBackend;

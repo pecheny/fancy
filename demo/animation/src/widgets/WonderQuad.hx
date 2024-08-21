@@ -1,5 +1,5 @@
 package widgets;
-import fui.graphics.BarWidget;
+import fu.graphics.BarWidget;
 import a2d.Stage;
 import graphics.ShapesColorAssigner;
 import al.al2d.Placeholder2D;

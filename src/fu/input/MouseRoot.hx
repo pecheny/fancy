@@ -1,4 +1,4 @@
-package fui.input;
+package fu.input;
 
 import a2d.Stage;
 import Axis2D;

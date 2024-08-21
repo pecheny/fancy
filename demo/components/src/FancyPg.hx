@@ -1,10 +1,10 @@
 package;
 
 import backends.openfl.SpriteAspectKeeper;
-import fui.graphics.Slider;
-import fui.ui.Button;
-import fui.graphics.BarWidget;
-import fui.graphics.ShapeWidget;
+import fu.graphics.Slider;
+import fu.ui.Button;
+import fu.graphics.BarWidget;
+import fu.graphics.ShapeWidget;
 import al.al2d.PlaceholderBuilder2D;
 import FuiBuilder.XmlLayerLayouts;
 import al.ec.WidgetSwitcher;
@@ -29,7 +29,7 @@ import graphics.shapes.QuadGraphicElement;
 import openfl.display.Sprite;
 import scroll.ScrollableContent.W2CScrollableContent;
 import scroll.ScrollboxItem;
-import fui.ui.Label;
+import fu.ui.Label;
 
 
 using al.Builder;

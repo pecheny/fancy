@@ -1,4 +1,4 @@
-package fui.graphics;
+package fu.graphics;
 
 import a2d.AspectRatioProvider;
 import al.al2d.Placeholder2D;

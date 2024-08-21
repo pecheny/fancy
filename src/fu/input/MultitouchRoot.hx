@@ -1,4 +1,4 @@
-package fui.input;
+package fu.input;
 
 import Axis2D;
 import a2d.AspectRatio;

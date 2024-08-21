@@ -1,6 +1,6 @@
-package fui.ui;
+package fu.ui;
 
-import fui.graphics.ColouredQuad;
+import fu.graphics.ColouredQuad;
 
 class Button extends ButtonBase {
     public function new(w, h, text, style) {

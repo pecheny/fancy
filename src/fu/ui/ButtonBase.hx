@@ -1,4 +1,4 @@
-package fui.ui;
+package fu.ui;
 import widgets.utils.WidgetHitTester.Point;
 import al.al2d.Placeholder2D;
 import ec.CtxWatcher;

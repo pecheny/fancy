@@ -1,4 +1,4 @@
-package fui.ui;
+package fu.ui;
 
 
 typedef Label = MSDFLabel;

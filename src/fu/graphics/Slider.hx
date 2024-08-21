@@ -1,4 +1,4 @@
-package fui.graphics;
+package fu.graphics;
 import shimp.InputSystem;
 import al.al2d.Placeholder2D;
 import widgets.utils.WidgetHitTester.Point;
