@@ -1,13 +1,14 @@
 package fu.ui;
-import widgets.utils.WidgetHitTester.Point;
 import al.al2d.Placeholder2D;
 import ec.CtxWatcher;
 import ec.Entity;
-import widgets.utils.WidgetHitTester;
+import ecbind.ClickInputBinder;
 import shimp.ClicksInputSystem.ClickTarget;
 import shimp.ClicksInputSystem.ClickTargetViewState;
-import ecbind.ClickInputBinder;
+import shimp.Point;
 import widgets.Widget;
+import widgets.utils.WidgetHitTester;
+
 class ButtonBase implements ClickTarget<Point> extends Widget implements ClickViewProcessor {
     var hittester:WidgetHitTester;
     public var clickHandler:Void -> Void;

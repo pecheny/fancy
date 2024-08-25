@@ -1,4 +1,5 @@
 package fu.ui.scroll;
+import shimp.Point;
 import al.al2d.Placeholder2D;
 import al.al2d.Widget2DContainer;
 import al.appliers.ContainerRefresher;
@@ -12,7 +13,6 @@ import widgets.utils.WidgetHitTester;
 import shimp.InputSystemsContainer;
 import shimp.InputSystem;
 import ecbind.InputBinder;
-import widgets.utils.WidgetHitTester.Point;
 import fu.ui.scroll.ScrollboxInput;
 
 

@@ -1,61 +1,46 @@
 package widgets.utils;
-import al.al2d.Placeholder2D;
+
 import Axis2D;
-import shimp.InputSystem.HitTester;
-import shimp.IPos;
+import Axis;
+import al.al2d.Placeholder2D;
+import al.core.AxisState;
+import al.core.Placeholder;
 import macros.AVConstructor;
-class WidgetHitTester implements HitTester<Point> {
-    var w:Placeholder2D;
+import shimp.IPos;
+import shimp.InputSystem.HitTester;
+import shimp.Point;
 
-    public function new(w) {
-        this.w = w;
-    }
+class WidgetHitTester extends WidgetHitTesterImpl<2, Axis2D, Point> {}
 
-    public function isUnder(pos:Point):Bool {
-        for (a in Axis2D) {
+@:generic
+class WidgetHitTesterImpl<@:const NumAxes:Int, TAxis:Axis<TAxis>, TPos:IPos<TPos> & PosAccess<TAxis>> implements HitTester<TPos> {
+	var w:Placeholder<TAxis>;
+
+	public function new(w) {
+		this.w = w;
+	}
+
+	public function isUnder(pos:TPos):Bool {
+		var axisStates:AVector<TAxis, AxisState> = w.axisStates;
+        // @:const works in haxe nightly only
+        // as long as there is no other implementations than Axis2D yet
+        // for now it is safe to leave hardcoded value '2'
+		var numAxes =
+			#if (haxe_ver < 4.4)
+			2;
+			#else
+			NumAxes;
+			#end
+
+		for (a in 0...numAxes) {
+			var a:TAxis = cast a;
             var axis = w.axisStates[a];
-            var val = @:privateAccess pos.vec[a];
-            if (val < axis.getPos())
-                return false;
-            if (val > (axis.getPos() + axis.getSize()))
-                return false;
-        }
-        return true;
-    }
-}
-
-class Point implements IPos<Point> {
-   var vec:AVector2D<Float> = AVConstructor.create(0., 0.);
-    public var x(get, set):Float;
-    public var y(get, set):Float;
-    public function new(){}
-
-    public function equals(other:Point):Bool {
-        return x == other.x && y == other.y;
-    }
-
-    public function setValue(other:Point):Void {
-        x = other.x;
-        y = other.y;
-    }
-
-    function get_x():Float {
-        return vec[horizontal];
-    }
-
-    function set_x(value:Float):Float {
-        return vec[horizontal] = value;
-    }
-
-    function get_y():Float {
-        return vec[vertical];
-    }
-
-    function set_y(value:Float):Float {
-        return vec[vertical] = value;
-    }
-
-    function toString() {
-        return '[$x, $y]';
-    }
+			var val = pos.getValue(a);
+			if (val < axis.getPos())
+				return false;
+			if (val > (axis.getPos() + axis.getSize()))
+				return false;
+		}
+		return true;
+	}
 }

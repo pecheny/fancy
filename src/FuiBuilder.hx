@@ -48,6 +48,7 @@ import update.RealtimeUpdater;
 import update.Updater;
 import utils.TextureStorage;
 import widgets.utils.WidgetHitTester;
+import shimp.Point;
 
 class XmlLayerLayouts {
     public static final COLOR_AND_TEXT = '<container>

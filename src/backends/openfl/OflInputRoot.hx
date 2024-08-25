@@ -1,9 +1,9 @@
 package backends.openfl;
 
+import shimp.Point;
 import Axis2D;
 import openfl.events.MouseEvent;
 import openfl.events.Event;
-import widgets.utils.WidgetHitTester.Point;
 import shimp.InputSystem.InputTarget;
 import a2d.AspectRatio;
 

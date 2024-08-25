@@ -1,18 +1,18 @@
 package fu.graphics;
-import shimp.InputSystem;
 import al.al2d.Placeholder2D;
-import widgets.utils.WidgetHitTester.Point;
 import data.aliases.AttribAliases;
 import ec.CtxWatcher;
 import ecbind.InputBinder;
 import gl.sets.ColorSet;
 import graphics.shapes.ProgressBar;
 import haxe.io.Bytes;
-import widgets.utils.WidgetHitTester.Point;
 import mesh.MeshUtilss;
 import mesh.providers.AttrProviders.SolidColorProvider;
+import shimp.InputSystem;
 import utils.Mathu;
+import shimp.Point;
 import widgets.utils.WidgetHitTester;
+
 class Slider extends ShapeWidget<ColorSet> {
     public var q:ProgressBar<ColorSet>;
     var color:Int;

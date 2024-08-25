@@ -1,5 +1,5 @@
 package fu.ui.scroll;
-import widgets.utils.WidgetHitTester.Point;
+import shimp.Point;
 import Axis2D;
 import fsm.FSM;
 import fsm.State;
@@ -16,6 +16,7 @@ import fu.ui.scroll.Scrollbar;
     var open = "open";
     var dragged = "dragged";
 }
+
 typedef TPos = Point;
 
 
