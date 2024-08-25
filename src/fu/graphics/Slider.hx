@@ -11,7 +11,7 @@ import mesh.providers.AttrProviders.SolidColorProvider;
 import shimp.InputSystem;
 import utils.Mathu;
 import shimp.Point;
-import widgets.utils.WidgetHitTester2D;
+import al2d.WidgetHitTester2D;
 
 class Slider extends ShapeWidget<ColorSet> {
     public var q:ProgressBar<ColorSet>;

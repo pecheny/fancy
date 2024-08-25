@@ -9,7 +9,7 @@ import al.layouts.PortionLayout;
 import Axis2D;
 import widgets.Widget;
 import ec.CtxWatcher;
-import widgets.utils.WidgetHitTester2D;
+import al2d.WidgetHitTester2D;
 import shimp.InputSystemsContainer;
 import shimp.InputSystem;
 import ecbind.InputBinder;

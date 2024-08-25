@@ -7,7 +7,7 @@ import shimp.ClicksInputSystem.ClickTarget;
 import shimp.ClicksInputSystem.ClickTargetViewState;
 import shimp.Point;
 import widgets.Widget;
-import widgets.utils.WidgetHitTester2D;
+import al2d.WidgetHitTester2D;
 
 class ButtonBase implements ClickTarget<Point> extends Widget implements ClickViewProcessor {
     var hittester:WidgetHitTester2D;

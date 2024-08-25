@@ -47,7 +47,7 @@ import shimp.InputSystemsContainer;
 import update.RealtimeUpdater;
 import update.Updater;
 import utils.TextureStorage;
-import widgets.utils.WidgetHitTester2D;
+import al2d.WidgetHitTester2D;
 import shimp.Point;
 
 class XmlLayerLayouts {

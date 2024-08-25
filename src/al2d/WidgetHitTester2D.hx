@@ -1,4 +1,4 @@
-package widgets.utils;
+package al2d;
 
 import Axis2D;
 import shimp.Point;
