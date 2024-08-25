@@ -2,18 +2,16 @@ package widgets.utils;
 
 import Axis2D;
 import Axis;
-import al.al2d.Placeholder2D;
 import al.core.AxisState;
 import al.core.Placeholder;
-import macros.AVConstructor;
 import shimp.IPos;
 import shimp.InputSystem.HitTester;
 import shimp.Point;
 
-class WidgetHitTester extends WidgetHitTesterImpl<2, Axis2D, Point> {}
+class WidgetHitTester2D extends WidgetHitTester<2, Axis2D, Point> {}
 
 @:generic
-class WidgetHitTesterImpl<@:const NumAxes:Int, TAxis:Axis<TAxis>, TPos:IPos<TPos> & PosAccess<TAxis>> implements HitTester<TPos> {
+class WidgetHitTester<@:const NumAxes:Int, TAxis:Axis<TAxis>, TPos:IPos<TPos> & PosAccess<TAxis>> implements HitTester<TPos> {
 	var w:Placeholder<TAxis>;
 
 	public function new(w) {

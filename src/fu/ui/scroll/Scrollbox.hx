@@ -9,7 +9,7 @@ import al.layouts.PortionLayout;
 import Axis2D;
 import widgets.Widget;
 import ec.CtxWatcher;
-import widgets.utils.WidgetHitTester;
+import widgets.utils.WidgetHitTester2D;
 import shimp.InputSystemsContainer;
 import shimp.InputSystem;
 import ecbind.InputBinder;
@@ -23,7 +23,7 @@ class ScrollboxWidget extends Widget implements VisibleSizeProvider {
     public function new(w:Placeholder2D, content:ScrollableContent, ar) {
         super(w);
         trace(w.entity.getChildren().length);
-        var hitester = new WidgetHitTester(w);
+        var hitester = new WidgetHitTester2D(w);
         new CtxWatcher(InputBinder, w.entity, true); // send upstream to scrollbox
         var inputPassthrough = new InputSystemsContainer(new Point(), hitester);
         inputPassthrough.verbose = true;

@@ -11,7 +11,7 @@ import mesh.providers.AttrProviders.SolidColorProvider;
 import shimp.InputSystem;
 import utils.Mathu;
 import shimp.Point;
-import widgets.utils.WidgetHitTester;
+import widgets.utils.WidgetHitTester2D;
 
 class Slider extends ShapeWidget<ColorSet> {
     public var q:ProgressBar<ColorSet>;
@@ -68,7 +68,7 @@ class SliderInput implements InputSystemTarget<Point> {
     var handler:Float -> Void;
 
     public function new(w, stage, a, h) {
-        this.hitTester = new WidgetHitTester(w);
+        this.hitTester = new WidgetHitTester2D(w);
         this.toLocal = new ToWidgetSpace(w, stage);
         this.handler = h;
         this.a = a;

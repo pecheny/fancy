@@ -47,7 +47,7 @@ import shimp.InputSystemsContainer;
 import update.RealtimeUpdater;
 import update.Updater;
 import utils.TextureStorage;
-import widgets.utils.WidgetHitTester;
+import widgets.utils.WidgetHitTester2D;
 import shimp.Point;
 
 class XmlLayerLayouts {
@@ -217,7 +217,7 @@ class FuiBuilder {
         var outside = new Point();
         outside.x = -9999999;
         outside.y = -9999999;
-        w.entity.addComponentByType(InputSystemTarget, new SwitchableInputAdapter(input, new WidgetHitTester(w), new Point(), outside));
+        w.entity.addComponentByType(InputSystemTarget, new SwitchableInputAdapter(input, new WidgetHitTester2D(w), new Point(), outside));
         new CtxWatcher(InputBinder, w.entity);
         return w;
     }

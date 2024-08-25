@@ -7,17 +7,17 @@ import shimp.ClicksInputSystem.ClickTarget;
 import shimp.ClicksInputSystem.ClickTargetViewState;
 import shimp.Point;
 import widgets.Widget;
-import widgets.utils.WidgetHitTester;
+import widgets.utils.WidgetHitTester2D;
 
 class ButtonBase implements ClickTarget<Point> extends Widget implements ClickViewProcessor {
-    var hittester:WidgetHitTester;
+    var hittester:WidgetHitTester2D;
     public var clickHandler:Void -> Void;
     var interactives:Array<ClickTargetViewState -> Void> = [];
 
     public function new(w:Placeholder2D, handler:Void -> Void = null) {
         super(w);
         clickHandler = handler;
-        hittester = new WidgetHitTester(w);
+        hittester = new WidgetHitTester2D(w);
         w.entity.addComponentByName(Entity.getComponentId(ClickTarget), this);
         w.entity.addComponentByName(Entity.getComponentId(ClickViewProcessor), this);
         new CtxWatcher(ClickInputBinder, w.entity);
