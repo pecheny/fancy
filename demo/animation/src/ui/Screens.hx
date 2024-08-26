@@ -8,7 +8,7 @@ import a2d.Stage;
 import update.Updatable;
 import al.animation.AnimationTreeBuilder;
 import al.ec.WidgetSwitcher;
-import widgets.Widget;
+import al.al2d.Widget;
 import al.animation.Animation.AnimationPlaceholder;
 
 class Screens implements Updatable {

@@ -11,7 +11,7 @@ import htext.TextAutoWidth;
 import htext.TextRender;
 import htext.style.TextStyleContext;
 import transform.TransformerBase;
-import widgets.Widget;
+import al.al2d.Widget;
 
 using htext.TextTransformer;
 class LabelBase<T:AttribSet> extends Widget {

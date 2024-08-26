@@ -7,7 +7,7 @@ import al.Builder;
 import al.layouts.data.LayoutData.FixedSize;
 import al.layouts.PortionLayout;
 import Axis2D;
-import widgets.Widget;
+import al.al2d.Widget;
 import ec.CtxWatcher;
 import al2d.WidgetHitTester2D;
 import shimp.InputSystemsContainer;

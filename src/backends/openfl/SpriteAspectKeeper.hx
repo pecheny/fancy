@@ -11,7 +11,7 @@ import al.core.AxisApplier;
 import ec.Entity;
 import macros.AVConstructor;
 import openfl.display.Sprite;
-import widgets.Widget;
+import al.al2d.Widget;
 
 class SpriteAspectKeeper extends Widget {
     var spr:Sprite;

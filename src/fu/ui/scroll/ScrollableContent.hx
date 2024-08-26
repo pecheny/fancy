@@ -6,7 +6,7 @@ import al.al2d.Placeholder2D;
 import al.al2d.Widget2DContainer;
 import al.core.AxisApplier;
 import al.core.WidgetContainer.ContentSizeProvider;
-import widgets.Widget;
+import al.al2d.Widget;
 import ec.Signal;
 
 // provides content size, store ofset, apply offset
