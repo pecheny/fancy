@@ -33,8 +33,8 @@ import fu.ui.Label;
 
 
 using al.Builder;
-using transform.LiquidTransformer;
-using transform.LiquidTransformer;
+using a2d.transform.LiquidTransformer;
+using a2d.transform.LiquidTransformer;
 
 class FancyPg extends Sprite {
     var fuiBuilder = new FuiBuilder();

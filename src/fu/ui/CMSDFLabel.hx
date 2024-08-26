@@ -5,7 +5,7 @@ import htext.AttributeFiller;
 import htext.SmothnessWriter;
 import htext.TextColorFiller;
 import htext.TextRender;
-import transform.TransformerBase;
+import a2d.transform.TransformerBase;
 
 class CMSDFLabel extends LabelBase<CMSDFSet> {
     var color:Int = 0xffffff;

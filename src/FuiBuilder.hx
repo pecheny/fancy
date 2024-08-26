@@ -1,6 +1,6 @@
 package;
 
-import transform.LiquidTransformer;
+import a2d.transform.LiquidTransformer;
 import fu.graphics.ShapeWidget;
 import gl.GldoBuilder;
 import gl.XmlProc;

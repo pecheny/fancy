@@ -5,7 +5,7 @@ import Axis2D;
 import gl.AttribSet;
 import graphics.shapes.Bar;
 import macros.AVConstructor;
-import transform.LineThicknessCalculator;
+import a2d.transform.LineThicknessCalculator;
 
 class BarWidget<T:AttribSet> extends ShapeWidget<T> {
     public var q:Bar;

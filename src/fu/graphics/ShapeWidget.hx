@@ -11,7 +11,7 @@ import gl.RenderTarget;
 import graphics.ShapeRenderer;
 import graphics.shapes.Shape;
 import graphics.ShapesBuffer;
-import transform.LiquidTransformer;
+import a2d.transform.LiquidTransformer;
 import al.al2d.Widget;
 
 class ShapeWidget<T:AttribSet> extends Widget implements Renderable<T> {

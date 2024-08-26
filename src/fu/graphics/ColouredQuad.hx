@@ -10,7 +10,7 @@ import graphics.ShapesColorAssigner;
 import graphics.shapes.QuadGraphicElement;
 import macros.AVConstructor;
 import shimp.ClicksInputSystem.ClickTargetViewState;
-import transform.LiquidTransformer;
+import a2d.transform.LiquidTransformer;
 
 class ColouredQuad {
     public static function flatClolorQuad(w:Placeholder2D, color = 0):ShapeWidget<ColorSet> {

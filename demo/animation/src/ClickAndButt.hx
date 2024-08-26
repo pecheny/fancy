@@ -19,8 +19,8 @@ import widgets.WonderButton;
 import widgets.WonderQuad;
 
 using al.Builder;
-using transform.LiquidTransformer;
-using transform.LiquidTransformer;
+using a2d.transform.LiquidTransformer;
+using a2d.transform.LiquidTransformer;
 
 class ScreenNames {
     public inline static var ONE:String = "one";

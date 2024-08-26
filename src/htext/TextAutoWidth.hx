@@ -3,7 +3,7 @@ import al.al2d.Placeholder2D;
 import al.core.AxisApplier;
 import Axis2D;
 import htext.style.TextStyleContext;
-import transform.TransformerBase;
+import a2d.transform.TransformerBase;
 class TextAutoWidth implements AxisApplier {
     var textLayouter:TextLayouter;
     var tr:TextTransformer;

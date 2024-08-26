@@ -1,9 +1,9 @@
 package htext;
 
 import al.al2d.Placeholder2D;
-import transform.TransformatorAxisApplier;
+import a2d.transform.TransformatorAxisApplier;
 import htext.style.TextStyleContext;
-import transform.TransformerBase;
+import a2d.transform.TransformerBase;
 
 class TextTransformer extends TransformerBase {
     var textStyleContext:TextStyleContext;

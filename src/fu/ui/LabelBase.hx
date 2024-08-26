@@ -10,7 +10,7 @@ import htext.ITextRender;
 import htext.TextAutoWidth;
 import htext.TextRender;
 import htext.style.TextStyleContext;
-import transform.TransformerBase;
+import a2d.transform.TransformerBase;
 import al.al2d.Widget;
 
 using htext.TextTransformer;
