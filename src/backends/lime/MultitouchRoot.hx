@@ -1,11 +1,11 @@
-package fu.input;
+package backends.lime;
 
 import Axis2D;
 import a2d.AspectRatio;
 import lime.ui.Touch;
-import shimp.InputSystem;
 import shimp.MultiInputTarget;
-import widgets.utils.WidgetHitTester.Point;
+import shimp.Point;
+
 
 class MultitouchRoot {
     var ar:AspectRatio;

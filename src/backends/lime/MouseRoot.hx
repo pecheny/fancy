@@ -1,11 +1,11 @@
-package fu.input;
+package backends.lime;
 
 import a2d.Stage;
 import Axis2D;
 import a2d.AspectRatio;
 import lime.ui.MouseButton;
 import shimp.InputSystem;
-import widgets.utils.WidgetHitTester.Point;
+import shimp.Point;
 
 class MouseRoot {
     var stage:Stage;
