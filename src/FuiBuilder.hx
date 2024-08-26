@@ -1,5 +1,6 @@
 package;
 
+import transform.LiquidTransformer;
 import fu.graphics.ShapeWidget;
 import gl.GldoBuilder;
 import gl.XmlProc;
@@ -250,7 +251,7 @@ class FuiBuilder {
     }
 
     public function lqtr(ph) {
-        return widgets.utils.Utils.withLiquidTransform(ph, ar.getAspectRatio());
+        return LiquidTransformer.withLiquidTransform(ph, ar.getAspectRatio());
     }
 
     public function quad(ph:Placeholder2D, color) {

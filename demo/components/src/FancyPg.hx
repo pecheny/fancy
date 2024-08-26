@@ -34,7 +34,7 @@ import fu.ui.Label;
 
 using al.Builder;
 using transform.LiquidTransformer;
-using widgets.utils.Utils;
+using transform.LiquidTransformer;
 
 class FancyPg extends Sprite {
     var fuiBuilder = new FuiBuilder();
