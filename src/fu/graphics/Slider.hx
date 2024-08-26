@@ -1,5 +1,5 @@
 package fu.graphics;
-import al.al2d.Placeholder2D;
+import a2d.Placeholder2D;
 import data.aliases.AttribAliases;
 import ec.CtxWatcher;
 import ecbind.InputBinder;

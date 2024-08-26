@@ -1,8 +1,8 @@
 package fu.graphics;
 
 import Axis2D;
-import al.al2d.Placeholder2D;
-import al.al2d.Widget;
+import a2d.Placeholder2D;
+import a2d.Widget;
 import fu.ui.ButtonBase.ClickViewProcessor;
 import gl.sets.ColorSet;
 import graphics.ShapesBuffer;

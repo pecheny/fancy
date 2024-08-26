@@ -1,9 +1,9 @@
 package fu.graphics;
-import al.al2d.Placeholder2D;
+import a2d.Placeholder2D;
 import Axis2D;
 import shimp.ClicksInputSystem.ClickTargetViewState;
 import mesh.providers.AttrProviders.SolidColorProvider;
-import al.al2d.Widget;
+import a2d.Widget;
 class InteractiveBackground extends Widget {
     var colors:Map<ClickTargetViewState, Int>;
     var bg:ColouredQuad;

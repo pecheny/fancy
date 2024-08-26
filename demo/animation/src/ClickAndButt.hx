@@ -1,10 +1,10 @@
 package;
 
-import al.al2d.PlaceholderBuilder2D;
+import a2d.PlaceholderBuilder2D;
 import FuiBuilder;
 import a2d.Stage;
-import al.al2d.ContainerFactory;
-import al.al2d.Widget2DContainer;
+import a2d.ContainerFactory;
+import a2d.Widget2DContainer;
 import al.animation.Animation.AnimContainer;
 import al.ec.WidgetSwitcher;
 import al.layouts.PortionLayout;

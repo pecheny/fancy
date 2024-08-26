@@ -1,6 +1,6 @@
 package ui;
 
-import al.al2d.PlaceholderBuilder2D;
+import a2d.PlaceholderBuilder2D;
 import ec.Entity;
 import al.animation.Animation.AnimContainer;
 import al.layouts.OffsetLayout;
@@ -8,7 +8,7 @@ import a2d.Stage;
 import update.Updatable;
 import al.animation.AnimationTreeBuilder;
 import al.ec.WidgetSwitcher;
-import al.al2d.Widget;
+import a2d.Widget;
 import al.animation.Animation.AnimationPlaceholder;
 
 class Screens implements Updatable {

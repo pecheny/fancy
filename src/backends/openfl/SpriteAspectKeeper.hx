@@ -6,12 +6,12 @@ import ec.CtxWatcher;
 import Axis2D;
 import a2d.Boundbox;
 import a2d.Stage;
-import al.al2d.Placeholder2D;
+import a2d.Placeholder2D;
 import al.core.AxisApplier;
 import ec.Entity;
 import macros.AVConstructor;
 import openfl.display.Sprite;
-import al.al2d.Widget;
+import a2d.Widget;
 
 class SpriteAspectKeeper extends Widget {
     var spr:Sprite;

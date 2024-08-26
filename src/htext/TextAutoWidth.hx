@@ -1,5 +1,5 @@
 package htext;
-import al.al2d.Placeholder2D;
+import a2d.Placeholder2D;
 import al.core.AxisApplier;
 import Axis2D;
 import htext.style.TextStyleContext;

@@ -1,6 +1,6 @@
 package htext;
 
-import al.al2d.Placeholder2D;
+import a2d.Placeholder2D;
 import a2d.transform.TransformatorAxisApplier;
 import htext.style.TextStyleContext;
 import a2d.transform.TransformerBase;

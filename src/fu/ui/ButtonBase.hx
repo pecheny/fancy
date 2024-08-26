@@ -1,12 +1,12 @@
 package fu.ui;
-import al.al2d.Placeholder2D;
+import a2d.Placeholder2D;
 import ec.CtxWatcher;
 import ec.Entity;
 import ecbind.ClickInputBinder;
 import shimp.ClicksInputSystem.ClickTarget;
 import shimp.ClicksInputSystem.ClickTargetViewState;
 import shimp.Point;
-import al.al2d.Widget;
+import a2d.Widget;
 import al2d.WidgetHitTester2D;
 
 class ButtonBase implements ClickTarget<Point> extends Widget implements ClickViewProcessor {

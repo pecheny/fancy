@@ -2,11 +2,11 @@ package fu.ui.scroll;
 import macros.AVConstructor;
 import Axis2D;
 import utils.Mathu;
-import al.al2d.Placeholder2D;
-import al.al2d.Widget2DContainer;
+import a2d.Placeholder2D;
+import a2d.Widget2DContainer;
 import al.core.AxisApplier;
 import al.core.WidgetContainer.ContentSizeProvider;
-import al.al2d.Widget;
+import a2d.Widget;
 import ec.Signal;
 
 // provides content size, store ofset, apply offset

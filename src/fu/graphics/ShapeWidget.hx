@@ -1,7 +1,7 @@
 package fu.graphics;
 
 import a2d.AspectRatioProvider;
-import al.al2d.Placeholder2D;
+import a2d.Placeholder2D;
 import ec.CtxWatcher;
 import ecbind.RenderableBinder;
 import ecbind.RenderablesComponent;
@@ -12,7 +12,7 @@ import graphics.ShapeRenderer;
 import graphics.shapes.Shape;
 import graphics.ShapesBuffer;
 import a2d.transform.LiquidTransformer;
-import al.al2d.Widget;
+import a2d.Widget;
 
 class ShapeWidget<T:AttribSet> extends Widget implements Renderable<T> {
     @:once var ratioProvider:AspectRatioProvider;

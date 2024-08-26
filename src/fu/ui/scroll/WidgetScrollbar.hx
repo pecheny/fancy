@@ -1,5 +1,5 @@
 package fu.ui.scroll;
-import al.al2d.Placeholder2D;
+import a2d.Placeholder2D;
 interface WidgetScrollbar extends Scrollbar {
     public var ph(get, null):Placeholder2D;
 }
