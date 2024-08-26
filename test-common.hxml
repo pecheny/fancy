@@ -1,7 +1,0 @@
--lib utest
--lib slec
--cp ./src
--cp ./test
-# -x Main
---main Main
-# -D UTEST_FAILURE_THROW
