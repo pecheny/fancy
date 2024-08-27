@@ -80,7 +80,7 @@ class FancyPg extends Sprite {
             cont.addWidget(ch);
         var spr:Sprite = scroller.ph.entity.getComponent(Sprite);
         addChild(spr);
-        fuiBuilder.setAspects([]);
+        fuiBuilder.pipeline.setAspects([]);
         return placeholder;
     }
 

@@ -58,27 +58,71 @@ class XmlLayerLayouts {
     </container>';
 }
 
-class FuiBuilder {
-    public var ar:Stage = new StageImpl(1);
+class RenderingPipeline {
     public var renderAspectBuilder(default, null):RenderAspectBuilder;
     public var textureStorage:TextureStorage;
     public var shaderRegistry:ShaderRegistry;
+    var gldoBuilder:GldoBuilder;
+    var pos:ShaderElement = PosPassthrough.instance;
+    var xmlProc:XmlProc;
+    var sharedAspects:Array<RenderingAspect>;
+    public function new() {
+    
+        textureStorage = new TextureStorage();
+        shaderRegistry = new ShaderRegistry();
+        gldoBuilder = new GldoBuilder(shaderRegistry);
+        xmlProc = new XmlProc(gldoBuilder);
+        setAspects([]);
+
+    }
+    
+    public function regDrawcallType<T:AttribSet>(drawcallType:String, shaderDesc:ShaderDescr<T>, gldoFactory:GldoFactory<T>) {
+        shaderRegistry.reg(shaderDesc);
+        xmlProc.regHandler(drawcallType, gldoFactory);
+    }
+
+    public function hasDrawcallType(type) {
+        return (shaderRegistry.getDescr(type) != null);
+    }
+
+    public function setAspects(a:Array<RenderingAspect>) {
+        sharedAspects = a;
+        renderAspectBuilder = new RenderAspectBuilder(a);
+        return this;
+    }
+
+
+    public function setPositioning(pos:ShaderElement) {
+        this.pos = pos;
+        return this;
+    }
+
+
+    public function createContainer(e:Entity, descr):Entity {
+        xmlProc.processNode(e, descr);
+        return e;
+    }
+    
+    public function createGldo<T:AttribSet>(attrs:T, e:Entity, type:String, aspect:RenderingAspect, name:String):GLDisplayObject<T> {
+        renderAspectBuilder.newChain();
+        if (aspect != null)
+            renderAspectBuilder.add(aspect);
+        return cast gldoBuilder.getGldo(e, type, renderAspectBuilder.build(), name);
+    }
+}
+
+class FuiBuilder {
+    public var pipeline:RenderingPipeline;
+    public var ar:Stage = new StageImpl(1);
     public var fonts(default, null) = new FontStorage(new BMFontFactory());
     public var placeholderBuilder(default, null):PlaceholderBuilder2D;
     public var textStyles:TextContextBuilder;
     public var updater(default, null):Updater;
 
-    var gldoBuilder:GldoBuilder;
-    var pos:ShaderElement = PosPassthrough.instance;
-    var xmlProc:XmlProc;
-    var sharedAspects:Array<RenderingAspect>;
 
     public function new() {
-        textureStorage = new TextureStorage();
+        this.pipeline = new RenderingPipeline();
         placeholderBuilder = new PlaceholderBuilder2D(ar);
-        shaderRegistry = new ShaderRegistry();
-        gldoBuilder = new GldoBuilder(shaderRegistry);
-        xmlProc = new XmlProc(gldoBuilder);
         textStyles = new TextContextBuilder(fonts, ar);
         var updater = new RealtimeUpdater();
         updater.update();
@@ -86,13 +130,12 @@ class FuiBuilder {
         #if openfl
         openfl.Lib.current.stage.addEventListener(openfl.events.Event.ENTER_FRAME, _ -> updater.update());
         #end
-        setAspects([]);
     }
 
     public function createDefaultRoot(dl, font = "Assets/fonts/robo.fnt") {
         var rw = Builder.widget();
         var rootEntity = rw.entity;
-        this.regDefaultDrawcalls();
+        // this.regDefaultDrawcalls();
         var ar = this.ar;
         this.addBmFont("", font); // todo
         this.configureInput(rootEntity);
@@ -124,81 +167,61 @@ class FuiBuilder {
         rootEntity.addComponentByType(TextContextStorage, textStyles);
         return rootEntity;
     }
-
-    static var smoothShaderEl = new GeneralPassthrough(MSDFSet.NAME_DPI, MSDFShader.smoothness);
-
-    public dynamic function regDefaultDrawcalls():Void {
-        regDrawcallType("image", {
-            type: "texture",
-            attrs: TexSet.instance,
-            vert: [Uv0Passthrough.instance, PosPassthrough.instance],
-            frag: [cast TextureFragment.get(0, 0)],
-        }, (e, xml) -> {
-            if (!xml.exists("path"))
-                throw '<image /> gldo should have path property';
-            // todo image name to gldo
-            return createGldo(TexSet.instance, e, "texture", new TextureBinder(textureStorage, xml.get("path")), "");
-        });
-
-        regDrawcallType("color", {
-            type: "color",
-            attrs: ColorSet.instance,
-            vert: [ColorPassthroughVert.instance, PosPassthrough.instance],
-            frag: [cast ColorPassthroughFrag.instance],
-        }, (e, xml) -> createGldo(ColorSet.instance, e, "color", null, ""));
-
-        // first "color" – alias in xml
-        // descr.type: "color" – alias for shader registry. should be same with next one
-        // createGldo(_,_, "color") – alias by which shader will be requeseted during gl init
-
-        regDrawcallType("text", {
-            type: "msdf",
-            attrs: MSDFSet.instance,
-            vert: [Uv0Passthrough.instance, PosPassthrough.instance, smoothShaderEl],
-            frag: [cast MSDFFrag.instance, ApplyUnoformColorFrag.instance],
-            uniforms: ["color"]
-        }, createTextGldo);
+    public function addScissors(w:Placeholder2D) {
+        var sc = new ScissorAspect(w, ar.getAspectRatio());
+        @:privateAccess pipeline.sharedAspects.push(sc);
     }
 
-    public function regDrawcallType<T:AttribSet>(drawcallType:String, shaderDesc:ShaderDescr<T>, gldoFactory:GldoFactory<T>) {
-        shaderRegistry.reg(shaderDesc);
-        xmlProc.regHandler(drawcallType, gldoFactory);
-    }
 
-    public function hasDrawcallType(type) {
-        return (shaderRegistry.getDescr(type) != null);
-    }
+    // static var smoothShaderEl = new GeneralPassthrough(MSDFSet.NAME_DPI, MSDFShader.smoothness);
 
-    public function setAspects(a:Array<RenderingAspect>) {
-        sharedAspects = a;
-        renderAspectBuilder = new RenderAspectBuilder(a);
-        return this;
-    }
+    // public dynamic function regDefaultDrawcalls():Void {
+    //     regDrawcallType("image", {
+    //         type: "texture",
+    //         attrs: TexSet.instance,
+    //         vert: [Uv0Passthrough.instance, PosPassthrough.instance],
+    //         frag: [cast TextureFragment.get(0, 0)],
+    //     }, (e, xml) -> {
+    //         if (!xml.exists("path"))
+    //             throw '<image /> gldo should have path property';
+    //         // todo image name to gldo
+    //         return createGldo(TexSet.instance, e, "texture", new TextureBinder(textureStorage, xml.get("path")), "");
+    //     });
 
-    public function setPositioning(pos:ShaderElement) {
-        this.pos = pos;
-        return this;
-    }
+    //     regDrawcallType("color", {
+    //         type: "color",
+    //         attrs: ColorSet.instance,
+    //         vert: [ColorPassthroughVert.instance, PosPassthrough.instance],
+    //         frag: [cast ColorPassthroughFrag.instance],
+    //     }, (e, xml) -> createGldo(ColorSet.instance, e, "color", null, ""));
 
-    public function createGldo<T:AttribSet>(attrs:T, e:Entity, type:String, aspect:RenderingAspect, name:String):GLDisplayObject<T> {
-        renderAspectBuilder.newChain();
-        if (aspect != null)
-            renderAspectBuilder.add(aspect);
-        return cast gldoBuilder.getGldo(e, type, renderAspectBuilder.build(), name);
-    }
+    //     // first "color" – alias in xml
+    //     // descr.type: "color" – alias for shader registry. should be same with next one
+    //     // createGldo(_,_, "color") – alias by which shader will be requeseted during gl init
 
-    public function createTextGldo(e, descr:Xml) {
-        var fontName = descr.get("font");
-        var color = descr.exists("color") ? Std.parseInt(descr.get("color")) : 0xffffff;
-        var font = fonts.getFont(fontName);
-        if (font == null)
-            throw 'there is no font $fontName';
-        return createGldo(MSDFSet.instance, e, "msdf", new MSDFRenderingElement(textureStorage, font.texturePath, color), font.getId());
-    }
+    //     regDrawcallType("text", {
+    //         type: "msdf",
+    //         attrs: MSDFSet.instance,
+    //         vert: [Uv0Passthrough.instance, PosPassthrough.instance, smoothShaderEl],
+    //         frag: [cast MSDFFrag.instance, ApplyUnoformColorFrag.instance],
+    //         uniforms: ["color"]
+    //     }, createTextGldo);
+    // }
+
+
+    
+
+//   public function createTextGldo(e, descr:Xml) {
+//         var fontName = descr.get("font");
+//         var color = descr.exists("color") ? Std.parseInt(descr.get("color")) : 0xffffff;
+//         var font = fonts.getFont(fontName);
+//         if (font == null)
+//             throw 'there is no font $fontName';
+//         return createGldo(MSDFSet.instance, e, "msdf", new MSDFRenderingElement(textureStorage, font.texturePath, color), font.getId());
+//     }
 
     public function createContainer(e:Entity, descr):Entity {
-        xmlProc.processNode(e, descr);
-        return e;
+        return pipeline.createContainer(e, descr);
     }
 
     public function addBmFont(fontName, fntPath) {
@@ -240,10 +263,6 @@ class FuiBuilder {
         return root;
     }
 
-    public function addScissors(w:Placeholder2D) {
-        var sc = new ScissorAspect(w, ar.getAspectRatio());
-        sharedAspects.push(sc);
-    }
 
     /// Shortcuts
     public inline function s(name = null) {
