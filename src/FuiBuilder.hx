@@ -71,7 +71,7 @@ class RenderingPipeline {
         textureStorage = new TextureStorage();
         shaderRegistry = new ShaderRegistry();
         gldoBuilder = new GldoBuilder(shaderRegistry);
-        xmlProc = new XmlProc(gldoBuilder);
+        xmlProc = new XmlProc();
         setAspects([]);
 
     }
@@ -99,6 +99,8 @@ class RenderingPipeline {
 
 
     public function createContainer(e:Entity, descr):Entity {
+        var dc = gldoBuilder.getDrawcalls(e);
+
         xmlProc.processNode(e, descr);
         return e;
     }
@@ -107,7 +109,11 @@ class RenderingPipeline {
         renderAspectBuilder.newChain();
         if (aspect != null)
             renderAspectBuilder.add(aspect);
-        return cast gldoBuilder.getGldo(e, type, renderAspectBuilder.build(), name);
+        var aspects = renderAspectBuilder.build();
+        var gldo = new GLDisplayObject(attrs, shaderRegistry.getState.bind(attrs, _, type), aspects);
+
+        gldoBuilder.bindLayer(e, attrs, type, name, gldo);
+        return gldo;
     }
 }
 
