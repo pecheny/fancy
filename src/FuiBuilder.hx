@@ -1,5 +1,6 @@
 package;
 
+import ecbind.RenderableBinder;
 import a2d.transform.LiquidTransformer;
 import fu.graphics.ShapeWidget;
 import gl.GldoBuilder;
@@ -70,7 +71,7 @@ class RenderingPipeline {
     
         textureStorage = new TextureStorage();
         shaderRegistry = new ShaderRegistry();
-        gldoBuilder = new GldoBuilder(shaderRegistry);
+        // gldoBuilder = new GldoBuilder(shaderRegistry);
         xmlProc = new XmlProc();
         setAspects([]);
 
@@ -99,8 +100,7 @@ class RenderingPipeline {
 
 
     public function createContainer(e:Entity, descr):Entity {
-        var dc = gldoBuilder.getDrawcalls(e);
-
+        RenderableBinder.getOrCreate(e); // to prevent
         xmlProc.processNode(e, descr);
         return e;
     }
@@ -111,8 +111,8 @@ class RenderingPipeline {
             renderAspectBuilder.add(aspect);
         var aspects = renderAspectBuilder.build();
         var gldo = new GLDisplayObject(attrs, shaderRegistry.getState.bind(attrs, _, type), aspects);
-
-        gldoBuilder.bindLayer(e, attrs, type, name, gldo);
+        var binder = RenderableBinder.getOrCreate(e);
+        binder.bindLayer(e, attrs, type, name, gldo);
         return gldo;
     }
 }
