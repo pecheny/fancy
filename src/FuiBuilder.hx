@@ -135,7 +135,7 @@ class FuiBuilder {
     public function createDefaultRoot(dl, font = "Assets/fonts/robo.fnt") {
         var rw = Builder.widget();
         var rootEntity = rw.entity;
-        // this.regDefaultDrawcalls();
+        this.regDefaultDrawcalls();
         var ar = this.ar;
         this.addBmFont("", font); // todo
         this.configureInput(rootEntity);
@@ -158,9 +158,6 @@ class FuiBuilder {
 
         textStyles.resetToDefaults();
 
-        // var rw = Builder.widget();
-        // rootEntity.addChild(rw.entity);
-
         var v = new StageAspectResizer(rw, 2);
         var switcher = new WidgetSwitcher(rw);
         rootEntity.addComponent(switcher);
@@ -172,53 +169,11 @@ class FuiBuilder {
         @:privateAccess pipeline.sharedAspects.push(sc);
     }
 
-
-    // static var smoothShaderEl = new GeneralPassthrough(MSDFSet.NAME_DPI, MSDFShader.smoothness);
-
-    // public dynamic function regDefaultDrawcalls():Void {
-    //     regDrawcallType("image", {
-    //         type: "texture",
-    //         attrs: TexSet.instance,
-    //         vert: [Uv0Passthrough.instance, PosPassthrough.instance],
-    //         frag: [cast TextureFragment.get(0, 0)],
-    //     }, (e, xml) -> {
-    //         if (!xml.exists("path"))
-    //             throw '<image /> gldo should have path property';
-    //         // todo image name to gldo
-    //         return createGldo(TexSet.instance, e, "texture", new TextureBinder(textureStorage, xml.get("path")), "");
-    //     });
-
-    //     regDrawcallType("color", {
-    //         type: "color",
-    //         attrs: ColorSet.instance,
-    //         vert: [ColorPassthroughVert.instance, PosPassthrough.instance],
-    //         frag: [cast ColorPassthroughFrag.instance],
-    //     }, (e, xml) -> createGldo(ColorSet.instance, e, "color", null, ""));
-
-    //     // first "color" – alias in xml
-    //     // descr.type: "color" – alias for shader registry. should be same with next one
-    //     // createGldo(_,_, "color") – alias by which shader will be requeseted during gl init
-
-    //     regDrawcallType("text", {
-    //         type: "msdf",
-    //         attrs: MSDFSet.instance,
-    //         vert: [Uv0Passthrough.instance, PosPassthrough.instance, smoothShaderEl],
-    //         frag: [cast MSDFFrag.instance, ApplyUnoformColorFrag.instance],
-    //         uniforms: ["color"]
-    //     }, createTextGldo);
-    // }
-
-
-    
-
-//   public function createTextGldo(e, descr:Xml) {
-//         var fontName = descr.get("font");
-//         var color = descr.exists("color") ? Std.parseInt(descr.get("color")) : 0xffffff;
-//         var font = fonts.getFont(fontName);
-//         if (font == null)
-//             throw 'there is no font $fontName';
-//         return createGldo(MSDFSet.instance, e, "msdf", new MSDFRenderingElement(textureStorage, font.texturePath, color), font.getId());
-//     }
+    public dynamic function regDefaultDrawcalls():Void {
+        new FlatColorPass(pipeline).register();
+        new MsdfPass(pipeline, fonts).register();
+        new ImagePass(pipeline).register();
+    }
 
     public function createContainer(e:Entity, descr):Entity {
         return pipeline.createContainer(e, descr);
