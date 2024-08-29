@@ -1,9 +1,11 @@
 package;
 
+import gl.passes.ImagePass;
+import gl.passes.MsdfPass;
+import gl.passes.FlatColorPass;
 import ecbind.RenderableBinder;
 import a2d.transform.LiquidTransformer;
 import fu.graphics.ShapeWidget;
-import gl.GldoBuilder;
 import gl.XmlProc;
 import backends.openfl.OpenflBackend;
 import a2d.PlaceholderBuilder2D;
@@ -63,35 +65,35 @@ class RenderingPipeline {
     public var renderAspectBuilder(default, null):RenderAspectBuilder;
     public var textureStorage:TextureStorage;
     public var shaderRegistry:ShaderRegistry;
-    var gldoBuilder:GldoBuilder;
     var pos:ShaderElement = PosPassthrough.instance;
     var xmlProc:XmlProc;
-    var sharedAspects:Array<RenderingAspect>;
+    // var sharedAspects:Array<RenderingAspect>;
     public function new() {
-    
+        renderAspectBuilder = new RenderAspectBuilder();
         textureStorage = new TextureStorage();
         shaderRegistry = new ShaderRegistry();
-        // gldoBuilder = new GldoBuilder(shaderRegistry);
-        xmlProc = new XmlProc();
-        setAspects([]);
+        xmlProc = new XmlProc(renderAspectBuilder);
 
     }
     
-    public function regDrawcallType<T:AttribSet>(drawcallType:String, shaderDesc:ShaderDescr<T>, gldoFactory:GldoFactory<T>) {
-        shaderRegistry.reg(shaderDesc);
-        xmlProc.regHandler(drawcallType, gldoFactory);
-    }
+    // public function regDrawcallType<T:AttribSet>(drawcallType:String, shaderDesc:ShaderDescr<T>, gldoFactory:GldoFactory<T>) {
+    //     shaderRegistry.reg(shaderDesc);
+    //     xmlProc.regHandler(drawcallType, gldoFactory);
+    // }
 
     public function hasDrawcallType(type) {
         return (shaderRegistry.getDescr(type) != null);
     }
 
-    public function setAspects(a:Array<RenderingAspect>) {
-        sharedAspects = a;
-        renderAspectBuilder = new RenderAspectBuilder(a);
-        return this;
-    }
+    // public function setAspects(a:Array<RenderingAspect>) {
+    //     sharedAspects = a;
+    //     renderAspectBuilder = new RenderAspectBuilder(a);
+    //     return this;
+    // }
 
+    public function addAspect(a:RenderingAspect) {
+        renderAspectBuilder.addShared(a);
+    }
 
     public function setPositioning(pos:ShaderElement) {
         this.pos = pos;
@@ -102,6 +104,7 @@ class RenderingPipeline {
     public function createContainer(e:Entity, descr):Entity {
         RenderableBinder.getOrCreate(e); // to prevent
         xmlProc.processNode(e, descr);
+        renderAspectBuilder.reset();
         return e;
     }
     
@@ -114,6 +117,11 @@ class RenderingPipeline {
         var binder = RenderableBinder.getOrCreate(e);
         binder.bindLayer(e, attrs, type, name, gldo);
         return gldo;
+    }
+    
+    public function addPass<TAtt:AttribSet>(p:gl.passes.PassBase<TAtt>) {
+        shaderRegistry.reg(p.getShaderDesc());
+        xmlProc.regHandler(p);
     }
 }
 
@@ -172,13 +180,13 @@ class FuiBuilder {
     }
     public function addScissors(w:Placeholder2D) {
         var sc = new ScissorAspect(w, ar.getAspectRatio());
-        @:privateAccess pipeline.sharedAspects.push(sc);
+        pipeline.addAspect(sc);
     }
 
     public dynamic function regDefaultDrawcalls():Void {
-        new FlatColorPass(pipeline).register();
-        new MsdfPass(pipeline, fonts).register();
-        new ImagePass(pipeline).register();
+        pipeline.addPass(new FlatColorPass(pipeline));
+        pipeline.addPass(new MsdfPass(pipeline, fonts));
+        pipeline.addPass(new ImagePass(pipeline));
     }
 
     public function createContainer(e:Entity, descr):Entity {
