@@ -185,7 +185,7 @@ class FuiBuilder {
 
     public dynamic function regDefaultDrawcalls():Void {
         pipeline.addPass(new FlatColorPass(pipeline));
-        pipeline.addPass(new MsdfPass(pipeline, fonts));
+        pipeline.addPass(new MsdfPass(pipeline).withAspectRegistrator(fontTextureExtractor).withLayerNameExtractor(fontLayerAliasExtractor));
         pipeline.addPass(new ImagePass(pipeline));
     }
 
@@ -196,6 +196,22 @@ class FuiBuilder {
     public function addBmFont(fontName, fntPath) {
         var font = fonts.initFont(fontName, fntPath, null);
         return this;
+    }
+    
+    function fontLayerAliasExtractor(xml:Xml) {
+        var fontName = xml.get("font");
+        var font = fonts.getFont(fontName);
+        if (font == null)
+            throw 'there is no font $fontName';
+        return font.getId();
+    }
+
+    function fontTextureExtractor(xml:Xml, aspects:RenderAspectBuilder) {
+        var fontName = xml.get("font");
+        var font = fonts.getFont(fontName);
+        if (font == null)
+            throw 'there is no font $fontName';
+        aspects.add(new TextureBinder(pipeline.textureStorage, font.texturePath));
     }
 
     public function configureInput(root:Entity) {
@@ -273,6 +289,7 @@ class FuiBuilder {
         return shw;
     }
 }
+
 
 class DummyFrag implements ShaderElement {
     public static var instance = new DummyFrag();
