@@ -1,63 +1,55 @@
 package;
 
-import gl.RenderingPipeline;
-import gl.OflGLNodeAdapter;
-import openfl.Lib;
-import gl.GLNode;
-import gl.passes.PassBase;
-import gl.passes.ImagePass;
-import gl.passes.MsdfPass;
-import gl.passes.FlatColorPass;
-import ecbind.RenderableBinder;
-import a2d.transform.LiquidTransformer;
-import fu.graphics.ShapeWidget;
-// import gl.XmlProc;
-import backends.openfl.OpenflBackend;
-import a2d.PlaceholderBuilder2D;
-import openfl.display.Sprite;
-import al.openfl.display.FlashDisplayRoot;
-import al.openfl.display.DrawcallDataProvider;
-import data.aliases.AttribAliases;
-import update.UpdateBinder;
-import graphics.ShapesColorAssigner;
-import graphics.shapes.QuadGraphicElement;
-import al.openfl.StageAspectResizer;
-import al.ec.WidgetSwitcher;
-import al.Builder;
-import gl.aspects.TextureBinder;
-import shaderbuilder.TextureFragment;
-import gl.sets.TexSet;
+import gl.aspects.AlphaBlendingAspect;
 import a2d.AspectRatioProvider;
+import a2d.Placeholder2D;
+import a2d.PlaceholderBuilder2D;
 import a2d.Stage;
 import a2d.WindowSizeProvider;
-import a2d.Placeholder2D;
+import a2d.transform.LiquidTransformer;
+import al.Builder;
 import al.animation.AnimationTreeBuilder;
+import al.ec.WidgetSwitcher;
 import al.layouts.OffsetLayout;
+import al.openfl.StageAspectResizer;
+import al.openfl.display.DrawcallDataProvider;
+import al.openfl.display.FlashDisplayRoot;
+import al2d.WidgetHitTester2D;
+import backends.openfl.OpenflBackend;
+import data.aliases.AttribAliases;
 import ec.CtxWatcher;
 import ec.Entity;
 import ecbind.ClickInputBinder;
 import ecbind.InputBinder;
-import font.bmf.BMFont.BMFontFactory;
+import ecbind.RenderableBinder;
 import font.FontStorage;
-import gl.aspects.RenderingAspect;
+import font.bmf.BMFont.BMFontFactory;
+import fu.graphics.ShapeWidget;
 import gl.AttribSet;
-import gl.GLDisplayObject;
-import gl.sets.ColorSet;
-import gl.sets.MSDFSet;
-import gl.ShaderRegistry;
-import htext.style.TextContextBuilder;
+import gl.GLNode;
+import gl.OflGLNodeAdapter;
+import gl.RenderingPipeline;
+import gl.aspects.RenderingAspect;
 import gl.aspects.ScissorAspect;
-import shaderbuilder.MSDFShader;
+import gl.aspects.TextureBinder;
+import gl.passes.FlatColorPass;
+import gl.passes.ImagePass;
+import gl.passes.MsdfPass;
+import gl.sets.ColorSet;
+import gl.sets.TexSet;
+import graphics.ShapesColorAssigner;
+import graphics.shapes.QuadGraphicElement;
+import htext.style.TextContextBuilder;
+import openfl.Lib;
+import openfl.display.Sprite;
 import shaderbuilder.ShaderElement;
-import shaderbuilder.SnaderBuilder;
 import shimp.ClicksInputSystem;
 import shimp.InputSystem;
 import shimp.InputSystemsContainer;
-import update.RealtimeUpdater;
-import update.Updater;
-import utils.TextureStorage;
-import al2d.WidgetHitTester2D;
 import shimp.Point;
+import update.RealtimeUpdater;
+import update.UpdateBinder;
+import update.Updater;
 
 class XmlLayerLayouts {
 	public static final COLOR_AND_TEXT = '<container>
@@ -134,6 +126,7 @@ class FuiBuilder {
 	public function createContainer(e:Entity, descr):Entity {
         RenderableBinder.getOrCreate(e); // to prevent
 		var node = pipeline.createContainer(descr); 
+        node.addAspect(new AlphaBlendingAspect());
 		bindLayer(e, node);
 		var adapter = new OflGLNodeAdapter();
 		adapter.addNode(node);
@@ -254,19 +247,5 @@ class FuiBuilder {
 			dp.views.push(spr);
 		}
 		return shw;
-	}
-}
-
-class DummyFrag implements ShaderElement {
-	public static var instance = new DummyFrag();
-
-	public function new() {}
-
-	public function getDecls():String {
-		return "";
-	}
-
-	public function getExprs():String {
-		return 'gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);';
 	}
 }
