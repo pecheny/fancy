@@ -217,9 +217,9 @@ class FuiBuilder {
 	}
 
 	public dynamic function regDefaultDrawcalls():Void {
-		pipeline.addPass(new FlatColorPass(pipeline));
-		pipeline.addPass(new MsdfPass(pipeline).withAspectRegistrator(fontTextureExtractor).withLayerNameExtractor(fontLayerAliasExtractor));
-		pipeline.addPass(new ImagePass(pipeline).withAspectRegistrator(imageTextureExtractor));
+		pipeline.addPass(new FlatColorPass());
+		pipeline.addPass(new MsdfPass().withAspectRegistrator(fontTextureExtractor).withLayerNameExtractor(fontLayerAliasExtractor));
+		pipeline.addPass(new ImagePass().withAspectRegistrator(imageTextureExtractor));
 	}
 
 	public function createContainer(e:Entity, descr):Entity {
