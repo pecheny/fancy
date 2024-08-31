@@ -5,4 +5,3 @@ import backends.openfl.OpenflStage;
 
 typedef StageImpl = OpenflStage;
 typedef InputRoot = OflInputRoot;
-typedef XmlProc = gl.XmlProc;

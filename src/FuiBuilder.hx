@@ -1,12 +1,16 @@
 package;
 
+import gl.OflGLNodeAdapter;
+import openfl.Lib;
+import gl.GLNode;
+import gl.passes.PassBase;
 import gl.passes.ImagePass;
 import gl.passes.MsdfPass;
 import gl.passes.FlatColorPass;
 import ecbind.RenderableBinder;
 import a2d.transform.LiquidTransformer;
 import fu.graphics.ShapeWidget;
-import gl.XmlProc;
+// import gl.XmlProc;
 import backends.openfl.OpenflBackend;
 import a2d.PlaceholderBuilder2D;
 import openfl.display.Sprite;
@@ -55,252 +59,285 @@ import al2d.WidgetHitTester2D;
 import shimp.Point;
 
 class XmlLayerLayouts {
-    public static final COLOR_AND_TEXT = '<container>
+	public static final COLOR_AND_TEXT = '<container>
     <drawcall type="color"/>
     <drawcall type="text" font=""/>
     </container>';
 }
 
 class RenderingPipeline {
-    public var renderAspectBuilder(default, null):RenderAspectBuilder;
-    public var textureStorage:TextureStorage;
-    public var shaderRegistry:ShaderRegistry;
-    var pos:ShaderElement = PosPassthrough.instance;
-    var xmlProc:XmlProc;
-    // var sharedAspects:Array<RenderingAspect>;
-    public function new() {
-        renderAspectBuilder = new RenderAspectBuilder();
-        textureStorage = new TextureStorage();
-        shaderRegistry = new ShaderRegistry();
-        xmlProc = new XmlProc(renderAspectBuilder);
+	public var renderAspectBuilder(default, null):RenderAspectBuilder;
+	public var textureStorage:TextureStorage;
+	public var shaderRegistry:ShaderRegistry;
 
-    }
-    
-    // public function regDrawcallType<T:AttribSet>(drawcallType:String, shaderDesc:ShaderDescr<T>, gldoFactory:GldoFactory<T>) {
-    //     shaderRegistry.reg(shaderDesc);
-    //     xmlProc.regHandler(drawcallType, gldoFactory);
-    // }
+	var pos:ShaderElement = PosPassthrough.instance;
 
-    public function hasDrawcallType(type) {
-        return (shaderRegistry.getDescr(type) != null);
-    }
+	public function new() {
+		renderAspectBuilder = new RenderAspectBuilder();
+		textureStorage = new TextureStorage();
+		shaderRegistry = new ShaderRegistry();
+	}
 
-    // public function setAspects(a:Array<RenderingAspect>) {
-    //     sharedAspects = a;
-    //     renderAspectBuilder = new RenderAspectBuilder(a);
-    //     return this;
-    // }
+	public function hasDrawcallType(type) {
+		return (shaderRegistry.getDescr(type) != null);
+	}
 
-    public function addAspect(a:RenderingAspect) {
-        renderAspectBuilder.addShared(a);
-    }
+	public function addAspect(a:RenderingAspect) {
+		renderAspectBuilder.addShared(a);
+	}
 
-    public function setPositioning(pos:ShaderElement) {
-        this.pos = pos;
-        return this;
-    }
+	public function setPositioning(pos:ShaderElement) {
+		this.pos = pos;
+		return this;
+	}
 
+	public function createContainer(e:Entity, descr):Entity {
+		RenderableBinder.getOrCreate(e); // to prevent
+		var node = processNode(e, descr);
+		renderAspectBuilder.reset();
+		bindLayer(e, node);
+		var adapter = new OflGLNodeAdapter();
+		adapter.addNode(node);
+		Lib.current.stage.addChild(adapter);
+		return e;
+	}
 
-    public function createContainer(e:Entity, descr):Entity {
-        RenderableBinder.getOrCreate(e); // to prevent
-        xmlProc.processNode(e, descr);
-        renderAspectBuilder.reset();
-        return e;
-    }
-    
-    public function createGldo<T:AttribSet>(attrs:T, e:Entity, type:String, aspect:RenderingAspect, name:String):GLDisplayObject<T> {
-        renderAspectBuilder.newChain();
-        if (aspect != null)
-            renderAspectBuilder.add(aspect);
-        var aspects = renderAspectBuilder.build();
-        var gldo = new GLDisplayObject(attrs, shaderRegistry.getState.bind(attrs, _, type), aspects);
-        var binder = RenderableBinder.getOrCreate(e);
-        binder.bindLayer(e, attrs, type, name, gldo);
-        return gldo;
-    }
-    
-    public function addPass<TAtt:AttribSet>(p:gl.passes.PassBase<TAtt>) {
-        shaderRegistry.reg(p.getShaderDesc());
-        xmlProc.regHandler(p);
-    }
+	function bindLayer(e, glnode:GLNode) {
+		var binder = RenderableBinder.getOrCreate(e);
+		if (Std.isOfType(glnode, ContainerGLNode)) {
+			var c = cast(glnode, ContainerGLNode);
+			for (ch in c.children)
+				bindLayer(e, ch);
+		}
+		if (Std.isOfType(glnode, ShadedGLNode)) {
+			var gldo:ShadedGLNode<AttribSet> = cast glnode;
+			binder.bindLayer(e, gldo.set, glnode.name, gldo);
+		}
+	}
+
+	var handlers:Map<String, PassBase<Dynamic>> = new Map();
+
+	public function processNode(e:Entity, node:Xml, ?container:Null<ContainerGLNode>):GLNode {
+		return switch (node.nodeName) {
+			case "container": {
+					var c = new ContainerGLNode();
+					if (container != null)
+						container.addChild(c);
+					for (child in node.elements()) {
+						processNode(e, child, c);
+					}
+					c;
+				}
+			case "drawcall": {
+					var type = node.get("type");
+					if (!handlers.exists(type)) {
+						trace('No "$type" drawcall type was registered.');
+						return container;
+					}
+					var pass = handlers[type];
+					renderAspectBuilder.newChain();
+
+					if (pass.aspectRegistrator != null)
+						pass.aspectRegistrator(node, renderAspectBuilder);
+					var gldo = new ShadedGLNode(pass.attr, shaderRegistry.getState.bind(pass.attr, _, type), renderAspectBuilder.build());
+
+					if (pass.layerNameExtractor != null)
+						gldo.name = pass.layerNameExtractor(node);
+					if (container != null)
+						container.addChild(gldo);
+					gldo;
+				}
+			case _:
+				throw "wrong " + node.nodeName;
+		}
+	}
+
+	public function addPass<TAtt:AttribSet>(p:gl.passes.PassBase<TAtt>) {
+		shaderRegistry.reg(p.getShaderDesc());
+        handlers[p.drawcallType] = p;
+	}
 }
 
 class FuiBuilder {
-    public var pipeline:RenderingPipeline;
-    public var ar:Stage = new StageImpl(1);
-    public var fonts(default, null) = new FontStorage(new BMFontFactory());
-    public var placeholderBuilder(default, null):PlaceholderBuilder2D;
-    public var textStyles:TextContextBuilder;
-    public var updater(default, null):Updater;
+	public var pipeline:RenderingPipeline;
+	public var ar:Stage = new StageImpl(1);
+	public var fonts(default, null) = new FontStorage(new BMFontFactory());
+	public var placeholderBuilder(default, null):PlaceholderBuilder2D;
+	public var textStyles:TextContextBuilder;
+	public var updater(default, null):Updater;
 
+	public function new() {
+		this.pipeline = new RenderingPipeline();
+		placeholderBuilder = new PlaceholderBuilder2D(ar);
+		textStyles = new TextContextBuilder(fonts, ar);
+		var updater = new RealtimeUpdater();
+		updater.update();
+		this.updater = updater;
+		#if openfl
+		openfl.Lib.current.stage.addEventListener(openfl.events.Event.ENTER_FRAME, _ -> updater.update());
+		#end
+	}
 
-    public function new() {
-        this.pipeline = new RenderingPipeline();
-        placeholderBuilder = new PlaceholderBuilder2D(ar);
-        textStyles = new TextContextBuilder(fonts, ar);
-        var updater = new RealtimeUpdater();
-        updater.update();
-        this.updater = updater;
-        #if openfl
-        openfl.Lib.current.stage.addEventListener(openfl.events.Event.ENTER_FRAME, _ -> updater.update());
-        #end
-    }
+	public function createDefaultRoot(dl, font = "Assets/fonts/robo.fnt") {
+		var rw = Builder.widget();
+		var rootEntity = rw.entity;
+		this.regDefaultDrawcalls();
+		var ar = this.ar;
+		this.addBmFont("", font); // todo
+		this.configureInput(rootEntity);
+		this.configureScreen(rootEntity);
+		this.configureAnimation(rootEntity);
+		rootEntity.addComponent(this);
 
-    public function createDefaultRoot(dl, font = "Assets/fonts/robo.fnt") {
-        var rw = Builder.widget();
-        var rootEntity = rw.entity;
-        this.regDefaultDrawcalls();
-        var ar = this.ar;
-        this.addBmFont("", font); // todo
-        this.configureInput(rootEntity);
-        this.configureScreen(rootEntity);
-        this.configureAnimation(rootEntity);
-        rootEntity.addComponent(this);
+		this.createContainer(rootEntity, Xml.parse(dl).firstElement());
 
-        this.createContainer(rootEntity, Xml.parse(dl).firstElement());
+		rootEntity.addComponent(new UpdateBinder(updater));
 
-        rootEntity.addComponent(new UpdateBinder(updater));
+		var fitStyle = this.textStyles.newStyle("fit")
+			.withSize(pfr, .5)
+			.withAlign(horizontal, Forward)
+			.withAlign(vertical, Backward)
+			.withPadding(horizontal, pfr, 0.33)
+			.withPadding(vertical, pfr, 0.33)
+			.build();
+		rootEntity.addComponent(fitStyle);
 
-        var fitStyle = this.textStyles.newStyle("fit")
-            .withSize(pfr, .5)
-            .withAlign(horizontal, Forward)
-            .withAlign(vertical, Backward)
-            .withPadding(horizontal, pfr, 0.33)
-            .withPadding(vertical, pfr, 0.33)
-            .build();
-        rootEntity.addComponent(fitStyle);
+		textStyles.resetToDefaults();
 
-        textStyles.resetToDefaults();
+		var v = new StageAspectResizer(rw, 2);
+		var switcher = new WidgetSwitcher(rw);
+		rootEntity.addComponent(switcher);
+		rootEntity.addComponentByType(TextContextStorage, textStyles);
+		return rootEntity;
+	}
 
-        var v = new StageAspectResizer(rw, 2);
-        var switcher = new WidgetSwitcher(rw);
-        rootEntity.addComponent(switcher);
-        rootEntity.addComponentByType(TextContextStorage, textStyles);
-        return rootEntity;
-    }
-    public function addScissors(w:Placeholder2D) {
-        var sc = new ScissorAspect(w, ar.getAspectRatio());
-        pipeline.addAspect(sc);
-    }
+	public function addScissors(w:Placeholder2D) {
+		var sc = new ScissorAspect(w, ar.getAspectRatio());
+		pipeline.addAspect(sc);
+	}
 
-    public dynamic function regDefaultDrawcalls():Void {
-        pipeline.addPass(new FlatColorPass(pipeline));
-        pipeline.addPass(new MsdfPass(pipeline).withAspectRegistrator(fontTextureExtractor).withLayerNameExtractor(fontLayerAliasExtractor));
-        pipeline.addPass(new ImagePass(pipeline));
-    }
+	public dynamic function regDefaultDrawcalls():Void {
+		pipeline.addPass(new FlatColorPass(pipeline));
+		pipeline.addPass(new MsdfPass(pipeline).withAspectRegistrator(fontTextureExtractor).withLayerNameExtractor(fontLayerAliasExtractor));
+		pipeline.addPass(new ImagePass(pipeline).withAspectRegistrator(imageTextureExtractor));
+	}
 
-    public function createContainer(e:Entity, descr):Entity {
-        return pipeline.createContainer(e, descr);
-    }
+	public function createContainer(e:Entity, descr):Entity {
+		return pipeline.createContainer(e, descr);
+	}
 
-    public function addBmFont(fontName, fntPath) {
-        var font = fonts.initFont(fontName, fntPath, null);
-        return this;
-    }
-    
-    function fontLayerAliasExtractor(xml:Xml) {
-        var fontName = xml.get("font");
-        var font = fonts.getFont(fontName);
-        if (font == null)
-            throw 'there is no font $fontName';
-        return font.getId();
-    }
+	public function addBmFont(fontName, fntPath) {
+		var font = fonts.initFont(fontName, fntPath, null);
+		return this;
+	}
 
-    function fontTextureExtractor(xml:Xml, aspects:RenderAspectBuilder) {
-        var fontName = xml.get("font");
-        var font = fonts.getFont(fontName);
-        if (font == null)
-            throw 'there is no font $fontName';
-        aspects.add(new TextureBinder(pipeline.textureStorage, font.texturePath));
-    }
+	function imageTextureExtractor(xml:Xml, aspects:RenderAspectBuilder) {
+		if (!xml.exists("path"))
+			throw '<image /> gldo should have path property';
+		aspects.add(new TextureBinder(pipeline.textureStorage, xml.get("path")));
+	}
 
-    public function configureInput(root:Entity) {
-        var s = new InputSystemsContainer(new Point(), null);
-        root.addComponent(new InputBinder<Point>(s));
-        new InputRoot(s, ar.getAspectRatio());
-    }
+	function fontLayerAliasExtractor(xml:Xml) {
+		var fontName = xml.get("font");
+		var font = fonts.getFont(fontName);
+		if (font == null)
+			throw 'there is no font $fontName';
+		return font.getId();
+	}
 
-    public function makeClickInput(w:Placeholder2D) {
-        var input = new ClicksInputSystem(new Point());
-        w.entity.addComponent(new ClickInputBinder(input));
-        var outside = new Point();
-        outside.x = -9999999;
-        outside.y = -9999999;
-        w.entity.addComponentByType(InputSystemTarget, new SwitchableInputAdapter(input, new WidgetHitTester2D(w), new Point(), outside));
-        new CtxWatcher(InputBinder, w.entity);
-        return w;
-    }
+	function fontTextureExtractor(xml:Xml, aspects:RenderAspectBuilder) {
+		var fontName = xml.get("font");
+		var font = fonts.getFont(fontName);
+		if (font == null)
+			throw 'there is no font $fontName';
+		aspects.add(new TextureBinder(pipeline.textureStorage, font.texturePath));
+	}
 
-    public function configureScreen(root:Entity) {
-        root.addComponentByType(Stage, ar);
-        root.addComponentByType(AspectRatioProvider, ar);
-        root.addComponentByType(WindowSizeProvider, ar);
-        root.addComponentByType(PlaceholderBuilder2D, placeholderBuilder);
+	public function configureInput(root:Entity) {
+		var s = new InputSystemsContainer(new Point(), null);
+		root.addComponent(new InputBinder<Point>(s));
+		new InputRoot(s, ar.getAspectRatio());
+	}
 
-        return root;
-    }
+	public function makeClickInput(w:Placeholder2D) {
+		var input = new ClicksInputSystem(new Point());
+		w.entity.addComponent(new ClickInputBinder(input));
+		var outside = new Point();
+		outside.x = -9999999;
+		outside.y = -9999999;
+		w.entity.addComponentByType(InputSystemTarget, new SwitchableInputAdapter(input, new WidgetHitTester2D(w), new Point(), outside));
+		new CtxWatcher(InputBinder, w.entity);
+		return w;
+	}
 
-    public function configureAnimation(root:Entity) {
-        root.addComponentByType(Updater, updater);
-        var animBuilder = new AnimationTreeBuilder();
-        animBuilder.addLayout(OffsetLayout.NAME, new OffsetLayout(0.1));
-        root.addComponent(animBuilder);
-        return root;
-    }
+	public function configureScreen(root:Entity) {
+		root.addComponentByType(Stage, ar);
+		root.addComponentByType(AspectRatioProvider, ar);
+		root.addComponentByType(WindowSizeProvider, ar);
+		root.addComponentByType(PlaceholderBuilder2D, placeholderBuilder);
 
+		return root;
+	}
 
-    /// Shortcuts
-    public inline function s(name = null) {
-        return name == null ? textStyles.defaultStyle() : textStyles.getStyle(name);
-    }
+	public function configureAnimation(root:Entity) {
+		root.addComponentByType(Updater, updater);
+		var animBuilder = new AnimationTreeBuilder();
+		animBuilder.addLayout(OffsetLayout.NAME, new OffsetLayout(0.1));
+		root.addComponent(animBuilder);
+		return root;
+	}
 
-    public function lqtr(ph) {
-        return LiquidTransformer.withLiquidTransform(ph, ar.getAspectRatio());
-    }
+	/// Shortcuts
+	public inline function s(name = null) {
+		return name == null ? textStyles.defaultStyle() : textStyles.getStyle(name);
+	}
 
-    public function quad(ph:Placeholder2D, color) {
-        lqtr(ph);
-        var attrs = ColorSet.instance;
-        var shw = new ShapeWidget(attrs, ph, true);
-        shw.addChild(new QuadGraphicElement(attrs));
-        var colors = new ShapesColorAssigner(attrs, color, shw.getBuffer());
-        ph.entity.addComponent(colors);
-        shw.manInit();
-        return shw;
-    }
+	public function lqtr(ph) {
+		return LiquidTransformer.withLiquidTransform(ph, ar.getAspectRatio());
+	}
 
-    public function texturedQuad(w, filename, createGldo = true):ShapeWidget<TexSet> {
-        var attrs = TexSet.instance;
-        var shw = new ShapeWidget(attrs, w);
-        shw.addChild(new QuadGraphicElement(attrs));
-        var uvs = new graphics.DynamicAttributeAssigner(attrs, shw.getBuffer());
-        uvs.fillBuffer = (attrs:TexSet, buffer) -> {
-            var writer = attrs.getWriter(AttribAliases.NAME_UV_0);
-            QuadGraphicElement.writeQuadPostions(buffer.getBuffer(), writer, 0, (a, wg) -> wg);
-            trace(attrs.printVertex(buffer.getBuffer(), 1));
-        };
-        if (createGldo) {
-            createContainer(w.entity, Xml.parse('<container><drawcall type="image" font="" path="$filename" /></container>').firstElement());
-            var spr:Sprite = w.entity.getComponent(Sprite);
-            var dp = DrawcallDataProvider.get(w.entity);
-            new CtxWatcher(FlashDisplayRoot, w.entity);
-            dp.views.push(spr);
-        }
-        return shw;
-    }
+	public function quad(ph:Placeholder2D, color) {
+		lqtr(ph);
+		var attrs = ColorSet.instance;
+		var shw = new ShapeWidget(attrs, ph, true);
+		shw.addChild(new QuadGraphicElement(attrs));
+		var colors = new ShapesColorAssigner(attrs, color, shw.getBuffer());
+		ph.entity.addComponent(colors);
+		shw.manInit();
+		return shw;
+	}
+
+	public function texturedQuad(w, filename, createGldo = true):ShapeWidget<TexSet> {
+		var attrs = TexSet.instance;
+		var shw = new ShapeWidget(attrs, w);
+		shw.addChild(new QuadGraphicElement(attrs));
+		var uvs = new graphics.DynamicAttributeAssigner(attrs, shw.getBuffer());
+		uvs.fillBuffer = (attrs:TexSet, buffer) -> {
+			var writer = attrs.getWriter(AttribAliases.NAME_UV_0);
+			QuadGraphicElement.writeQuadPostions(buffer.getBuffer(), writer, 0, (a, wg) -> wg);
+			trace(attrs.printVertex(buffer.getBuffer(), 1));
+		};
+		if (createGldo) {
+			createContainer(w.entity, Xml.parse('<container><drawcall type="image" font="" path="$filename" /></container>').firstElement());
+			var spr:Sprite = w.entity.getComponent(Sprite);
+			var dp = DrawcallDataProvider.get(w.entity);
+			new CtxWatcher(FlashDisplayRoot, w.entity);
+			dp.views.push(spr);
+		}
+		return shw;
+	}
 }
 
-
 class DummyFrag implements ShaderElement {
-    public static var instance = new DummyFrag();
+	public static var instance = new DummyFrag();
 
-    public function new() {}
+	public function new() {}
 
-    public function getDecls():String {
-        return "";
-    }
+	public function getDecls():String {
+		return "";
+	}
 
-    public function getExprs():String {
-        return 'gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);';
-    }
+	public function getExprs():String {
+		return 'gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);';
+	}
 }

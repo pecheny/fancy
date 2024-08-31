@@ -50,8 +50,8 @@ class FancyPg extends Sprite {
         var root:Entity = fuiBuilder.createDefaultRoot(XmlLayerLayouts.COLOR_AND_TEXT);
         createTextStyles();
 
-        var container:Sprite = root.getComponent(Sprite);
-        addChild(container);
+        // var container:Sprite = root.getComponent(Sprite);
+        // addChild(container);
 
         var rw = Builder.h();
 
@@ -78,8 +78,8 @@ class FancyPg extends Sprite {
         fuiBuilder.createContainer(scroller.ph.entity, Xml.parse(dl).firstElement());
         for (ch in childrenFactory(fuiBuilder))
             cont.addWidget(ch);
-        var spr:Sprite = scroller.ph.entity.getComponent(Sprite);
-        addChild(spr);
+        // var spr:Sprite = scroller.ph.entity.getComponent(Sprite);
+        // addChild(spr);
         // fuiBuilder.pipeline.setAspects([]);
         return placeholder;
     }
@@ -95,8 +95,8 @@ class FancyPg extends Sprite {
         };
         if (createGldo) {
             fuiBuilder.createContainer(w.entity, Xml.parse('<container><drawcall type="image" path="Assets/$filename" /></container>').firstElement());
-            var spr:Sprite = w.entity.getComponent(Sprite);
-            addChild(spr);
+            // var spr:Sprite = w.entity.getComponent(Sprite);
+            // addChild(spr);
         }
         return shw;
     }
