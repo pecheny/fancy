@@ -1,5 +1,6 @@
 package;
 
+import gl.aspects.UniformAspect.Uniform4fAspect;
 import gl.aspects.AlphaBlendingAspect;
 import a2d.AspectRatioProvider;
 import a2d.Placeholder2D;
@@ -54,10 +55,9 @@ import update.Updater;
 class XmlLayerLayouts {
 	public static final COLOR_AND_TEXT = '<container>
     <drawcall type="color"/>
-    <drawcall type="text" font=""/>
+    <drawcall type="text" font="" color="0xffffff"/>
     </container>';
 }
-
 
 class FuiBuilder {
 	public var pipeline:RenderingPipeline;
@@ -119,14 +119,17 @@ class FuiBuilder {
 
 	public dynamic function regDefaultDrawcalls():Void {
 		pipeline.addPass(new FlatColorPass());
-		pipeline.addPass(new MsdfPass().withAspectRegistrator(fontTextureExtractor).withLayerNameExtractor(fontLayerAliasExtractor));
+		pipeline.addPass(new MsdfPass().withAspectRegistrator((x,r)->{
+            fontTextureExtractor(x,r);
+            colorUniformExtractor(x,r);
+        }).withLayerNameExtractor(fontLayerAliasExtractor));
 		pipeline.addPass(new ImagePass().withAspectRegistrator(imageTextureExtractor));
 	}
 
 	public function createContainer(e:Entity, descr):Entity {
-        RenderableBinder.getOrCreate(e); // to prevent
-		var node = pipeline.createContainer(descr); 
-        node.addAspect(new AlphaBlendingAspect());
+		RenderableBinder.getOrCreate(e); // to prevent
+		var node = pipeline.createContainer(descr);
+		node.addAspect(new AlphaBlendingAspect());
 		bindLayer(e, node);
 		var adapter = new OflGLNodeAdapter();
 		adapter.addNode(node);
@@ -134,7 +137,14 @@ class FuiBuilder {
 		return e;
 	}
 
-    function bindLayer(e, glnode:GLNode) {
+	function colorUniformExtractor(xml:Xml, aspects:RenderAspectBuilder) {
+		if (xml.exists("color")) {
+			var color = new utils.RGBA(Std.parseInt(xml.get("color")));
+			aspects.add(new Uniform4fAspect("color", color.r/255, color.g/255, color.b/255, color.a/255));
+		}
+	}
+
+	function bindLayer(e, glnode:GLNode) {
 		var binder = RenderableBinder.getOrCreate(e);
 		if (Std.isOfType(glnode, ContainerGLNode)) {
 			var c = cast(glnode, ContainerGLNode);
@@ -146,7 +156,6 @@ class FuiBuilder {
 			binder.bindLayer(e, gldo.set, glnode.name, gldo);
 		}
 	}
-
 
 	public function addBmFont(fontName, fntPath) {
 		var font = fonts.initFont(fontName, fntPath, null);
