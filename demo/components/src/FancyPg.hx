@@ -1,12 +1,12 @@
 package;
 
+import fu.GuiDrawcalls;
 import backends.openfl.SpriteAspectKeeper;
 import fu.graphics.Slider;
 import fu.ui.Button;
 import fu.graphics.BarWidget;
 import fu.graphics.ShapeWidget;
 import a2d.PlaceholderBuilder2D;
-import FuiBuilder.XmlLayerLayouts;
 import al.ec.WidgetSwitcher;
 import a2d.Boundbox;
 import macros.AVConstructor;
@@ -47,7 +47,7 @@ class FancyPg extends Sprite {
         
         ar = fuiBuilder.ar;
         b = new PlaceholderBuilder2D(fuiBuilder.ar);
-        var root:Entity = fuiBuilder.createDefaultRoot(XmlLayerLayouts.COLOR_AND_TEXT);
+        var root:Entity = fuiBuilder.createDefaultRoot(GuiDrawcalls.DRAWCALLS_LAYOUT);
         createTextStyles();
 
         // var container:Sprite = root.getComponent(Sprite);
@@ -55,7 +55,7 @@ class FancyPg extends Sprite {
 
         var rw = Builder.h();
 
-        var scrollPlaceholder = createScrollbox(fuiBuilder.makeClickInput(b.b("c1").createContainer(vertical, Forward).widget()), b.b(), ar, XmlLayerLayouts.COLOR_AND_TEXT,
+        var scrollPlaceholder = createScrollbox(fuiBuilder.makeClickInput(b.b("c1").createContainer(vertical, Forward).widget()), b.b(), ar, GuiDrawcalls.DRAWCALLS_LAYOUT,
             createMixedContentArray);
         rw.addWidget(scrollPlaceholder);
 

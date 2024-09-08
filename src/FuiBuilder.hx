@@ -1,7 +1,8 @@
 package;
 
-import gl.aspects.UniformAspect.Uniform4fAspect;
-import gl.aspects.AlphaBlendingAspect;
+import htext.FontAspectsFactory;
+import gl.passes.ImagePass;
+import gl.aspects.ExtractionUtils;
 import a2d.AspectRatioProvider;
 import a2d.Placeholder2D;
 import a2d.PlaceholderBuilder2D;
@@ -25,16 +26,16 @@ import ecbind.InputBinder;
 import ecbind.RenderableBinder;
 import font.FontStorage;
 import font.bmf.BMFont.BMFontFactory;
+import fu.GuiDrawcalls;
 import fu.graphics.ShapeWidget;
 import gl.AttribSet;
 import gl.GLNode;
 import gl.OflGLNodeAdapter;
 import gl.RenderingPipeline;
-import gl.aspects.RenderingAspect;
+import gl.aspects.AlphaBlendingAspect;
 import gl.aspects.ScissorAspect;
 import gl.aspects.TextureBinder;
 import gl.passes.FlatColorPass;
-import gl.passes.ImagePass;
 import gl.passes.MsdfPass;
 import gl.sets.ColorSet;
 import gl.sets.TexSet;
@@ -43,7 +44,6 @@ import graphics.shapes.QuadGraphicElement;
 import htext.style.TextContextBuilder;
 import openfl.Lib;
 import openfl.display.Sprite;
-import shaderbuilder.ShaderElement;
 import shimp.ClicksInputSystem;
 import shimp.InputSystem;
 import shimp.InputSystemsContainer;
@@ -52,23 +52,18 @@ import update.RealtimeUpdater;
 import update.UpdateBinder;
 import update.Updater;
 
-class XmlLayerLayouts {
-	public static final COLOR_AND_TEXT = '<container>
-    <drawcall type="color"/>
-    <drawcall type="text" font="" color="0xffffff"/>
-    </container>';
-}
 
 class FuiBuilder {
+	public var fonts(default, null) = new FontStorage(new BMFontFactory());
+
 	public var pipeline:RenderingPipeline;
 	public var ar:Stage = new StageImpl(1);
-	public var fonts(default, null) = new FontStorage(new BMFontFactory());
 	public var placeholderBuilder(default, null):PlaceholderBuilder2D;
 	public var textStyles:TextContextBuilder;
 	public var updater(default, null):Updater;
 
 	public function new() {
-		this.pipeline = new RenderingPipeline();
+		pipeline = new RenderingPipeline();
 		placeholderBuilder = new PlaceholderBuilder2D(ar);
 		textStyles = new TextContextBuilder(fonts, ar);
 		var updater = new RealtimeUpdater();
@@ -118,12 +113,15 @@ class FuiBuilder {
 	}
 
 	public dynamic function regDefaultDrawcalls():Void {
-		pipeline.addPass(new FlatColorPass());
-		pipeline.addPass(new MsdfPass().withAspectRegistrator((x,r)->{
-            fontTextureExtractor(x,r);
-            colorUniformExtractor(x,r);
-        }).withLayerNameExtractor(fontLayerAliasExtractor));
-		pipeline.addPass(new ImagePass().withAspectRegistrator(imageTextureExtractor));
+		pipeline.addPass(GuiDrawcalls.BG_DRAWCALL, new FlatColorPass());
+		pipeline.addPass(GuiDrawcalls.TEXT_DRAWCALL, new MsdfPass());
+		var fontAsp = new FontAspectsFactory(fonts, pipeline.textureStorage);
+		pipeline.addAspectExtractor(GuiDrawcalls.TEXT_DRAWCALL, fontAsp.create, fontAsp.getAlias);
+		pipeline.addAspectExtractor(GuiDrawcalls.TEXT_DRAWCALL, ExtractionUtils.colorUniformExtractor);
+
+		// pipeline.addPass(new ImagePass());
+        // var picAsp = new TextureAspectFactory(pipeline.textureStorage);
+        // pipeline.addAspectExtractor();
 	}
 
 	public function createContainer(e:Entity, descr):Entity {
@@ -135,13 +133,6 @@ class FuiBuilder {
 		adapter.addNode(node);
 		Lib.current.stage.addChild(adapter);
 		return e;
-	}
-
-	function colorUniformExtractor(xml:Xml, aspects:RenderAspectBuilder) {
-		if (xml.exists("color")) {
-			var color = new utils.RGBA(Std.parseInt(xml.get("color")));
-			aspects.add(new Uniform4fAspect("color", color.r/255, color.g/255, color.b/255, color.a/255));
-		}
 	}
 
 	function bindLayer(e, glnode:GLNode) {
@@ -160,28 +151,6 @@ class FuiBuilder {
 	public function addBmFont(fontName, fntPath) {
 		var font = fonts.initFont(fontName, fntPath, null);
 		return this;
-	}
-
-	function imageTextureExtractor(xml:Xml, aspects:RenderAspectBuilder) {
-		if (!xml.exists("path"))
-			throw '<image /> gldo should have path property';
-		aspects.add(new TextureBinder(pipeline.textureStorage, xml.get("path")));
-	}
-
-	function fontLayerAliasExtractor(xml:Xml) {
-		var fontName = xml.get("font");
-		var font = fonts.getFont(fontName);
-		if (font == null)
-			throw 'there is no font $fontName';
-		return font.getId();
-	}
-
-	function fontTextureExtractor(xml:Xml, aspects:RenderAspectBuilder) {
-		var fontName = xml.get("font");
-		var font = fonts.getFont(fontName);
-		if (font == null)
-			throw 'there is no font $fontName';
-		aspects.add(new TextureBinder(pipeline.textureStorage, font.texturePath));
 	}
 
 	public function configureInput(root:Entity) {
