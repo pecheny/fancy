@@ -1,11 +1,6 @@
 package fu;
 
-import font.FontStorage;
-import font.bmf.BMFont.BMFontFactory;
 import gl.RenderingPipeline;
-import gl.aspects.RenderingAspect;
-import gl.aspects.TextureBinder;
-import utils.TextureStorage;
 
 class GuiDrawcalls {
 	public static inline var TEXT_DRAWCALL:DrawcallType = "text";
@@ -17,4 +12,9 @@ class GuiDrawcalls {
     </container>';
 }
 
+class PictureDrawcalls {
+	public static inline var IMAGE_DRAWCALL = "image";
 
+	public static function DRAWCALLS_LAYOUT(filename)
+		return '<drawcall type="image" font="" path="$filename" />';
+}
