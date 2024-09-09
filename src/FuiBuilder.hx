@@ -1,5 +1,8 @@
 package;
 
+import fu.ui.scroll.ScrollboxItem;
+import a2d.Widget2DContainer;
+import fu.ui.scroll.ScrollableContent.W2CScrollableContent;
 import htext.FontAspectsFactory;
 import gl.passes.ImagePass;
 import gl.aspects.ExtractionUtils;
@@ -85,7 +88,7 @@ class FuiBuilder {
 		this.configureAnimation(rootEntity);
 		rootEntity.addComponent(this);
 
-		this.createContainer(rootEntity, Xml.parse(dl).firstElement());
+		this.createContainer(rootEntity, dl);
 
 		rootEntity.addComponent(new UpdateBinder(updater));
 
@@ -119,9 +122,9 @@ class FuiBuilder {
 		pipeline.addAspectExtractor(GuiDrawcalls.TEXT_DRAWCALL, fontAsp.create, fontAsp.getAlias);
 		pipeline.addAspectExtractor(GuiDrawcalls.TEXT_DRAWCALL, ExtractionUtils.colorUniformExtractor);
 
-		// pipeline.addPass(new ImagePass());
-        // var picAsp = new TextureAspectFactory(pipeline.textureStorage);
-        // pipeline.addAspectExtractor();
+		pipeline.addPass(PictureDrawcalls.IMAGE_DRAWCALL, new ImagePass());
+        var picAsp = new TextureAspectFactory(pipeline.textureStorage);
+        pipeline.addAspectExtractor(PictureDrawcalls.IMAGE_DRAWCALL, picAsp.create);
 	}
 
 	public function createContainer(e:Entity, descr):Entity {
@@ -207,7 +210,12 @@ class FuiBuilder {
 		return shw;
 	}
 
-	public function texturedQuad(w, filename, createGldo = true):ShapeWidget<TexSet> {
+/**
+    @param createGldo - if true, GLNode of Image type with apropriate TextureAspect would be created. 
+    Can be useful if the image used just once in this place. Otherwise, if the image can be reused in other gui elements, this layer can be added to the default xml descr of ui
+    Do not usse createGldo if the quad meant to be used in a scrollbox, add layer to the xmldesc argument instead.
+**/
+	public function texturedQuad(w, filename, createGldo = false):ShapeWidget<TexSet> {
 		var attrs = TexSet.instance;
 		var shw = new ShapeWidget(attrs, w);
 		shw.addChild(new QuadGraphicElement(attrs));
@@ -218,12 +226,20 @@ class FuiBuilder {
 			trace(attrs.printVertex(buffer.getBuffer(), 1));
 		};
 		if (createGldo) {
-			createContainer(w.entity, Xml.parse('<container><drawcall type="image" font="" path="$filename" /></container>').firstElement());
-			var spr:Sprite = w.entity.getComponent(Sprite);
-			var dp = DrawcallDataProvider.get(w.entity);
-			new CtxWatcher(FlashDisplayRoot, w.entity);
-			dp.views.push(spr);
+			createContainer(w.entity, Xml.parse(PictureDrawcalls.DRAWCALLS_LAYOUT(filename)).firstElement());
 		}
 		return shw;
 	}
+    
+    public function createScrollbox(content:Widget2DContainer, placeholder:Placeholder2D,  dl) {
+        var scroll = new W2CScrollableContent(content, placeholder);
+
+        placeholder.entity.name = "placeholder";
+        var scroller = new ScrollboxItem(placeholder, scroll, ar.getAspectRatio());
+        addScissors(scroller.ph);
+        createContainer(scroller.ph.entity, dl);
+        pipeline.renderAspectBuilder.reset();
+        return placeholder;
+    }
+
 }
