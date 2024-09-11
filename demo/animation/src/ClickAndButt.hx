@@ -1,5 +1,6 @@
 package;
 
+import fu.GuiDrawcalls;
 import a2d.PlaceholderBuilder2D;
 import FuiBuilder;
 import a2d.Stage;
@@ -31,10 +32,10 @@ class ClickAndButt extends Sprite {
     public function new() {
         super();
         var fuiBuilder = new FuiBuilder();
-        var root:Entity = fuiBuilder.createDefaultRoot(XmlLayerLayouts.COLOR_AND_TEXT);
+        var root:Entity = fuiBuilder.createDefaultRoot(Xml.parse(GuiDrawcalls.DRAWCALLS_LAYOUT).firstChild());
 
-        var container:Sprite = root.getComponent(Sprite);
-        addChild(container);
+        // var container:Sprite = root.getComponent(Sprite);
+        // addChild(container);
 
         var conts = new ContainerFactory();
         conts.regStyle("v", new WholefillLayout(new FractionSize(.2)), new PortionLayout(Forward, new FixedSize(0.1)));
@@ -83,7 +84,7 @@ class ScreenOne extends Screen {
     override public function init() {
         super.init();
         pnl = containerFactory.create(Builder.widget(), "v");
-        fuiBuilder.makeClickInput(pnl.widget());
+        fuiBuilder.makeClickInput(pnl.ph);
 
         addButton("Carrot");
         addButton("Zucchini");
@@ -93,7 +94,7 @@ class ScreenOne extends Screen {
         var content = new WonderQuad(Builder.widget().withLiquidTransform(stage.getAspectRatio()), 0x505050);
         addAnim(content.setTime);
 
-        containerFactory.create(ph, "h").withChildren([pnl.widget(), content.ph]);
+        containerFactory.create(ph, "h").withChildren([pnl.ph, content.ph]);
     }
 
     function addButton(text) {
@@ -112,7 +113,7 @@ class ScreenTwo extends Screen {
     override public function init() {
         super.init();
         pnl = containerFactory.create(ph, "v");
-        fuiBuilder.makeClickInput(pnl.widget());
+        fuiBuilder.makeClickInput(pnl.ph);
 
         addButton("Pork");
         addButton("Fish");
