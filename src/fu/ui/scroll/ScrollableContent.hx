@@ -1,11 +1,12 @@
 package fu.ui.scroll;
+import al.core.ResizableWidget;
+import al.core.WidgetContainer;
 import macros.AVConstructor;
 import Axis2D;
 import utils.Mathu;
 import a2d.Placeholder2D;
 import a2d.Widget2DContainer;
 import al.core.AxisApplier;
-import al.core.WidgetContainer.ContentSizeProvider;
 import a2d.Widget;
 import ec.Signal;
 
@@ -40,10 +41,10 @@ class ScrollableContent extends Widget {
 }
 
 class W2CScrollableContent extends ScrollableContent implements ContentSizeProvider<Axis2D> {
-    var w2c:Widget2DContainer;
+    var w2c:ResizableWidget2D;
     public var contentSizeChanged(default, null) = new Signal<Axis2D -> Void>();
 
-    public function new(content:Widget2DContainer, placeholder:Placeholder2D) {
+    public function new(content:ResizableWidget2D, placeholder:Placeholder2D) {
         super(placeholder);
         w2c = content;
         contentSizeChanged = w2c.contentSizeChanged;
@@ -51,7 +52,7 @@ class W2CScrollableContent extends ScrollableContent implements ContentSizeProvi
         var w = placeholder;
         placeholder.entity.addChild(content.entity);
         for (a in Axis2D) {
-            var offsetAxis = new ScrollableAxisState(c.widget().axisStates[a], a, this);
+            var offsetAxis = new ScrollableAxisState(c.ph.axisStates[a], a, this);
             axis[a] = offsetAxis;
             w.axisStates[a].addSibling(offsetAxis);
         }

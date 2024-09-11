@@ -1,5 +1,6 @@
 package;
 
+import a2d.Widget.ResizableWidget2D;
 import fu.ui.scroll.ScrollboxItem;
 import a2d.Widget2DContainer;
 import fu.ui.scroll.ScrollableContent.W2CScrollableContent;
@@ -231,7 +232,7 @@ class FuiBuilder {
 		return shw;
 	}
     
-    public function createScrollbox(content:Widget2DContainer, placeholder:Placeholder2D,  dl) {
+    public function createScrollbox(content:ResizableWidget2D, placeholder:Placeholder2D,  dl) {
         var scroll = new W2CScrollableContent(content, placeholder);
 
         placeholder.entity.name = "placeholder";
