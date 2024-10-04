@@ -1,18 +1,16 @@
 package widgets;
-import fu.ui.AnimatedLabel;
-import fu.graphics.ColouredQuad.InteractiveColors;
-import fu.graphics.BarWidget;
-import fu.ui.ButtonBase;
+
 import al.animation.Animation.AnimationPlaceholder;
 import al.animation.AnimationTreeBuilder;
-import data.aliases.AttribAliases;
+import fu.graphics.BarWidget;
+import fu.graphics.ColouredQuad.InteractiveColors;
+import fu.ui.AnimatedLabel;
+import fu.ui.ButtonBase;
 import gl.AttribSet;
 import gl.sets.ColorSet;
-import graphics.shapes.Bar.BarAxisSlot;
-import graphics.shapes.Bar.BarContainer;
-import graphics.shapes.Bar;
 import graphics.ShapesBuffer;
-import mesh.providers.AttrProviders.SolidColorProvider;
+import graphics.shapes.Bar;
+
 class WonderButton extends ButtonBase {
     var tree:AnimationPlaceholder;
 
@@ -20,31 +18,25 @@ class WonderButton extends ButtonBase {
         super(w, h);
 
         var elements = [
-            new BarContainer(Portion(new BarAxisSlot ({start:0., end:1.}, null)), Portion(new BarAxisSlot ({start:0., end:1.}, null)) ),
-            new BarContainer(FixedThikness(new BarAxisSlot ({pos:0., thikness:1.}, null)), Portion(new BarAxisSlot ({start:0., end:1.}, null)))
+            new BarContainer(Portion(new BarAxisSlot({start: 0., end: 1.}, null)), Portion(new BarAxisSlot({start: 0., end: 1.}, null))),
+            new BarContainer(FixedThikness(new BarAxisSlot({pos: 0., thikness: 1.}, null)), Portion(new BarAxisSlot({start: 0., end: 1.}, null))),
         ];
-        var bg = new BarWidget(ColorSet.instance, w, elements);
-         new BColors(ColorSet.instance, bg, 1).colorizeQuad(0x1e1e1e);
-        var colors = new BColors(ColorSet.instance, bg, 0);
-        var viewProc:ClickViewProcessor = w.entity.getComponent(ClickViewProcessor);
-        if (viewProc!=null) {
-            viewProc.addHandler(new InteractiveColors(colors.colorizeQuad).viewHandler);
-//            viewProc.addHandler(new InteractiveTransform(w).viewHandler);
-        }
+        var bg = new ColorBarWidget(ColorSet.instance, w, elements, 0);
+        bg.colorize(1, 0x6c6c6c);
+        addHandler(new InteractiveColors(bg.getColorizeFun(0)).viewHandler);
 
         var lbl = new AnimatedLabel(w, style);
         lbl.withText(text);
 
-        tree = new AnimationTreeBuilder().build(
-            { layout:"wholefill",
-                children:[ {
-                    layout:"portion",
-                    children:[
-                        {size:{value:.4 }},
-                        {size:{value:1. }},
-                    ]
-                } ] }
-        );
+        tree = new AnimationTreeBuilder().build({
+            layout: "wholefill",
+            children: [
+                {
+                    layout: "portion",
+                    children: [{size: {value: .4}}, {size: {value: 1.}},]
+                }
+            ]
+        });
         tree.bindDeep([0, 0], BarAnimationUtils.directUnfold(elements[1]));
         tree.bindDeep([0, 1], BarAnimationUtils.directUnfold(elements[0]));
         tree.bindDeep([0, 1], lbl.setTime);
@@ -54,7 +46,6 @@ class WonderButton extends ButtonBase {
         tree.setTime(t);
     }
 }
-
 
 class BColors<T:AttribSet> {
     var attrs:T;
@@ -67,7 +58,7 @@ class BColors<T:AttribSet> {
         this.buffer = bars.getBuffer();
         this.n = n;
         buffer.onInit.listen(() -> {
-            if (color > -1)
+            if (color != -1)
                 colorizeQuad(color);
         });
     }
@@ -80,34 +71,30 @@ class BColors<T:AttribSet> {
     }
 }
 
-class BarsColorAssigner<T:AttribSet> {
-    var attrs:T;
-    var cp:SolidColorProvider;
-    var buffer:ShapesBuffer<T>;
-    var colors:Array<Int>;
-
-
-    public function new(attrs, color, buffer):Void {
-        this.attrs = attrs;
-        this.colors = color;
-        this.buffer = buffer;
-        cp = new SolidColorProvider(0, 0, 0);
-        this.buffer.onInit.listen(fillBuffer);
-    }
-
-    function fillBuffer() {
-        if (!buffer.isInited())
-            return;
-        var writers = attrs.getWriter(AttribAliases.NAME_COLOR_IN);
-        var quadsCount = Std.int(buffer.getVertCount() / 4);
-        for (q in 0...quadsCount) {
-            var color = q < colors.length ? colors[q] : colors[colors.length - 1];
-            cp.setColor(color);
-            for (v in 0...4)
-                for (w in 0...writers.length)
-                    writers[w].setValue(buffer.getBuffer(), q * 4 + v, cp.getValue(0, w));
-        }
-//        MeshUtilss.writeInt8Attribute(attrs, buffer.getBuffer(), AttribAliases.NAME_COLOR_IN, 0, buffer.getVertCount(), cp.getValue);
-    }
-
-}
+// class BarsColorAssigner<T:AttribSet> {
+//     var attrs:T;
+//     var cp:SolidColorProvider;
+//     var buffer:ShapesBuffer<T>;
+//     var colors:Array<Int>;
+//     public function new(attrs, color, buffer):Void {
+//         this.attrs = attrs;
+//         this.colors = color;
+//         this.buffer = buffer;
+//         cp = new SolidColorProvider(0, 0, 0);
+//         this.buffer.onInit.listen(fillBuffer);
+//     }
+//     function fillBuffer() {
+//         if (!buffer.isInited())
+//             return;
+//         var writers = attrs.getWriter(AttribAliases.NAME_COLOR_IN);
+//         var quadsCount = Std.int(buffer.getVertCount() / 4);
+//         for (q in 0...quadsCount) {
+//             var color = q < colors.length ? colors[q] : colors[colors.length - 1];
+//             cp.setColor(color);
+//             for (v in 0...4)
+//                 for (w in 0...writers.length)
+//                     writers[w].setValue(buffer.getBuffer(), q * 4 + v, cp.getValue(0, w));
+//         }
+// //        MeshUtilss.writeInt8Attribute(attrs, buffer.getBuffer(), AttribAliases.NAME_COLOR_IN, 0, buffer.getVertCount(), cp.getValue);
+//     }
+// }
