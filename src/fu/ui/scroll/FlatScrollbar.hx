@@ -20,6 +20,7 @@ class FlatScrollbar extends ShapeWidget<ColorSet> implements WidgetScrollbar {
 
     public function new(w:Placeholder2D, aspectRatio:AspectRatio, axis:Axis2D) {
         super(ColorSet.instance, w);
+        onShapesDone.listen(caclWeights);
         this.axis = axis;
         handler = new QuadGraphicElement(ColorSet.instance);
         addChild(handler);
@@ -40,12 +41,6 @@ class FlatScrollbar extends ShapeWidget<ColorSet> implements WidgetScrollbar {
         hanlderPos = Mathu.clamp(v, 0, 1);
         caclWeights();
     }
-
-    override function onShapesDone() {
-        super.onShapesDone();
-        caclWeights();
-    }
-
 
     function caclWeights() {
         var trgWg = handler.weights[axis];

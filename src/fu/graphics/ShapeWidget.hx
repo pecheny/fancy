@@ -1,5 +1,6 @@
 package fu.graphics;
 
+import haxe.ds.ReadOnlyArray;
 import a2d.AspectRatioProvider;
 import a2d.Placeholder2D;
 import ec.CtxWatcher;
@@ -15,11 +16,13 @@ import a2d.transform.LiquidTransformer;
 import a2d.Widget;
 
 class ShapeWidget<T:AttribSet> extends Widget implements Renderable<T> {
+    public var onShapesDone:Signal<Void->Void> = new Signal();
     @:once var ratioProvider:AspectRatioProvider;
     @:once var transformer:LiquidTransformer;
     var attrs:T;
     var inited = false;
     var shapeRenderer:ShapeRenderer<T>;
+    var children:Array<Shape> = [];
     // do not call initialization before manual call in order to construct shapes on placeholder with all deps.
     var delayInit = false;
 
@@ -37,7 +40,7 @@ class ShapeWidget<T:AttribSet> extends Widget implements Renderable<T> {
     public function addChild(shape:Shape) {
         if (inited)
             throw "Can't add children after initialization";
-        shapeRenderer.addChild(shape);
+        children.push(shape);
     }
 
     override function init() {
@@ -47,9 +50,9 @@ class ShapeWidget<T:AttribSet> extends Widget implements Renderable<T> {
             return;
         shapeRenderer.transform = transformer.transformValue;
         createShapes();
-        shapeRenderer.initChildren();
+        shapeRenderer.initChildren(children);
         inited = true;
-        onShapesDone();
+        onShapesDone.dispatch();
     }
 
     public function manInit() {
@@ -60,14 +63,16 @@ class ShapeWidget<T:AttribSet> extends Widget implements Renderable<T> {
 
     function createShapes() {}
 
-    function onShapesDone() {}
-
     public function getBuffer():ShapesBuffer<T> {
         return shapeRenderer;
     }
 
     public function render(targets:RenderTarget<T>):Void {
         shapeRenderer.render(targets);
+    }
+
+    public function getChildren():ReadOnlyArray<Shape> {
+        return children;
     }
 
     //    function printVerts(n) {

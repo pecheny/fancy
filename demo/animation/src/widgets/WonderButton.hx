@@ -1,5 +1,6 @@
 package widgets;
 
+import graphics.ShapeColors;
 import al.animation.Animation.AnimationPlaceholder;
 import al.animation.AnimationTreeBuilder;
 import fu.graphics.BarWidget;
@@ -21,9 +22,11 @@ class WonderButton extends ButtonBase {
             new BarContainer(Portion(new BarAxisSlot({start: 0., end: 1.}, null)), Portion(new BarAxisSlot({start: 0., end: 1.}, null))),
             new BarContainer(FixedThikness(new BarAxisSlot({pos: 0., thikness: 1.}, null)), Portion(new BarAxisSlot({start: 0., end: 1.}, null))),
         ];
-        var bg = new ColorBarWidget(ColorSet.instance, w, elements, 0);
-        bg.colorize(1, 0x6c6c6c);
-        addHandler(new InteractiveColors(bg.getColorizeFun(0)).viewHandler);
+        var bg = new BarWidget(ColorSet.instance, w, elements);
+        var bgcolors = new ShapeColors(ColorSet.instance, bg.getBuffer());
+        bg.onShapesDone.listen(() -> bgcolors.initChildren(bg.getChildren()));
+        bgcolors.colorize(1, 0x6c6c6c);
+        addHandler(new InteractiveColors(bgcolors.getColorizeFun(0)).viewHandler);
 
         var lbl = new AnimatedLabel(w, style);
         lbl.withText(text);
