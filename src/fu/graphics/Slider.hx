@@ -10,6 +10,9 @@ import mesh.providers.AttrProviders.SolidColorProvider;
 import shimp.InputSystem;
 import shimp.Point;
 import utils.Mathu;
+import a2d.Placeholder2D;
+import graphics.shapes.ProgressBar;
+
 
 class Slider extends ShapeWidget<ColorSet> {
     public var q:ProgressBar<ColorSet>;
