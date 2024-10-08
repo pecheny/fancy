@@ -1,29 +1,69 @@
 package;
 
+import fu.Signal;
 import Axis2D;
 import a2d.Placeholder2D;
 import a2d.transform.WidgetToScreenRatio;
+import al.ec.WidgetSwitcher;
+import al.layouts.PortionLayout;
 import data.IndexCollection;
 import data.aliases.AttribAliases;
+import fancy.domkit.Dkit.BaseDkit;
+import fu.GuiDrawcalls;
 import fu.graphics.ShapeWidget;
+import fu.graphics.Slider;
 import gl.AttribSet;
 import gl.ValueWriter.AttributeWriters;
 import gl.ValueWriter;
+import gl.passes.CirclePass;
+import gl.passes.CmsdfPass;
+import gl.passes.FlatColorPass;
 import gl.sets.CircleSet;
 import graphics.shapes.Shape;
 import haxe.ds.ReadOnlyArray;
 import haxe.io.Bytes;
+import htext.FontAspectsFactory;
 import macros.AVConstructor;
+import openfl.display.Sprite;
 
 using a2d.transform.LiquidTransformer;
 using al.Builder;
 
-class SquaresDemo extends CircleShaderDemo {
+class SquaresDemo extends Sprite {
+    public var fui:FuiBuilder;
+    public var switcher:WidgetSwitcher<Axis2D>;
+
+    var gui:DemoGui;
     public function new() {
         super();
-        var wdg = shapes(fui.placeholderBuilder.h(sfr, 1).v(sfr, 1).b());
-        switcher.switchTo(wdg.ph);
+        fui = new FuiBuilder();
+
+        var pipeline = fui.pipeline;
+        pipeline.addPass("circle", new CirclePass());
+        pipeline.addPass(GuiDrawcalls.BG_DRAWCALL, new FlatColorPass());
+        pipeline.addPass(GuiDrawcalls.TEXT_DRAWCALL, new CmsdfPass());
+        var fontAsp = new FontAspectsFactory(fui.fonts, pipeline.textureStorage);
+        pipeline.addAspectExtractor(GuiDrawcalls.TEXT_DRAWCALL, fontAsp.create, fontAsp.getAlias);
+
+        BaseDkit.inject(fui);
+        fui.regDefaultDrawcalls = () -> {};
+        var e = fui.createDefaultRoot(Xml.parse('<container>
+        <drawcall type="color"/>
+        <drawcall type="text" font="" color="0xffffff"/>
+        <drawcall type="circle"/>
+    </container>')
+            .firstElement());
+        DkitStyle.createStyles(fui, e);
+
+        switcher = e.getComponent(WidgetSwitcher);
+
+        // var wdg = shapes(fui.placeholderBuilder.h(sfr, 1).v(sfr, 1).b());
+        gui = new DemoGui(Builder.widget());
+        shapes(gui.canvas.ph);
+        switcher.switchTo(gui.ph);
     }
+
+    var squares:Array<SquareShape<CircleSet>> = [];
 
     public function shapes(ph:Placeholder2D) {
         fui.lqtr(ph);
@@ -40,11 +80,36 @@ class SquaresDemo extends CircleShaderDemo {
             sq.withAtt(squv.writePostions).withAtt(squv.writePostions).withAtt(rad.writePostions);
             sq.withAtt(new SquareAntialiasing(attrs, sq, fui.ar.getWindowSize()).writePostions);
             shw.addChild(sq);
+            squares.push(sq);
         }
-
+        
+        // var lastSq = squares[n-1];
+        
+        gui.r1Changed.listen(v -> rad.r1 = v);
+        gui.r2Changed.listen(v -> rad.r2 = v);
         shw.manInit();
         return shw;
     }
+}
+
+class DemoGui extends BaseDkit {
+    public var r1Changed:Signal<Float->Void> = new Signal();
+    public var r2Changed:Signal<Float->Void> = new Signal();
+
+    static var SRC = <demo-gui hl={PortionLayout.instance}>
+        <base(b().h(pfr, 0.25).b()) vl={PortionLayout.instance}>
+            <label(b().h(pfr, 1).v(sfr, 0.1).l().b()) text={ "r1, inner radius" }  />
+            <base(b().v(sfr,0.05).l().b())>
+                ${new Slider(__this__.ph, horizontal, v -> r1Changed.dispatch(v)).withProgress(0.3)}
+            </base>
+            <label(b().h(pfr, 1).v(sfr, 0.1).l().b())  text={ "r2, outer radius" }  />
+            <base(b().v(sfr,0.05).l().b())>
+                ${new Slider(__this__.ph, horizontal, v -> r2Changed.dispatch(v)).withProgress(0.9)}
+            </base>
+
+        </base>
+        <base(b().h(pfr, 1).b()) public id="canvas"></base>
+    </demo-gui>
 }
 
 @:access(SquareShape)
@@ -52,7 +117,7 @@ class SquareAntialiasing<T:AttribSet> {
     var att:T;
     var square:SquareShape<T>;
     var screenSize:ReadOnlyAVector2D<Int>;
-    var smoothness = 4.;
+    var smoothness = 6.;
 
     public function new(att, square, screen) {
         this.att = att;
@@ -61,21 +126,23 @@ class SquareAntialiasing<T:AttribSet> {
     }
 
     public function writePostions(target:Bytes, vertOffset = 0, transformer) {
-        var aasize = smoothness / (square.size * square.lineScales[horizontal] * screenSize[horizontal]) ;
+        var aasize = smoothness / (square.size * square.lineScales[horizontal] * screenSize[horizontal]);
         att.fillFloat(target, CircleSet.AASIZE_IN, aasize, vertOffset, 4);
     }
 }
 
 class RadiusAtt<T:AttribSet> {
     var att:T;
+    public var r1 = 0.3;
+    public var r2 = 0.9;
 
     public function new(att) {
         this.att = att;
     }
 
     public function writePostions(target:Bytes, vertOffset = 0, transformer) {
-        att.fillFloat(target, CircleSet.R1_IN, 0.3, vertOffset, 4);
-        att.fillFloat(target, CircleSet.R2_IN, 0.9, vertOffset, 4);
+        att.fillFloat(target, CircleSet.R1_IN, r1, vertOffset, 4);
+        att.fillFloat(target, CircleSet.R2_IN, r2, vertOffset, 4);
     }
 }
 
