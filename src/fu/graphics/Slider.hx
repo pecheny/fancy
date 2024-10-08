@@ -1,39 +1,35 @@
 package fu.graphics;
-import a2d.Placeholder2D;
+import al2d.WidgetHitTester2D;
 import data.aliases.AttribAliases;
 import ec.CtxWatcher;
 import ecbind.InputBinder;
+import format.png.Data.Color;
 import gl.sets.ColorSet;
-import graphics.shapes.ProgressBar;
-import haxe.io.Bytes;
-import mesh.MeshUtilss;
+import graphics.ShapesColorAssigner;
 import mesh.providers.AttrProviders.SolidColorProvider;
 import shimp.InputSystem;
-import utils.Mathu;
 import shimp.Point;
-import al2d.WidgetHitTester2D;
+import utils.Mathu;
 
 class Slider extends ShapeWidget<ColorSet> {
     public var q:ProgressBar<ColorSet>;
-    var color:Int;
-    var cp:SolidColorProvider;
+
     var mainAxis:Axis2D;
     var progress:Float;
     var handler:Float->Void;
 
     public function new(w:Placeholder2D, direction:Axis2D, h) {
         this.handler = h;
-        this.color = 0xffffff;
         this.mainAxis = direction;
-        cp = SolidColorProvider.fromInt(color, 255);
         super(ColorSet.instance, w);
+        new ShapesColorAssigner(ColorSet.instance, 0xffffff, getBuffer());
     }
 
     public function withProgress(v) {
         progress = v;
         if (q != null)
             q.setVal(mainAxis, v);
-        if(handler!=null)
+        if (handler != null)
             handler(v);
         return this;
     }
@@ -47,16 +43,6 @@ class Slider extends ShapeWidget<ColorSet> {
         ph.entity.addComponentByType(InputSystemTarget, inp);
         new CtxWatcher(InputBinder, ph.entity);
     }
-
-    override function onShapesDone() {
-        setColor(color);
-    }
-
-
-    public function setColor(c:Int) {
-        cp.setColor(c);
-        MeshUtilss.writeInt8Attribute(attrs, getBuffer().getBuffer(), AttribAliases.NAME_COLOR_IN, 0, getBuffer().getVertCount(), cp.getValue);
-    }
 }
 
 class SliderInput implements InputSystemTarget<Point> {
@@ -65,7 +51,7 @@ class SliderInput implements InputSystemTarget<Point> {
     var pressed = false;
     var toLocal:ToWidgetSpace;
     var a:Axis2D;
-    var handler:Float -> Void;
+    var handler:Float->Void;
 
     public function new(w, stage, a, h) {
         this.hitTester = new WidgetHitTester2D(w);
@@ -84,8 +70,8 @@ class SliderInput implements InputSystemTarget<Point> {
 
     inline function posVal(p:Point, a:Axis2D) {
         return switch a {
-            case horizontal : p.x;
-            case vertical : p.y;
+            case horizontal: p.x;
+            case vertical: p.y;
         }
     }
 
@@ -116,7 +102,6 @@ class ToWidgetSpace {
     }
 
     public inline function transformValue(c:Axis2D, input:Float):Float {
-        return (input - w.axisStates[c].getPos()) /
-        w.axisStates[c].getSize();
+        return (input - w.axisStates[c].getPos()) / w.axisStates[c].getSize();
     }
 }
