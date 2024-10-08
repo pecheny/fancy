@@ -1,17 +1,15 @@
 package;
 
-import gl.sets.CircleSet;
-import gl.ValueWriter;
 import Axis2D;
 import a2d.Placeholder2D;
 import a2d.transform.WidgetToScreenRatio;
 import data.IndexCollection;
 import data.aliases.AttribAliases;
-import fu.bootstrap.WidgetTester;
 import fu.graphics.ShapeWidget;
 import gl.AttribSet;
 import gl.ValueWriter.AttributeWriters;
-import gl.sets.ColorSet;
+import gl.ValueWriter;
+import gl.sets.CircleSet;
 import graphics.shapes.Shape;
 import haxe.ds.ReadOnlyArray;
 import haxe.io.Bytes;
@@ -23,28 +21,48 @@ using al.Builder;
 class SquaresDemo extends CircleShaderDemo {
     public function new() {
         super();
-        var wdg = quads(fui.placeholderBuilder.h(sfr, 1).v(sfr, 1).b(), 0x6a00ff);
+        var wdg = shapes(fui.placeholderBuilder.h(sfr, 1).v(sfr, 1).b());
         switcher.switchTo(wdg.ph);
     }
 
-    public function quads(ph:Placeholder2D, color) {
+    public function shapes(ph:Placeholder2D) {
         fui.lqtr(ph);
         var attrs = CircleSet.instance;
-        var steps = WidgetToScreenRatio.getOrCreate(ph.entity, ph, 0.15);
+        var steps = WidgetToScreenRatio.getOrCreate(ph.entity, ph, 0.5);
 
         var shw = new ShapeWidget(attrs, ph, true);
 
         var n = 3;
         var squv = new SquareUV(attrs);
         var rad = new RadiusAtt(attrs);
-        for (i in 0...n)
-            shw.addChild(new SquareShape(attrs, steps.getRatio(), Math.random(), Math.random())
-            .withAtt(squv.writePostions)
-            .withAtt(rad.writePostions)
-        );
+        for (i in 0...n) {
+            var sq = new SquareShape(attrs, steps.getRatio(), Math.random(), Math.random());
+            sq.withAtt(squv.writePostions).withAtt(squv.writePostions).withAtt(rad.writePostions);
+            sq.withAtt(new SquareAntialiasing(attrs, sq, fui.ar.getWindowSize()).writePostions);
+            shw.addChild(sq);
+        }
 
         shw.manInit();
         return shw;
+    }
+}
+
+@:access(SquareShape)
+class SquareAntialiasing<T:AttribSet> {
+    var att:T;
+    var square:SquareShape<T>;
+    var screenSize:ReadOnlyAVector2D<Int>;
+    var smoothness = 4.;
+
+    public function new(att, square, screen) {
+        this.att = att;
+        this.square = square;
+        this.screenSize = screen;
+    }
+
+    public function writePostions(target:Bytes, vertOffset = 0, transformer) {
+        var aasize = smoothness / (square.size * square.lineScales[horizontal] * screenSize[horizontal]) ;
+        att.fillFloat(target, CircleSet.AASIZE_IN, aasize, vertOffset, 4);
     }
 }
 
@@ -56,19 +74,15 @@ class RadiusAtt<T:AttribSet> {
     }
 
     public function writePostions(target:Bytes, vertOffset = 0, transformer) {
-        for (i in 0...4) {
-            att.fillFloat(target, CircleSet.R1_IN, 0.3, vertOffset, 4);
-            att.fillFloat(target, CircleSet.R2_IN, 0.9, vertOffset, 4);
-        }
+        att.fillFloat(target, CircleSet.R1_IN, 0.3, vertOffset, 4);
+        att.fillFloat(target, CircleSet.R2_IN, 0.9, vertOffset, 4);
     }
-
 }
 
 class SquareUV<T:AttribSet> {
     var att:T;
     var writers:Array<IValueWriter>;
-    // var values:Array<Float> = [0, 0, 1, 0, 1, 1, 0, 1];
-    var values:Array<Float> = [0, 0, 0,1, 1, 0, 1,1];
+    var values:Array<Float> = [0, 0, 0, 1, 1, 0, 1, 1];
 
     public function new(att) {
         this.att = att;
