@@ -1,5 +1,6 @@
 package;
 
+import graphics.ShapesColorAssigner;
 import fu.Signal;
 import Axis2D;
 import a2d.Placeholder2D;
@@ -88,6 +89,7 @@ class SquaresDemo extends Sprite {
         gui.r1Changed.listen(v -> rad.r1 = v);
         gui.r2Changed.listen(v -> rad.r2 = v);
         shw.manInit();
+        new ShapesColorAssigner(attrs, 0xff0000, shw.getBuffer());
         return shw;
     }
 }
@@ -173,8 +175,6 @@ class SquareShape<T:AttribSet> implements Shape {
     static var weights:ReadOnlyAVector2D<ReadOnlyArray<Float>> = AVConstructor.create([-0.5, -0.5, 0.5, 0.5], [-0.5, 0.5, -0.5, 0.5]);
 
     public function new(attrs:T, lineScales, x, y, size = 1) {
-        // weights = RectWeights.identity();
-        // var writers:AttributeWriters;
         this.size = size;
         this.lineScales = lineScales;
         this.pos = AVConstructor.create(x, y);
