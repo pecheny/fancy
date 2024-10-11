@@ -1,5 +1,6 @@
 package ui;
 
+import ec.Component;
 import a2d.PlaceholderBuilder2D;
 import ec.Entity;
 import al.animation.Animation.AnimContainer;
@@ -26,13 +27,13 @@ class Screens implements Updatable {
 
     var duration = 2.;
 
-
     public var screens:Map<String, Screen> = new Map();
     public var switcher:WidgetSwitcher<Axis2D>;
 
     var prev:Screen;
-    //    var next:Screen;
+    var prevAnim:Animator;
     var current:Screen;
+    var curAnim:Animator;
 
     public function new(switcher) {
         this.switcher = switcher;
@@ -41,12 +42,12 @@ class Screens implements Updatable {
             children: [{size: {value: 1.}}, {size: {value: 1.}},]
         });
         tree.bindAnimation(0, t -> {
-            if (prev != null)
-                prev.setT(1 - t);
+            if (prevAnim != null)
+                prevAnim.setT(1 - t);
         });
         tree.bindAnimation(1, t -> {
             if (current != null)
-                current.setT(t);
+                curAnim.setT(t);
         });
     }
 
@@ -59,7 +60,9 @@ class Screens implements Updatable {
     public function switchTo(name) {
         time = current != null ? 0 : 0.5;
         prev = current;
+        prevAnim = curAnim;
         current = screens[name];
+        curAnim = current.entity.getComponent(Animator);
         switcher.bind(current.ph);
     }
 
@@ -77,16 +80,12 @@ class Screens implements Updatable {
     }
 }
 
-class Screen extends Widget {
+@:build(ec.macros.Macros.buildGetOrCreate())
+class Animator extends Component {
     var tree:AnimationPlaceholder;
-    var b:PlaceholderBuilder2D;
-    var stage:Stage;
     @:once var animationTreeBuilder:AnimationTreeBuilder;
-    @:once var fuiBuilder:FuiBuilder;
 
     override function init() {
-        this.b = fuiBuilder.placeholderBuilder;
-        this.stage = fuiBuilder.ar;
         tree = animationTreeBuilder.build({
             layout: OffsetLayout.NAME,
             children: []
@@ -97,17 +96,30 @@ class Screen extends Widget {
         if (tree == null)
             return;
         tree.setTime(t);
-        for (a in Axis2D) {
-            var axis = ph.axisStates[a];
-            axis.apply(axis.getPos(), axis.getSize());
-        }
+        // for (a in Axis2D) {
+        //     var axis = ph.axisStates[a];
+        //     axis.apply(axis.getPos(), axis.getSize());
+        // }
     }
 
-    function addAnim(h) {
+    public function addAnim(h) {
         var animContainer = tree.entity.getComponent(AnimContainer);
         var anim = animationTreeBuilder.animationWidget(new Entity(), {});
         animationTreeBuilder.addChild(animContainer, anim);
         anim.animations.channels.push(h);
         animContainer.refresh();
+    }
+}
+
+class Screen extends Widget {
+    var b:PlaceholderBuilder2D;
+    var stage:Stage;
+    var animator:Animator;
+    @:once var fuiBuilder:FuiBuilder;
+
+    override function init() {
+        animator = Animator.getOrCreate(entity, entity);
+        this.b = fuiBuilder.placeholderBuilder;
+        this.stage = fuiBuilder.ar;
     }
 }
