@@ -13,6 +13,7 @@
     <haxelib name="flgl"/>
     <haxelib name="alayout"/>
     <haxelib name="fancy"/>
+    <haxelib name="jiga"/>
     <haxelib name="openfl"/>
 
 </project>
