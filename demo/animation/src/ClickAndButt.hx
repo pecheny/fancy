@@ -1,5 +1,6 @@
 package;
 
+import ui.Animator;
 import a2d.Widget;
 import fu.Signal;
 import a2d.Placeholder2D;
