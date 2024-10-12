@@ -1,5 +1,6 @@
 package ui;
 
+import a2d.Placeholder2D;
 import ec.Component;
 import a2d.PlaceholderBuilder2D;
 import ec.Entity;
@@ -27,12 +28,11 @@ class Screens implements Updatable {
 
     var duration = 2.;
 
-    public var screens:Map<String, Screen> = new Map();
     public var switcher:WidgetSwitcher<Axis2D>;
 
-    var prev:Screen;
+    var prev:Placeholder2D;
     var prevAnim:Animator;
-    var current:Screen;
+    var current:Placeholder2D;
     var curAnim:Animator;
 
     public function new(switcher) {
@@ -46,24 +46,18 @@ class Screens implements Updatable {
                 prevAnim.setT(1 - t);
         });
         tree.bindAnimation(1, t -> {
-            if (current != null)
+            if (curAnim != null)
                 curAnim.setT(t);
         });
     }
 
-    public function add(name, screen) {
-        screens[name] = screen;
-        switcher.bind(screen.ph);
-        switcher.unbind(screen.ph);
-    }
-
-    public function switchTo(name) {
+    public function switchTo(ph:Placeholder2D) {
         time = current != null ? 0 : 0.5;
         prev = current;
         prevAnim = curAnim;
-        current = screens[name];
+        current = ph;
         curAnim = current.entity.getComponent(Animator);
-        switcher.bind(current.ph);
+        switcher.bind(ph);
     }
 
     public function update(dt:Float):Void {
@@ -74,7 +68,7 @@ class Screens implements Updatable {
             time = 1;
         tree.setTime(time);
         if (time == 1 && prev != null) {
-            switcher.unbind(prev.ph);
+            switcher.unbind(prev);
             prev = null;
         }
     }

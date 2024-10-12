@@ -1,5 +1,8 @@
 package;
 
+import a2d.Widget;
+import fu.Signal;
+import a2d.Placeholder2D;
 import fu.GuiDrawcalls;
 import a2d.PlaceholderBuilder2D;
 import FuiBuilder;
@@ -23,12 +26,10 @@ using al.Builder;
 using a2d.transform.LiquidTransformer;
 using a2d.transform.LiquidTransformer;
 
-class ScreenNames {
-    public inline static var ONE:String = "one";
-    public inline static var TWO:String = "TWO";
-}
-
 class ClickAndButt extends Sprite {
+    var s1:Placeholder2D;
+    var s2:Placeholder2D;
+
     public function new() {
         super();
         var fuiBuilder = new FuiBuilder();
@@ -42,18 +43,27 @@ class ClickAndButt extends Sprite {
         conts.regStyle("h", new PortionLayout(Forward, new FixedSize(0.)), new WholefillLayout(new FractionSize(0.)));
         root.addComponent(conts);
 
-        var buts = new ButtonFactory(fuiBuilder.placeholderBuilder, fuiBuilder.ar, root.getComponent(TextStyleContext));
+        var buts = new ButtonFactory(fuiBuilder.placeholderBuilder, fuiBuilder.ar, fuiBuilder.s());
         root.addComponent(buts);
 
         var screens = new Screens(root.getComponent(WidgetSwitcher));
         fuiBuilder.updater.addUpdatable(screens);
         root.addComponent(screens);
 
-        var s1 = new ScreenOne(Builder.widget());
-        var s2 = new ScreenTwo(Builder.widget());
-        screens.add(ScreenNames.ONE, s1);
-        screens.add(ScreenNames.TWO, s2);
-        screens.switchTo(ScreenNames.ONE);
+        s1 = {
+            var s = new ScreenOne(Builder.widget());
+            s.onClick.listen(() -> screens.switchTo(s2));
+            s.watch(root);
+            s.ph;
+        };
+        s2 = {
+            var s = new ScreenTwo(Builder.widget());
+            s.onClick.listen(() -> screens.switchTo(s1));
+            s.watch(root);
+            s.ph;
+        };
+
+        screens.switchTo(s1);
     }
 }
 
@@ -89,18 +99,24 @@ class ScreenOne extends Screen {
         addButton("Carrot");
         addButton("Zucchini");
         addButton("Potato");
-        addButton("Broccoli");
+        // addButton("Broccoli");
+
+        // var b1 = new WonderButton(b.h(sfr, 0.6).v(sfr, 0.3).b().withLiquidTransform(stage.getAspectRatio()), () -> {}, "Boo-boom",
+        //     ph.entity.getComponentUpward(TextStyleContext));
+        // Builder.addWidget(pnl, b1.ph);
+        // animator.addAnim(b1.setTime);
 
         var content = new WonderQuad(Builder.widget().withLiquidTransform(stage.getAspectRatio()), 0x505050);
-        addAnim(content.setTime);
+        animator.addAnim(content.setTime);
 
         containerFactory.create(ph, "h").withChildren([pnl.ph, content.ph]);
     }
 
     function addButton(text) {
-        var b1 = buttonFactory.button(text, () -> screens.switchTo(ScreenNames.TWO));
+        var b1 = buttonFactory.button(text, () -> onClick.dispatch());
+        // var b1 = buttonFactory.button(text, null);
         Builder.addWidget(pnl, b1.ph);
-        addAnim(b1.setTime);
+        animator.addAnim(b1.setTime);
     }
 }
 
@@ -120,8 +136,23 @@ class ScreenTwo extends Screen {
     }
 
     function addButton(text) {
-        var b1 = buttonFactory.button(text, () -> screens.switchTo(ScreenNames.ONE));
+        var b1 = buttonFactory.button(text, () -> onClick.dispatch());
         Builder.addWidget(pnl, b1.ph);
-        addAnim(b1.setTime);
+        animator.addAnim(b1.setTime);
+    }
+}
+
+class Screen extends Widget {
+    var b:PlaceholderBuilder2D;
+    var stage:Stage;
+    var animator:Animator;
+    @:once var fuiBuilder:FuiBuilder;
+
+    public var onClick = new Signal<Void->Void>();
+
+    override function init() {
+        animator = Animator.getOrCreate(entity, entity);
+        this.b = fuiBuilder.placeholderBuilder;
+        this.stage = fuiBuilder.ar;
     }
 }
