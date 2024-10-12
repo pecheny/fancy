@@ -6,7 +6,7 @@ import al.animation.AnimationTreeBuilder;
 import al.ec.WidgetSwitcher;
 import update.Updatable;
 
-class Screens implements Updatable {
+class AnimatedSwitcher implements Updatable {
     var tree:AnimationPlaceholder;
     var time:Float = 0;
     var duration = 2.;

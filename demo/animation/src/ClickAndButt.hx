@@ -19,7 +19,7 @@ import al.layouts.data.LayoutData.FractionSize;
 import ec.Entity;
 import htext.style.TextStyleContext;
 import openfl.display.Sprite;
-import ui.Screens;
+import ui.AnimatedSwitcher;
 import widgets.WonderButton;
 import widgets.WonderQuad;
 
@@ -47,7 +47,7 @@ class ClickAndButt extends Sprite {
         var buts = new ButtonFactory(fuiBuilder.placeholderBuilder, fuiBuilder.ar, fuiBuilder.s());
         root.addComponent(buts);
 
-        var screens = new Screens(root.getComponent(WidgetSwitcher));
+        var screens = new AnimatedSwitcher(root.getComponent(WidgetSwitcher));
         fuiBuilder.updater.addUpdatable(screens);
         root.addComponent(screens);
 
@@ -86,7 +86,7 @@ class ButtonFactory {
 }
 
 class ScreenOne extends Screen {
-    @:once var screens:Screens;
+    @:once var screens:AnimatedSwitcher;
     @:once var containerFactory:ContainerFactory;
     @:once var buttonFactory:ButtonFactory;
 
@@ -122,7 +122,7 @@ class ScreenOne extends Screen {
 }
 
 class ScreenTwo extends Screen {
-    @:once var screens:Screens;
+    @:once var screens:AnimatedSwitcher;
     @:once var containerFactory:ContainerFactory;
     @:once var buttonFactory:ButtonFactory;
     var pnl:Widget2DContainer;
