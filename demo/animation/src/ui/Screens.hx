@@ -1,35 +1,16 @@
 package ui;
 
 import a2d.Placeholder2D;
-import ec.Component;
-import a2d.PlaceholderBuilder2D;
-import ec.Entity;
-import al.animation.Animation.AnimContainer;
-import al.layouts.OffsetLayout;
-import a2d.Stage;
-import update.Updatable;
+import al.animation.Animation.AnimationPlaceholder;
 import al.animation.AnimationTreeBuilder;
 import al.ec.WidgetSwitcher;
-import a2d.Widget;
-import al.animation.Animation.AnimationPlaceholder;
+import update.Updatable;
 
 class Screens implements Updatable {
     var tree:AnimationPlaceholder;
     var time:Float = 0;
-    var e1 = (t:Float) -> {
-        var a1 = Math.abs((Math.sin(Math.PI * t / 2)));
-        return Math.pow(a1, 2);
-    }
-
-    var e2 = t -> {
-        var a1 = Math.abs((Math.sin(Math.PI * t / 2)));
-        return Math.pow(a1, 2);
-    }
-
     var duration = 2.;
-
-    public var switcher:WidgetSwitcher<Axis2D>;
-
+    var switcher:WidgetSwitcher<Axis2D>;
     var prev:Placeholder2D;
     var prevAnim:Animator;
     var current:Placeholder2D;
