@@ -90,6 +90,9 @@ class Animator extends Component {
             layout: OffsetLayout.NAME,
             children: []
         });
+        for (ch in channels)
+            initAnim(ch);
+        channels = null;
     }
 
     public function setT(t:Float) {
@@ -102,24 +105,20 @@ class Animator extends Component {
         // }
     }
 
+    var channels:Array<Float->Void> = [];
+
     public function addAnim(h) {
+        if (_inited)
+            initAnim(h);
+        else
+            channels.push(h);
+    }
+
+    function initAnim(h) {
         var animContainer = tree.entity.getComponent(AnimContainer);
         var anim = animationTreeBuilder.animationWidget(new Entity(), {});
         animationTreeBuilder.addChild(animContainer, anim);
         anim.animations.channels.push(h);
         animContainer.refresh();
-    }
-}
-
-class Screen extends Widget {
-    var b:PlaceholderBuilder2D;
-    var stage:Stage;
-    var animator:Animator;
-    @:once var fuiBuilder:FuiBuilder;
-
-    override function init() {
-        animator = Animator.getOrCreate(entity, entity);
-        this.b = fuiBuilder.placeholderBuilder;
-        this.stage = fuiBuilder.ar;
     }
 }
