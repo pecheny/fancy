@@ -1,5 +1,6 @@
 package;
 
+import al.animation.AnimatedSwitcher;
 import a2d.Widget.ResizableWidget2D;
 import fu.ui.scroll.ScrollboxItem;
 import a2d.Widget2DContainer;
@@ -107,6 +108,11 @@ class FuiBuilder {
 		var v = new StageAspectResizer(rw, 2);
 		var switcher = new WidgetSwitcher(rw);
 		rootEntity.addComponent(switcher);
+        
+        var screens = new AnimatedSwitcher(switcher);
+        updater.addUpdatable(screens);
+        rootEntity.addComponent(screens);
+
 		rootEntity.addComponentByType(TextContextStorage, textStyles);
 		return rootEntity;
 	}

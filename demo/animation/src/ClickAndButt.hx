@@ -1,6 +1,6 @@
 package;
 
-import ui.Animator;
+import al.animation.Animator;
 import a2d.Widget;
 import fu.Signal;
 import a2d.Placeholder2D;
@@ -19,7 +19,7 @@ import al.layouts.data.LayoutData.FractionSize;
 import ec.Entity;
 import htext.style.TextStyleContext;
 import openfl.display.Sprite;
-import ui.AnimatedSwitcher;
+import al.animation.AnimatedSwitcher;
 import widgets.WonderButton;
 import widgets.WonderQuad;
 
@@ -47,9 +47,7 @@ class ClickAndButt extends Sprite {
         var buts = new ButtonFactory(fuiBuilder.placeholderBuilder, fuiBuilder.ar, fuiBuilder.s());
         root.addComponent(buts);
 
-        var screens = new AnimatedSwitcher(root.getComponent(WidgetSwitcher));
-        fuiBuilder.updater.addUpdatable(screens);
-        root.addComponent(screens);
+        var screens = root.getComponent(AnimatedSwitcher);
 
         s1 = {
             var s = new ScreenOne(Builder.widget());
