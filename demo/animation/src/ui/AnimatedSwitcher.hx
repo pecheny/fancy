@@ -7,21 +7,26 @@ import al.ec.WidgetSwitcher;
 import update.Updatable;
 
 class AnimatedSwitcher implements Updatable {
+    public var duration = 2.;
     var tree:AnimationPlaceholder;
     var time:Float = 0;
-    var duration = 2.;
     var switcher:WidgetSwitcher<Axis2D>;
     var prev:Placeholder2D;
     var prevAnim:Animator;
     var current:Placeholder2D;
     var curAnim:Animator;
+    var builder:AnimationTreeBuilder = new AnimationTreeBuilder();
 
     public function new(switcher) {
         this.switcher = switcher;
-        tree = new AnimationTreeBuilder().build({
+        setTree({
             layout: "portion",
             children: [{size: {value: 1.}}, {size: {value: 1.}},]
         });
+    }
+    
+    public function setTree(desc) {
+        tree = builder.build(desc);
         tree.bindAnimation(0, t -> {
             if (prevAnim != null)
                 prevAnim.setT(1 - t);
