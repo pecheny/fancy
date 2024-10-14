@@ -1,21 +1,19 @@
 package widgets;
 
-import ec.CtxWatcher;
-import ec.Component;
 import al.animation.Animation.AnimContainer;
-import ec.CtxWatcher.CtxBinder;
-import fu.PropStorage;
-import ec.Entity;
-import graphics.ShapeColors;
 import al.animation.Animation.AnimationPlaceholder;
 import al.animation.AnimationTreeBuilder;
+import ec.Component;
+import ec.CtxWatcher.CtxBinder;
+import ec.CtxWatcher;
+import ec.Entity;
+import fu.PropStorage;
 import fu.graphics.BarWidget;
 import fu.graphics.ColouredQuad.InteractiveColors;
 import fu.ui.AnimatedLabel;
 import fu.ui.ButtonBase;
-import gl.AttribSet;
 import gl.sets.ColorSet;
-import graphics.ShapesBuffer;
+import graphics.ShapeColors;
 import graphics.shapes.Bar;
 
 class WonderButton extends ButtonBase implements Channels {
