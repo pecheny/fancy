@@ -44,23 +44,3 @@ class WonderButton extends ButtonBase implements Channels {
         tree.setTime(t);
     }
 }
-
-class WonderKit {
-    public static function configure(e:Entity) {
-        var props = new DummyProps<AnimationPreset>();
-        var preset = new AnimationPreset({
-            layout: "wholefill",
-            children: [
-                {
-                    layout: "portion",
-                    children: [{size: {value: .4}}, {size: {value: 1.}},]
-                }
-            ]
-        });
-        preset.mapping.push(AnimationSlotSelectors.pathSelector.bind([0, 0]));
-        preset.mapping.push(AnimationSlotSelectors.pathSelector.bind([0, 1]));
-        preset.mapping.push(AnimationSlotSelectors.pathSelector.bind([0, 1]));
-        props.set(AnimationTreeComponent.getId(WonderButton), preset);
-        e.addComponentByType(PropStorage, props);
-    }
-}
