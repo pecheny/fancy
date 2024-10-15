@@ -12,9 +12,9 @@ class WonderKit {
             layout: "portion",
             children: [{size: {value: .4}}, {size: {value: 1.}},]
         });
-        preset.mapping.push(AnimationSlotSelectors.pathSelector.bind([0]));
-        preset.mapping.push(AnimationSlotSelectors.pathSelector.bind([1]));
-        preset.mapping.push(AnimationSlotSelectors.pathSelector.bind([1]));
+        preset.mapping.push(AnimationSlotSelectors.pathMapper.bind([0]));
+        preset.mapping.push(AnimationSlotSelectors.pathMapper.bind([1]));
+        preset.mapping.push(AnimationSlotSelectors.pathMapper.bind([1]));
         props.set(AnimationTreeComponent.getId(WonderButton), preset);
         e.addComponentByType(PropStorage, props);
     }

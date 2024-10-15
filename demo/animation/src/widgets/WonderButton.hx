@@ -2,8 +2,6 @@ package widgets;
 
 import al.animation.Animation;
 import al.animation.AnimationTreeComponent;
-import ec.Entity;
-import fu.PropStorage;
 import fu.graphics.BarWidget;
 import fu.graphics.ColouredQuad.InteractiveColors;
 import fu.ui.AnimatedLabel;
