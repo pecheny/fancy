@@ -1,31 +1,29 @@
 package;
 
-import al.animation.Animator;
-import a2d.Widget;
-import fu.Signal;
-import a2d.Placeholder2D;
-import fu.GuiDrawcalls;
-import a2d.PlaceholderBuilder2D;
 import FuiBuilder;
-import a2d.Stage;
 import a2d.ContainerFactory;
+import a2d.Placeholder2D;
+import a2d.PlaceholderBuilder2D;
+import a2d.Stage;
 import a2d.Widget2DContainer;
-import al.animation.Animation.AnimContainer;
-import al.ec.WidgetSwitcher;
+import a2d.Widget;
+import al.animation.AnimatedSwitcher;
+import al.animation.Animator;
 import al.layouts.PortionLayout;
 import al.layouts.WholefillLayout;
 import al.layouts.data.LayoutData.FixedSize;
 import al.layouts.data.LayoutData.FractionSize;
 import ec.Entity;
+import fu.GuiDrawcalls;
+import fu.Signal;
 import htext.style.TextStyleContext;
 import openfl.display.Sprite;
-import al.animation.AnimatedSwitcher;
 import widgets.WonderButton;
 import widgets.WonderQuad;
 
+using a2d.transform.LiquidTransformer;
+using a2d.transform.LiquidTransformer;
 using al.Builder;
-using a2d.transform.LiquidTransformer;
-using a2d.transform.LiquidTransformer;
 
 class ClickAndButt extends Sprite {
     var s1:Placeholder2D;
@@ -36,8 +34,6 @@ class ClickAndButt extends Sprite {
         var fuiBuilder = new FuiBuilder();
         var root:Entity = fuiBuilder.createDefaultRoot(Xml.parse(GuiDrawcalls.DRAWCALLS_LAYOUT).firstChild());
 
-        // var container:Sprite = root.getComponent(Sprite);
-        // addChild(container);
 
         WonderKit.configure(root);
         var conts = new ContainerFactory();
@@ -99,12 +95,7 @@ class ScreenOne extends Screen {
         addButton("Carrot");
         addButton("Zucchini");
         addButton("Potato");
-        // addButton("Broccoli");
-
-        // var b1 = new WonderButton(b.h(sfr, 0.6).v(sfr, 0.3).b().withLiquidTransform(stage.getAspectRatio()), () -> {}, "Boo-boom",
-        //     ph.entity.getComponentUpward(TextStyleContext));
-        // Builder.addWidget(pnl, b1.ph);
-        // animator.addAnim(b1.setTime);
+        addButton("Broccoli");
 
         var content = new WonderQuad(Builder.widget().withLiquidTransform(stage.getAspectRatio()), 0x505050);
         animator.addAnim(content.setTime);
@@ -114,7 +105,6 @@ class ScreenOne extends Screen {
 
     function addButton(text) {
         var b1 = buttonFactory.button(text, () -> onClick.dispatch());
-        // var b1 = buttonFactory.button(text, null);
         Builder.addWidget(pnl, b1.ph);
         animator.addAnim(b1.setTime);
     }
