@@ -31,7 +31,6 @@ class WonderButton extends ButtonBase implements Channels {
         var lbl = new AnimatedLabel(w, style);
         lbl.withText(text);
 
-        WonderKit.configure(entity);
         tree = new AnimationTreeComponent(entity, this);
         channels.push(BarAnimationUtils.directUnfold(elements[1]));
         channels.push(BarAnimationUtils.directUnfold(elements[0]));

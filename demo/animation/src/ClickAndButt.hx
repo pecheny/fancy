@@ -39,6 +39,7 @@ class ClickAndButt extends Sprite {
         // var container:Sprite = root.getComponent(Sprite);
         // addChild(container);
 
+        WonderKit.configure(root);
         var conts = new ContainerFactory();
         conts.regStyle("v", new WholefillLayout(new FractionSize(.2)), new PortionLayout(Forward, new FixedSize(0.1)));
         conts.regStyle("h", new PortionLayout(Forward, new FixedSize(0.)), new WholefillLayout(new FractionSize(0.)));
