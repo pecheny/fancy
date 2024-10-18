@@ -34,7 +34,6 @@ class ClickAndButt extends Sprite {
         var fuiBuilder = new FuiBuilder();
         var root:Entity = fuiBuilder.createDefaultRoot(Xml.parse(GuiDrawcalls.DRAWCALLS_LAYOUT).firstChild());
 
-
         WonderKit.configure(root);
         var conts = new ContainerFactory();
         conts.regStyle("v", new WholefillLayout(new FractionSize(.2)), new PortionLayout(Forward, new FixedSize(0.1)));
@@ -98,7 +97,7 @@ class ScreenOne extends Screen {
         addButton("Broccoli");
 
         var content = new WonderQuad(Builder.widget().withLiquidTransform(stage.getAspectRatio()), 0x505050);
-        animator.addAnim(content.setTime);
+        // animator.addAnim(content.setTime);
 
         containerFactory.create(ph, "h").withChildren([pnl.ph, content.ph]);
     }
@@ -136,6 +135,7 @@ class Screen extends Widget {
     var b:PlaceholderBuilder2D;
     var stage:Stage;
     var animator:Animator;
+    
     @:once var fuiBuilder:FuiBuilder;
 
     public var onClick = new Signal<Void->Void>();

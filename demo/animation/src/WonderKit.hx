@@ -1,6 +1,6 @@
 package;
 
-import al.animation.AnimationTreeComponent;
+import al.animation.AnimationTree;
 import ec.Entity;
 import fu.PropStorage;
 import widgets.WonderButton;
@@ -10,12 +10,13 @@ class WonderKit {
         var props = new DummyProps<AnimationPreset>();
         var preset = new AnimationPreset({
             layout: "portion",
-            children: [{size: {value: .4}}, {size: {value: 1.}},]
+            name:"preset-root",
+            children: [{size: {value: .4}, name:"dot4"}, {size: {value: 1.}, name:"1dot"},]
         });
         preset.mapping.push(AnimationSlotSelectors.pathMapper.bind([0]));
         preset.mapping.push(AnimationSlotSelectors.pathMapper.bind([1]));
         preset.mapping.push(AnimationSlotSelectors.pathMapper.bind([1]));
-        props.set(AnimationTreeComponent.getId(WonderButton), preset);
+        props.set(AnimationPreset.getId(WonderButton), preset);
         e.addComponentByType(PropStorage, props);
     }
 }

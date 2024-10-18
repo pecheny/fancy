@@ -1,7 +1,7 @@
 package widgets;
 
 import al.animation.Animation;
-import al.animation.AnimationTreeComponent;
+import al.animation.AnimationTree;
 import fu.graphics.BarWidget;
 import fu.graphics.ColouredQuad.InteractiveColors;
 import fu.ui.AnimatedLabel;
@@ -13,11 +13,11 @@ import graphics.shapes.Bar;
 class WonderButton extends ButtonBase implements Channels {
     public var channels(default, null):Array<Float->Void> = [];
 
-    var tree:AnimationTreeComponent;
+    var tree:AnimationTreeProp;
 
     public function new(w, h, text, style) {
         super(w, h);
-
+        tree = AnimationTreeProp.getOrCreate(entity);
         var elements = [
             new BarContainer(Portion(new BarAxisSlot({start: 0., end: 1.}, null)), Portion(new BarAxisSlot({start: 0., end: 1.}, null))),
             new BarContainer(FixedThikness(new BarAxisSlot({pos: 0., thikness: 1.}, null)), Portion(new BarAxisSlot({start: 0., end: 1.}, null))),
@@ -31,13 +31,16 @@ class WonderButton extends ButtonBase implements Channels {
         var lbl = new AnimatedLabel(w, style);
         lbl.withText(text);
 
-        tree = new AnimationTreeComponent(entity, this);
+        new TreeMapperComponent(entity, this);
+        new TreeBuilderComponent(entity, this);
+
         channels.push(BarAnimationUtils.directUnfold(elements[1]));
         channels.push(BarAnimationUtils.directUnfold(elements[0]));
         channels.push(lbl.setTime);
     }
+    
 
     public function setTime(t):Void {
-        tree.setTime(t);
+        tree.value.setTime(t);
     }
 }
