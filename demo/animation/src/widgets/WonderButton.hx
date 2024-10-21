@@ -13,7 +13,7 @@ import graphics.shapes.Bar;
 class WonderButton extends ButtonBase implements Channels {
     public var channels(default, null):Array<Float->Void> = [];
 
-    var tree:AnimationTreeProp;
+    public var tree (default, null):AnimationTreeProp;
 
     public function new(w, h, text, style) {
         super(w, h);

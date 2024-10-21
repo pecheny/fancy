@@ -8,13 +8,14 @@ import a2d.Stage;
 import a2d.Widget2DContainer;
 import a2d.Widget;
 import al.animation.AnimatedSwitcher;
-import al.animation.Animator;
+import al.animation.AnimationTree;
 import al.layouts.PortionLayout;
 import al.layouts.WholefillLayout;
 import al.layouts.data.LayoutData.FixedSize;
 import al.layouts.data.LayoutData.FractionSize;
 import ec.Entity;
 import fu.GuiDrawcalls;
+import fu.PropStorage;
 import fu.Signal;
 import htext.style.TextStyleContext;
 import openfl.display.Sprite;
@@ -35,6 +36,8 @@ class ClickAndButt extends Sprite {
         var root:Entity = fuiBuilder.createDefaultRoot(Xml.parse(GuiDrawcalls.DRAWCALLS_LAYOUT).firstChild());
 
         WonderKit.configure(root);
+        ClickAndButtPreset.configure(root);
+
         var conts = new ContainerFactory();
         conts.regStyle("v", new WholefillLayout(new FractionSize(.2)), new PortionLayout(Forward, new FixedSize(0.1)));
         conts.regStyle("h", new PortionLayout(Forward, new FixedSize(0.)), new WholefillLayout(new FractionSize(0.)));
@@ -59,6 +62,30 @@ class ClickAndButt extends Sprite {
         };
 
         screens.switchTo(s1);
+    }
+}
+
+class ClickAndButtPreset {
+    public static function configure(e:Entity) {
+        var props = e.getComponentUpward(PropStorage);
+        var preset = new AnimationPreset({
+            layout: "portion",
+            name: "screen-one",
+            children: [
+                {
+                    size: {value: 14.4},
+                    name: "buttons",
+                    layout: "offset",
+                    children: []
+                },
+                {size: {value: .1}, name: "content"},
+                {size: {value: .1}, name: "flick"},
+            ]
+        });
+
+        preset.addChildBinder(WonderButton, "", AnimationSlotSelectors.nameSelector.bind("buttons"));
+        props.set(AnimationPreset.getId(ScreenOne), preset);
+        props.set(AnimationPreset.getId(ScreenTwo), preset);
     }
 }
 
@@ -97,7 +124,6 @@ class ScreenOne extends Screen {
         addButton("Broccoli");
 
         var content = new WonderQuad(Builder.widget().withLiquidTransform(stage.getAspectRatio()), 0x505050);
-        // animator.addAnim(content.setTime);
 
         containerFactory.create(ph, "h").withChildren([pnl.ph, content.ph]);
     }
@@ -105,7 +131,7 @@ class ScreenOne extends Screen {
     function addButton(text) {
         var b1 = buttonFactory.button(text, () -> onClick.dispatch());
         Builder.addWidget(pnl, b1.ph);
-        animator.addAnim(b1.setTime);
+        binder.addChild(b1);
     }
 }
 
@@ -127,21 +153,31 @@ class ScreenTwo extends Screen {
     function addButton(text) {
         var b1 = buttonFactory.button(text, () -> onClick.dispatch());
         Builder.addWidget(pnl, b1.ph);
-        animator.addAnim(b1.setTime);
+        binder.addChild(b1);
     }
 }
 
-class Screen extends Widget {
+class Screen extends Widget implements Channels {
     var b:PlaceholderBuilder2D;
     var stage:Stage;
-    var animator:Animator;
-    
+
+    public var tree(default, null):AnimationTreeProp;
+    public var channels(default, null):Array<Float->Void> = [];
+
+    var binder:TreeBinderComponent;
+
     @:once var fuiBuilder:FuiBuilder;
 
     public var onClick = new Signal<Void->Void>();
 
+    public function new(ph) {
+        super(ph);
+        this.tree = AnimationTreeProp.getOrCreate(ph.entity);
+    }
+
     override function init() {
-        animator = Animator.getOrCreate(entity, entity);
+        binder = new TreeBinderComponent(entity, this);
+        new TreeBuilderComponent(entity, this);
         this.b = fuiBuilder.placeholderBuilder;
         this.stage = fuiBuilder.ar;
     }
