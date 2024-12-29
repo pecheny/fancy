@@ -141,6 +141,7 @@ class FuiBuilder {
 		bindLayer(e, node);
 		var adapter = new OflGLNodeAdapter();
 		adapter.addNode(node);
+        e.addComponent(adapter);
 		Lib.current.stage.addChild(adapter);
 		return e;
 	}
