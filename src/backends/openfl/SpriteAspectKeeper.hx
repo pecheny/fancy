@@ -25,13 +25,12 @@ class SpriteAspectKeeper extends Widget {
         var dp = DrawcallDataProvider.get(w.entity);
         new CtxWatcher(FlashDisplayRoot, w.entity);
         dp.views.push(spr);
-        super(w);
         this.spr = spr;
         this.bounds = if (bounds == null) {
             var b = spr.getBounds(spr);
             new Boundbox(b.left, b.top, b.width, b.height);
         } else bounds;
-
+        super(w);
         for (a in Axis2D) {
             w.axisStates[a].addSibling(new KeeperAxisApplier(pos, size, this, a));
         }
