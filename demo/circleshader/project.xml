@@ -13,7 +13,7 @@
     <haxelib name="flgl"/>
     <haxelib name="alayout"/>
     <haxelib name="fancy"/>
-    <haxelib name="jiga"/>
+    <haxelib name="uikit-flat"/>
     <haxelib name="openfl"/>
 
 </project>

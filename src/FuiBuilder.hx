@@ -1,5 +1,7 @@
 package;
 
+import fu.FuCtx;
+import backends.openfl.DrawcallUtils;
 import al.animation.AnimatedSwitcher;
 import a2d.Widget.ResizableWidget2D;
 import fu.ui.scroll.ScrollboxItem;
@@ -31,7 +33,7 @@ import ecbind.InputBinder;
 import ecbind.RenderableBinder;
 import font.FontStorage;
 import font.bmf.BMFont.BMFontFactory;
-import fu.GuiDrawcalls;
+import fu.gl.GuiDrawcalls;
 import fu.graphics.ShapeWidget;
 import gl.AttribSet;
 import gl.GLNode;
@@ -58,7 +60,7 @@ import update.UpdateBinder;
 import update.Updater;
 
 
-class FuiBuilder {
+class FuiBuilder implements FuCtx {
 	public var fonts(default, null) = new FontStorage(new BMFontFactory());
 
 	public var pipeline:RenderingPipeline;
@@ -79,32 +81,18 @@ class FuiBuilder {
 		#end
 	}
 
-	public function createDefaultRoot(dl, font = "Assets/fonts/robo.fnt") {
+	public function createDefaultRoot() {
 		var rw = Builder.widget();
 		var rootEntity = rw.entity;
-		this.regDefaultDrawcalls();
+		// this.regDefaultDrawcalls();
 		var ar = this.ar;
-		this.addBmFont("", font); // todo
+		// this.addBmFont("", font); // todo
 		this.configureInput(rootEntity);
 		this.configureScreen(rootEntity);
 		this.configureAnimation(rootEntity);
 		rootEntity.addComponent(this);
 
-		this.createContainer(rootEntity, dl);
-
 		rootEntity.addComponent(new UpdateBinder(updater));
-
-		var fitStyle = this.textStyles.newStyle("fit")
-			.withSize(pfr, .5)
-			.withAlign(horizontal, Forward)
-			.withAlign(vertical, Backward)
-			.withPadding(horizontal, pfr, 0.33)
-			.withPadding(vertical, pfr, 0.33)
-			.build();
-		rootEntity.addComponent(fitStyle);
-
-		textStyles.resetToDefaults();
-
 		var v = new StageAspectResizer(rw, 2);
 		var switcher = new WidgetSwitcher(rw);
 		rootEntity.addComponent(switcher);
@@ -122,47 +110,12 @@ class FuiBuilder {
 		pipeline.addAspect(sc);
 	}
 
-	public dynamic function regDefaultDrawcalls():Void {
-		pipeline.addPass(GuiDrawcalls.BG_DRAWCALL, new FlatColorPass());
-		pipeline.addPass(GuiDrawcalls.TEXT_DRAWCALL, new MsdfPass());
-		var fontAsp = new FontAspectsFactory(fonts, pipeline.textureStorage);
-		pipeline.addAspectExtractor(GuiDrawcalls.TEXT_DRAWCALL, fontAsp.create, fontAsp.getAlias);
-		pipeline.addAspectExtractor(GuiDrawcalls.TEXT_DRAWCALL, ExtractionUtils.colorUniformExtractor);
 
-		pipeline.addPass(PictureDrawcalls.IMAGE_DRAWCALL, new ImagePass());
-        var picAsp = new TextureAspectFactory(pipeline.textureStorage);
-        pipeline.addAspectExtractor(PictureDrawcalls.IMAGE_DRAWCALL, picAsp.create);
-	}
 
-	public function createContainer(e:Entity, descr):Entity {
-		RenderableBinder.getOrCreate(e); // to prevent
-		var node = pipeline.createContainer(descr);
-		node.addAspect(new AlphaBlendingAspect());
-		bindLayer(e, node);
-		var adapter = new OflGLNodeAdapter();
-		adapter.addNode(node);
-        e.addComponent(adapter);
-		Lib.current.stage.addChild(adapter);
-		return e;
-	}
-
-	function bindLayer(e, glnode:GLNode) {
-		var binder = RenderableBinder.getOrCreate(e);
-		if (Std.isOfType(glnode, ContainerGLNode)) {
-			var c = cast(glnode, ContainerGLNode);
-			for (ch in c.children)
-				bindLayer(e, ch);
-		}
-		if (Std.isOfType(glnode, ShadedGLNode)) {
-			var gldo:ShadedGLNode<AttribSet> = cast glnode;
-			binder.bindLayer(e, gldo.set, glnode.name, gldo);
-		}
-	}
-
-	public function addBmFont(fontName, fntPath) {
-		var font = fonts.initFont(fontName, fntPath, null);
-		return this;
-	}
+	// public function addBmFont(fontName, fntPath) {
+	// 	var font = fonts.initFont(fontName, fntPath, null);
+	// 	return this;
+	// }
 
 	public function configureInput(root:Entity) {
 		var s = new InputSystemsContainer(new Point(), null);
@@ -234,7 +187,7 @@ class FuiBuilder {
 			trace(attrs.printVertex(buffer.getBuffer(), 1));
 		};
 		if (createGldo) {
-			createContainer(w.entity, Xml.parse(PictureDrawcalls.DRAWCALLS_LAYOUT(filename)).firstElement());
+			DrawcallUtils.createContainer(pipeline, w.entity, Xml.parse(PictureDrawcalls.DRAWCALLS_LAYOUT(filename)).firstElement());
 		}
 		return shw;
 	}
@@ -245,7 +198,7 @@ class FuiBuilder {
         placeholder.entity.name = "placeholder";
         var scroller = new ScrollboxItem(placeholder, scroll, ar.getAspectRatio());
         addScissors(scroller.ph);
-        createContainer(scroller.ph.entity, dl);
+        DrawcallUtils.createContainer(pipeline, scroller.ph.entity, dl);
         pipeline.renderAspectBuilder.reset();
         return placeholder;
     }

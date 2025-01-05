@@ -1,5 +1,6 @@
 package;
 
+import ec.Entity;
 import graphics.ShapesColorAssigner;
 import fu.Signal;
 import Axis2D;
@@ -9,8 +10,7 @@ import al.ec.WidgetSwitcher;
 import al.layouts.PortionLayout;
 import data.IndexCollection;
 import data.aliases.AttribAliases;
-import fancy.domkit.Dkit.BaseDkit;
-import fu.GuiDrawcalls;
+import dkit.Dkit.BaseDkit;
 import fu.graphics.ShapeWidget;
 import fu.graphics.Slider;
 import gl.AttribSet;
@@ -38,27 +38,14 @@ class SquaresDemo extends Sprite {
     public function new() {
         super();
         fui = new FuiBuilder();
-
-        var pipeline = fui.pipeline;
-        pipeline.addPass("circle", new CirclePass());
-        pipeline.addPass(GuiDrawcalls.BG_DRAWCALL, new FlatColorPass());
-        pipeline.addPass(GuiDrawcalls.TEXT_DRAWCALL, new CmsdfPass());
-        var fontAsp = new FontAspectsFactory(fui.fonts, pipeline.textureStorage);
-        pipeline.addAspectExtractor(GuiDrawcalls.TEXT_DRAWCALL, fontAsp.create, fontAsp.getAlias);
-
         BaseDkit.inject(fui);
-        fui.regDefaultDrawcalls = () -> {};
-        var e = fui.createDefaultRoot(Xml.parse('<container>
-        <drawcall type="color"/>
-        <drawcall type="text" font="" color="0xffffff"/>
-        <drawcall type="circle"/>
-    </container>')
-            .firstElement());
-        DkitStyle.createStyles(fui, e);
+        var root:Entity = fui.createDefaultRoot();
+        var uikit = new FlatUikitExtended(fui);
+        uikit.configure(root);
+        uikit.createContainer(root);
 
-        switcher = e.getComponent(WidgetSwitcher);
+        switcher = root.getComponent(WidgetSwitcher);
 
-        // var wdg = shapes(fui.placeholderBuilder.h(sfr, 1).v(sfr, 1).b());
         gui = new DemoGui(Builder.widget());
         shapes(gui.canvas.ph);
         switcher.switchTo(gui.ph);

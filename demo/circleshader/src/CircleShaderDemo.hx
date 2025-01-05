@@ -1,5 +1,6 @@
 package;
 
+import dkit.Dkit;
 import data.IndexCollection;
 import haxe.io.Bytes;
 import gl.passes.CirclePass;
@@ -26,17 +27,15 @@ class CircleShaderDemo extends Sprite {
     public function new() {
         super();
         fui = new FuiBuilder();
+        BaseDkit.inject(fui);
+        var root:Entity = fui.createDefaultRoot();
+        var uikit = new FlatUikitExtended(fui);
+        uikit.configure(root);
+        uikit.createContainer(root);
 
-        var pipeline = fui.pipeline;
-        pipeline.addPass("circle", new CirclePass());
-
-        fui.regDefaultDrawcalls = () -> {};
-        e = fui.createDefaultRoot(Xml.parse('<drawcall type="circle"/>').firstElement());
-        switcher = e.getComponent(WidgetSwitcher);
+        switcher = root.getComponent(WidgetSwitcher);
         var wdg = quad(fui.placeholderBuilder.h(sfr, 1).v(sfr, 1).b(), 0x6a00ff);
-        var c = Builder.h();
-        Builder.addWidget(c, wdg.ph);
-        switcher.switchTo(c.ph);
+        root.getComponent(WidgetSwitcher).switchTo(wdg.ph);
     }
 
     public function quad(ph:Placeholder2D, color) {
@@ -51,7 +50,6 @@ class CircleShaderDemo extends Sprite {
             attrs.fillFloat(buffer.getBuffer(), CircleSet.R1_IN, 0.3, 0, 4);
             attrs.fillFloat(buffer.getBuffer(), CircleSet.R2_IN, 0.9, 0, 4);
         };
-
         shw.manInit();
         return shw;
     }

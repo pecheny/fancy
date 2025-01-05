@@ -3,7 +3,7 @@ package fu.bootstrap;
 import al.prop.ScaleComponent;
 import shimp.ClicksInputSystem.ClickTargetViewState;
 import fu.ui.ButtonBase.ClickViewProcessor;
-import bootstrap.Component;
+import ec.Component;
 import macros.AVConstructor;
 
 class ButtonScale extends Component {
