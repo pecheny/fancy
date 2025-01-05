@@ -39,7 +39,7 @@ class FancyPg extends Sprite {
 		var rw = Builder.h();
 
 		var container = b.b("c1").createContainer(vertical, Forward);
-		fuiBuilder.makeClickInput(container.widget());
+		fuiBuilder.makeClickInput(container.ph);
 		var scrollPlaceholder = fuiBuilder.createScrollbox(container, b.b(), guiDcDescr);
 		rw.addWidget(scrollPlaceholder);
 		for (ch in createMixedContentArray())
@@ -50,7 +50,7 @@ class FancyPg extends Sprite {
 			fuiBuilder.texturedQuad(b.h(pfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), pictureFile).ph,
 		]);
 		rw.addWidget(cright);
-		root.getComponent(WidgetSwitcher).switchTo(rw.widget());
+		root.getComponent(WidgetSwitcher).switchTo(rw.ph);
 	}
 
 	function createTextStyles() {
