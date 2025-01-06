@@ -1,8 +1,5 @@
 package;
 
-import ec.Entity;
-import graphics.ShapesColorAssigner;
-import fu.Signal;
 import Axis2D;
 import a2d.Placeholder2D;
 import a2d.transform.WidgetToScreenRatio;
@@ -11,19 +8,17 @@ import al.layouts.PortionLayout;
 import data.IndexCollection;
 import data.aliases.AttribAliases;
 import dkit.Dkit.BaseDkit;
+import ec.Entity;
+import fu.Signal;
 import fu.graphics.ShapeWidget;
 import fu.graphics.Slider;
 import gl.AttribSet;
-import gl.ValueWriter.AttributeWriters;
 import gl.ValueWriter;
-import gl.passes.CirclePass;
-import gl.passes.CmsdfPass;
-import gl.passes.FlatColorPass;
 import gl.sets.CircleSet;
+import graphics.ShapesColorAssigner;
 import graphics.shapes.Shape;
 import haxe.ds.ReadOnlyArray;
 import haxe.io.Bytes;
-import htext.FontAspectsFactory;
 import macros.AVConstructor;
 import openfl.display.Sprite;
 
