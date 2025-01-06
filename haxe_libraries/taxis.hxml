@@ -1,0 +1,3 @@
+# @install: lix --silent download "gh://github.com/pecheny/taxis#7943cceb8e205aef4469e6ae088e099b45359116" into taxis/1.0.0/github/7943cceb8e205aef4469e6ae088e099b45359116
+-cp ${HAXE_LIBCACHE}/taxis/1.0.0/github/7943cceb8e205aef4469e6ae088e099b45359116/src
+-D taxis=1.0.0

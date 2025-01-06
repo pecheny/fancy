@@ -1,0 +1,3 @@
+# @install: lix --silent download "gh://github.com/pecheny/fsm#c975e809ebc526b8901d794f70529c8fc069ebc8" into fsm/1.0.0/github/c975e809ebc526b8901d794f70529c8fc069ebc8
+-cp ${HAXE_LIBCACHE}/fsm/1.0.0/github/c975e809ebc526b8901d794f70529c8fc069ebc8/src
+-D fsm=1.0.0
