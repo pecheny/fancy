@@ -1,19 +1,10 @@
 {
-	"version": "0.2.0",
-	"configurations": [
-	
+    "version": "0.2.0",
+    "configurations": [
         {
-			"name": "Debug",
-			"type": "haxe-eval",
-			"request": "launch",
-			"args": ["test.hxml", "-lib", "test-adapter"]
-		},
-        {
-			"name": "run tests HashLink/JIT",
-			"type": "hl",
-			"request": "launch",
-			"preLaunchTask": "run tests HL/JIT (debug)",
-			"cwd": "${workspaceFolder}"
-		},
-	]
+            "name": "Lime",
+            "type": "lime",
+            "request": "launch"
+        }
+    ]
 }
