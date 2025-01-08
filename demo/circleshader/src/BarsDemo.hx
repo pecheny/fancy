@@ -61,31 +61,37 @@ class Strip implements Shape {
 
     var wwr:WeightedAttWriter;
     var ph:Placeholder2D;
-    // var att:AttribSet;
+    var att:AttribSet;
 
     public function new(att, ph) {
-        // this.att = att;
+        this.att = att;
         var writers = att.getWriter(AttribAliases.NAME_POSITION);
-        wwr = new WeightedAttWriter(writers);
+        wwr = new WeightedAttWriter(writers, AVConstructor.create([0,0.5,0.5,1], [0.,1]));
         this.ph = ph;
     }
 
-    static final cw:ReadOnlyArray<Float> = [0, 1];
-    final aw:Array<Float> = [0, 0.5, 0.5, 1];
+    // final cw:ReadOnlyArray<Float> = [0, 1];
+    // final aw:Array<Float> = [0, 0.5, 0.5, 1];
 
     public function writePostions(target:haxe.io.Bytes, vertOffset = 0, tr) {
         var w = ph.axisStates[horizontal].getSize();
         var h = ph.axisStates[vertical].getSize();
         var dir = w > h ? horizontal : vertical;
+        wwr.direction = dir;
         var cdir = dir.other();
         var so = ph.axisStates[cdir].getSize() / ph.axisStates[dir].getSize();
+        var aw = wwr.weights[horizontal];
+        // var cw = wwr.weights[cdir];
         aw[1] = so * 0.5;
         aw[2] = 1 - so * 0.5;
+        wwr.writeAtts(target, vertOffset,tr);
 
-        wwr.writeAtts(target, dir, vertOffset, 1, aw, tr);
-        wwr.writeAtts(target, dir, vertOffset + aw.length, 1,  aw,tr);
-        for (i in 0...aw.length)
-            wwr.writeAtts(target, cdir, vertOffset + i, aw.length, cw, tr);
+        // wwr.writeAtts(target, dir, vertOffset, 1, tr);
+        // wwr.writeAtts(target, dir, vertOffset + aw.length, 1, tr);
+        // for (i in 0...aw.length)
+        //     wwr.writeAtts(target, cdir, vertOffset + i, aw.length, tr);
+        for (i in 0...8)
+            trace(att.printVertex(target, i));
     }
 
     public function getVertsCount():Int {
@@ -99,13 +105,25 @@ class Strip implements Shape {
 
 class WeightedAttWriter {
     var writers:AttributeWriters;
+    public var direction:Axis2D = horizontal;
+    public var weights:AVector2D<Array<Float>>;
 
 
-    public function new(wrs) {
+    public function new(wrs, wghs) {
         this.writers = wrs;
+        this.weights = wghs;
     }
 
-    public inline function writeAtts(target, dir:Axis2D, start, offset, weights:ReadOnlyArray<Float>, tr) {
+    public inline function writeAtts(target, vertOffset, tr) {
+        var aw = weights[horizontal];
+        var cw = weights[vertical];
+        for (i in 0...cw.length)
+            writeLine(target, direction, vertOffset + aw.length * i, 1, aw, tr);
+        for (i in 0...aw.length){
+            writeLine(target, direction.other(), vertOffset + i, aw.length, cw, tr);
+        }
+    }
+    public inline function writeLine(target, dir:Axis2D, start, offset, weights, tr) {
         for (i in 0...weights.length)
             writers[dir].setValue(target, start + i * offset, tr(dir, weights[i]));
     }
