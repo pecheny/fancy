@@ -1,3 +1,5 @@
+import macros.AVConstructor;
+import haxe.ds.ReadOnlyArray;
 import gl.AttribSet;
 import Axis2D;
 import a2d.Placeholder2D;
@@ -37,14 +39,13 @@ class BarsDemo extends Sprite {
         var gui = new DemoGui(Builder.widget());
         shapes(gui.canvas.ph);
         switcher.switchTo(gui.ph);
-
     }
 
     function shapes(ph) {
         var shw = new ShapeWidget(ColorSet.instance, ph);
         var aweights = [];
         // shw.ph.axisStates[horizontal].getPos
-        
+
         var along = new PortionTransformApplier(aweights);
         // var bar = new Bar(ColorSet.instance, along, along);
         //
@@ -56,39 +57,35 @@ class BarsDemo extends Sprite {
 }
 
 class Strip implements Shape {
-    static var inds = IndexCollection.qGrid(4,2);
-    var writers:AttributeWriters;
+    static var inds = IndexCollection.qGrid(4, 2);
+
+    var wwr:WeightedAttWriter;
     var ph:Placeholder2D;
-    var att:AttribSet;
+    // var att:AttribSet;
 
     public function new(att, ph) {
-        this.att = att;
-        writers = att.getWriter(AttribAliases.NAME_POSITION) ;
+        // this.att = att;
+        var writers = att.getWriter(AttribAliases.NAME_POSITION);
+        wwr = new WeightedAttWriter(writers);
         this.ph = ph;
     }
+
+    static final cw:ReadOnlyArray<Float> = [0, 1];
+    final aw:Array<Float> = [0, 0.5, 0.5, 1];
 
     public function writePostions(target:haxe.io.Bytes, vertOffset = 0, tr) {
         var w = ph.axisStates[horizontal].getSize();
         var h = ph.axisStates[vertical].getSize();
         var dir = w > h ? horizontal : vertical;
         var cdir = dir.other();
-        var p = 0.;
-        var s = 1.;
-        var so = ph.axisStates[cdir].getSize() / ph.axisStates[dir].getSize() ;
+        var so = ph.axisStates[cdir].getSize() / ph.axisStates[dir].getSize();
+        aw[1] = so * 0.5;
+        aw[2] = 1 - so * 0.5;
 
-        function writeAlong(start) {
-            writers[dir].setValue(target, start++, tr(dir, p));
-            writers[dir].setValue(target, start++, tr(dir, p + so*0.5));
-            writers[dir].setValue(target, start++, tr(dir, p + s - so*0.5));
-            writers[dir].setValue(target, start, tr(dir, p + s) );
-        }
-        writeAlong(vertOffset);
-        writeAlong(vertOffset + 4);
-        
-        for (i in vertOffset...vertOffset+4) {
-            writers[cdir].setValue(target, i, tr(cdir, 0) );
-            writers[cdir].setValue(target, i+4, tr(cdir, 1) );
-        }
+        wwr.writeAtts(target, dir, vertOffset, 1, aw, tr);
+        wwr.writeAtts(target, dir, vertOffset + aw.length, 1,  aw,tr);
+        for (i in 0...aw.length)
+            wwr.writeAtts(target, cdir, vertOffset + i, aw.length, cw, tr);
     }
 
     public function getVertsCount():Int {
@@ -99,8 +96,27 @@ class Strip implements Shape {
         return inds;
     }
 }
-class DemoGui extends BaseDkit {
 
+class WeightedAttWriter {
+    var writers:AttributeWriters;
+
+
+    public function new(wrs) {
+        this.writers = wrs;
+    }
+
+    public inline function writeAtts(target, dir:Axis2D, start, offset, weights:ReadOnlyArray<Float>, tr) {
+        for (i in 0...weights.length)
+            writers[dir].setValue(target, start + i * offset, tr(dir, weights[i]));
+    }
+}
+
+// class SolidGrid implements Shape {
+//     public var weights:AVector2D<Array<Float>>;
+//     var writers:AttributeWriters;
+//     var weights;
+// }
+class DemoGui extends BaseDkit {
     static var SRC = <demo-gui hl={PortionLayout.instance}>
         <base(b().h(pfr, 0.25).b()) vl={PortionLayout.instance}>
             // <label(b().h(pfr, 1).v(sfr, 0.1).l().b()) text={ "r1, inner radius" }  />
@@ -111,17 +127,12 @@ class DemoGui extends BaseDkit {
     </demo-gui>
 }
 
-
-
 // class ArrayAxisApplier implements AxisApplier {
-
 //     var target:Array<Float>;
 //     var ph:Placeholder2D;
 //     public function new(ph, target) {
 //         this.ph = ph;
 //         this.target = target;
-    
 //     }
-
 //     public function apply(pos:Float, size:Float) {}
 // }
