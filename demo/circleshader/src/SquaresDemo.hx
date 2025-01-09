@@ -76,25 +76,6 @@ class SquaresDemo extends Sprite {
     }
 }
 
-class DemoGui extends BaseDkit {
-    public var r1Changed:Signal<Float->Void> = new Signal();
-    public var r2Changed:Signal<Float->Void> = new Signal();
-
-    static var SRC = <demo-gui hl={PortionLayout.instance}>
-        <base(b().h(pfr, 0.25).b()) vl={PortionLayout.instance}>
-            <label(b().h(pfr, 1).v(sfr, 0.1).l().b()) text={ "r1, inner radius" }  />
-            <base(b().v(sfr,0.05).l().b())>
-                ${new Slider(__this__.ph, horizontal, v -> r1Changed.dispatch(v)).withProgress(0.3)}
-            </base>
-            <label(b().h(pfr, 1).v(sfr, 0.1).l().b())  text={ "r2, outer radius" }  />
-            <base(b().v(sfr,0.05).l().b())>
-                ${new Slider(__this__.ph, horizontal, v -> r2Changed.dispatch(v)).withProgress(0.9)}
-            </base>
-
-        </base>
-        <base(b().h(pfr, 1).b()) public id="canvas"></base>
-    </demo-gui>
-}
 
 @:access(SquareShape)
 class SquareAntialiasing<T:AttribSet> {
