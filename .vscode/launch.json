@@ -4,6 +4,7 @@
         {
             "name": "Lime",
             "type": "lime",
+            "internalConsoleOptions": "openOnSessionStart",
             "request": "launch"
         }
     ]

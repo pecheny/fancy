@@ -1,23 +1,20 @@
-import haxe.io.Bytes;
-import gl.sets.CircleSet;
-import macros.AVConstructor;
-import haxe.ds.ReadOnlyArray;
-import gl.AttribSet;
 import Axis2D;
+import SquareShape;
 import a2d.Placeholder2D;
 import al.Builder;
 import al.ec.WidgetSwitcher;
-import al.layouts.PortionLayout;
 import data.IndexCollection;
 import data.aliases.AttribAliases;
 import dkit.Dkit.BaseDkit;
 import ec.Entity;
 import fu.graphics.ShapeWidget;
-import gl.ValueWriter.AttributeWriters;
-import gl.sets.ColorSet;
+import gl.AttribSet;
+import gl.ValueWriter;
+import gl.sets.CircleSet;
 import graphics.ShapesColorAssigner;
-import graphics.shapes.Bar;
 import graphics.shapes.Shape;
+import haxe.io.Bytes;
+import macros.AVConstructor;
 import openfl.display.Sprite;
 
 class BarsDemo extends Sprite {
@@ -29,15 +26,11 @@ class BarsDemo extends Sprite {
 
     public function new() {
         super();
-        trace("foo");
-        var kbinder = new utils.KeyBinder();
-        kbinder.addCommand(openfl.ui.Keyboard.A, () -> {
-            ec.DebugInit.initCheck.dispatch();
-        });
         fui = new FuiBuilder();
         BaseDkit.inject(fui);
         var root:Entity = fui.createDefaultRoot();
         var uikit = new FlatUikitExtended(fui);
+
         uikit.configure(root);
         uikit.createContainer(root);
 
@@ -48,40 +41,28 @@ class BarsDemo extends Sprite {
     }
 
     function shapes(ph) {
+        fui.lqtr(ph);
         var shw = new ShapeWidget(attrs, ph);
-        var aweights = [];
-        // shw.ph.axisStates[horizontal].getPos
-
-        // var along = new PortionTransformApplier(aweights);
-        // var bar = new Bar(ColorSet.instance, along, along);
-        //
         var s = new Strip(attrs, ph);
         shw.addChild(s);
+        new ShapesColorAssigner(attrs, 0x320078, shw.getBuffer());
         s.writeAttributes = new PhAntialiasing(attrs, ph, fui.ar.getWindowSize()).writePostions;
-        new ShapesColorAssigner(attrs, 0xff0000, shw.getBuffer());
-
         var uvs = new graphics.DynamicAttributeAssigner(attrs, shw.getBuffer());
         uvs.fillBuffer = (attrs, buffer) -> {
             var vertOffset = 0;
             var writers = attrs.getWriter(AttribAliases.NAME_UV_0);
             var wwr = new WeightedAttWriter(writers, AVConstructor.create([0, 0.5, 0.5, 1], [0., 1]));
             wwr.writeAtts(buffer.getBuffer(), vertOffset, (_, v) -> v);
-            var rad = new RadiusAtt(attrs);
-            rad.writePostions(buffer.getBuffer());
+            var rad = new RadiusAtt(attrs, buffer.getVertCount());
+            rad.writePostions(buffer.getBuffer(), 0, null);
             gui.r1Changed.listen(v -> {
                 rad.r1 = v;
-                rad.writePostions(buffer.getBuffer());
+                rad.writePostions(buffer.getBuffer(), 0, null);
             });
             gui.r2Changed.listen(v -> {
                 rad.r2 = v;
-                rad.writePostions(buffer.getBuffer());
+                rad.writePostions(buffer.getBuffer(), 0, null);
             });
-
-
-            // attrs.fillFloat(buffer.getBuffer(), CircleSet.AASIZE_IN, 1, vertOffset, 4);
-
-            for (i in 0...8)
-                trace(attrs.printVertex(buffer.getBuffer(), i));
         };
 
         return shw;
@@ -108,22 +89,6 @@ class PhAntialiasing<T:AttribSet> {
     }
 }
 
-class RadiusAtt<T:AttribSet> {
-    var att:T;
-
-    public var r1 = 0.3;
-    public var r2 = 0.9;
-
-    public function new(att) {
-        this.att = att;
-    }
-
-    public function writePostions(target:Bytes, vertOffset = 0) {
-        att.fillFloat(target, CircleSet.R1_IN, r1, vertOffset, 4);
-        att.fillFloat(target, CircleSet.R2_IN, r2, vertOffset, 4);
-    }
-}
-
 class Strip implements Shape {
     static var inds = IndexCollection.qGrid(4, 2);
 
@@ -138,9 +103,6 @@ class Strip implements Shape {
         this.ph = ph;
     }
 
-    // final cw:ReadOnlyArray<Float> = [0, 1];
-    // final aw:Array<Float> = [0, 0.5, 0.5, 1];
-
     public function writePostions(target:haxe.io.Bytes, vertOffset = 0, tr) {
         var w = ph.axisStates[horizontal].getSize();
         var h = ph.axisStates[vertical].getSize();
@@ -149,17 +111,10 @@ class Strip implements Shape {
         var cdir = dir.other();
         var so = ph.axisStates[cdir].getSize() / ph.axisStates[dir].getSize();
         var aw = wwr.weights[horizontal];
-        // var cw = wwr.weights[cdir];
         aw[1] = so * 0.5;
         aw[2] = 1 - so * 0.5;
         wwr.writeAtts(target, vertOffset, tr);
         writeAttributes(target, vertOffset, tr);
-        // wwr.writeAtts(target, dir, vertOffset, 1, tr);
-        // wwr.writeAtts(target, dir, vertOffset + aw.length, 1, tr);
-        // for (i in 0...aw.length)
-        //     wwr.writeAtts(target, cdir, vertOffset + i, aw.length, tr);
-        // for (i in 0...8)
-        //     trace(att.printVertex(target, i));
     }
 
     public dynamic function writeAttributes(target:Bytes, vertOffset = 0, transformer) {}
@@ -179,7 +134,7 @@ class WeightedAttWriter {
     public var direction:Axis2D = horizontal;
     public var weights:AVector2D<Array<Float>>;
 
-    public function new(wrs, wghs) {
+    public function new(wrs, wghs:AVector2D<Array<Float>>) {
         this.writers = wrs;
         this.weights = wghs;
     }

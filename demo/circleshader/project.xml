@@ -3,7 +3,8 @@
 
     <meta title="Sample" package="shoo.fancy.ClickANdButt" version="1.0.0" company="shoo"/>
     <!-- <app main="CircleShaderDemo" /> -->
-    <app main="SquaresDemo" />
+    <!-- <app main="SquaresDemo" /> -->
+    <app main="BarsDemo" />
 
     <window antialiasing="4"/>
     <window background="#303030" fps="60" />
