@@ -2,4 +2,5 @@
 <project>
     <include path="include.xml" />
     <include path="demo/circleshader/project.xml" />
+    <!-- <include path="demo/components/project.xml" /> -->
 </project>
