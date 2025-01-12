@@ -1,3 +1,4 @@
+import graphics.shapes.WeightedAttWriter;
 import Axis2D;
 import SquareShape;
 import a2d.Placeholder2D;
@@ -42,13 +43,14 @@ class BarsDemo extends Sprite {
 
         switcher = root.getComponent(WidgetSwitcher);
         gui = new DemoGui(Builder.widget());
+        ngrid(gui.canvas.ph, true);
         ngrid(gui.canvas.ph);
         shapes(gui.ph);
         createBarWidget(gui.canvas.ph);
         switcher.switchTo(gui.ph);
     }
 
-    function ngrid(ph) {
+    function ngrid(ph, fill = false) {
         fui.lqtr(ph);
         // var attrs = ColorSet.instance;
         var steps = WidgetToScreenRatio.getOrCreate(ph.entity, ph, 0.05);
@@ -68,6 +70,8 @@ class BarsDemo extends Sprite {
             rad.r2 = 1;
             rad.r1 = 1 - (1 / cornerSize);
             rad.r1 *= rad.r1;
+            if (fill)
+                rad.r1 = 0;
             rad.writePostions(buffer.getBuffer(), 0, null);
         };
 
@@ -79,7 +83,11 @@ class BarsDemo extends Sprite {
         var steps = WidgetToScreenRatio.getOrCreate(ph.entity, ph, 0.05);
 
         var shw = new ShapeWidget(attrs, ph);
-        var s = new Strip(attrs, ph);
+        var writers = attrs.getWriter(AttribAliases.NAME_POSITION);
+        var wwr = new WeightedAttWriter(writers, AVConstructor.create([0, 0.5, 0.5, 1], [0., 1]));
+        var s = new Strip(attrs, ph, wwr);
+        var sa = new StripAxisApplier(ph, wwr);
+        ph.axisStates[vertical].addSibling(sa);
         shw.addChild(s);
         new ShapesColorAssigner(attrs, 0x776A00FF, shw.getBuffer());
         s.writeAttributes = new PhAntialiasing(attrs, ph, fui.ar.getWindowSize()).writePostions;
@@ -216,21 +224,15 @@ class NineGrid implements Shape extends Widget implements AxisApplier {
     }
 }
 
-class Strip implements Shape {
-    static var inds = IndexCollection.qGrid(4, 2);
-
+class StripAxisApplier implements AxisApplier {
     var wwr:WeightedAttWriter;
     var ph:Placeholder2D;
-    var att:AttribSet;
-
-    public function new(att, ph) {
-        this.att = att;
-        var writers = att.getWriter(AttribAliases.NAME_POSITION);
-        wwr = new WeightedAttWriter(writers, AVConstructor.create([0, 0.5, 0.5, 1], [0., 1]));
+    public function new(ph, wwr) {
         this.ph = ph;
+        this.wwr = wwr;
     }
 
-    public function writePostions(target:haxe.io.Bytes, vertOffset = 0, tr) {
+    public function apply(pos:Float, size:Float) {
         var w = ph.axisStates[horizontal].getSize();
         var h = ph.axisStates[vertical].getSize();
         var dir = w > h ? horizontal : vertical;
@@ -240,6 +242,23 @@ class Strip implements Shape {
         var aw = wwr.weights[horizontal];
         aw[1] = so * 0.5;
         aw[2] = 1 - so * 0.5;
+    }
+}
+
+class Strip implements Shape {
+    static var inds = IndexCollection.qGrid(4, 2);
+
+    var wwr:WeightedAttWriter;
+    var ph:Placeholder2D;
+    var att:AttribSet;
+
+    public function new(att, ph, wwr) {
+        this.att = att;
+        this.wwr = wwr;
+        this.ph = ph;
+    }
+
+    public function writePostions(target:haxe.io.Bytes, vertOffset = 0, tr) {
         wwr.writeAtts(target, vertOffset, tr);
         writeAttributes(target, vertOffset, tr);
     }
@@ -252,33 +271,6 @@ class Strip implements Shape {
 
     public function getIndices() {
         return inds;
-    }
-}
-
-class WeightedAttWriter {
-    var writers:AttributeWriters;
-
-    public var direction:Axis2D = horizontal;
-    public var weights:AVector2D<Array<Float>>;
-
-    public function new(wrs, wghs:AVector2D<Array<Float>>) {
-        this.writers = wrs;
-        this.weights = wghs;
-    }
-
-    public inline function writeAtts(target, vertOffset, tr) {
-        var aw = weights[horizontal];
-        var cw = weights[vertical];
-        for (i in 0...cw.length)
-            writeLine(target, direction, vertOffset + aw.length * i, 1, aw, tr);
-        for (i in 0...aw.length) {
-            writeLine(target, direction.other(), vertOffset + i, aw.length, cw, tr);
-        }
-    }
-
-    public inline function writeLine(target, dir:Axis2D, start, offset, weights, tr) {
-        for (i in 0...weights.length)
-            writers[dir].setValue(target, start + i * offset, tr(dir, weights[i]));
     }
 }
 
