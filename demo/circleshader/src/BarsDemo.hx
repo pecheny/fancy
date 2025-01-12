@@ -62,7 +62,7 @@ class BarsDemo extends Sprite {
         uvs.fillBuffer = (attrs, buffer) -> {
             var vertOffset = 0;
             var writers = attrs.getWriter(AttribAliases.NAME_UV_0);
-            var wwr = new WeightedAttWriter(writers, AVConstructor.create([0, 0.5, 0.5, 1], [0, 0.5, 0.5, 1]));
+            var wwr = new WeightedAttWriter(writers, AVConstructor.create([0, 0.4999, 0.50001, 1], [0, 0.4999, 0.50001, 1]));
             wwr.writeAtts(buffer.getBuffer(), vertOffset, (_, v) -> v);
             var rad = new RadiusAtt(attrs, buffer.getVertCount());
             rad.r2 = 1;
