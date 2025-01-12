@@ -1,3 +1,8 @@
+import al.core.AxisApplier;
+import a2d.transform.WidgetToScreenRatio;
+import gl.sets.ColorSet;
+import fu.graphics.BarWidget;
+import graphics.shapes.Bar;
 import Axis2D;
 import SquareShape;
 import a2d.Placeholder2D;
@@ -37,15 +42,19 @@ class BarsDemo extends Sprite {
         switcher = root.getComponent(WidgetSwitcher);
         gui = new DemoGui(Builder.widget());
         shapes(gui.canvas.ph);
+        shapes(gui.ph);
+        createBarWidget(gui.canvas.ph);
         switcher.switchTo(gui.ph);
     }
 
     function shapes(ph) {
         fui.lqtr(ph);
+        var steps = WidgetToScreenRatio.getOrCreate(ph.entity, ph, 0.05);
+
         var shw = new ShapeWidget(attrs, ph);
         var s = new Strip(attrs, ph);
         shw.addChild(s);
-        new ShapesColorAssigner(attrs, 0x320078, shw.getBuffer());
+        new ShapesColorAssigner(attrs, 0x776A00FF, shw.getBuffer());
         s.writeAttributes = new PhAntialiasing(attrs, ph, fui.ar.getWindowSize()).writePostions;
         var uvs = new graphics.DynamicAttributeAssigner(attrs, shw.getBuffer());
         uvs.fillBuffer = (attrs, buffer) -> {
@@ -55,17 +64,64 @@ class BarsDemo extends Sprite {
             wwr.writeAtts(buffer.getBuffer(), vertOffset, (_, v) -> v);
             var rad = new RadiusAtt(attrs, buffer.getVertCount());
             rad.writePostions(buffer.getBuffer(), 0, null);
-            gui.r1Changed.listen(v -> {
-                rad.r1 = v;
-                rad.writePostions(buffer.getBuffer(), 0, null);
-            });
-            gui.r2Changed.listen(v -> {
-                rad.r2 = v;
-                rad.writePostions(buffer.getBuffer(), 0, null);
-            });
+            // gui.r1Changed.listen(v -> {
+            //     rad.r1 = v*v;
+            //     rad.writePostions(buffer.getBuffer(), 0, null);
+            // });
+            // gui.r2Changed.listen(v -> {
+            //     rad.r2 = v*v;
+            //     rad.writePostions(buffer.getBuffer(), 0, null);
+            // });
+            new CircleThicknessCalculator(ph, steps, rad, buffer.getBuffer());
         };
 
         return shw;
+    }
+
+    function createBarWidget(ph) {
+        var elements = () -> [
+            new BarContainer( Portion(new BarAxisSlot({start: 0., end: 1.}, null)), FixedThikness(new BarAxisSlot({pos: .0, thikness: 1.}, null))),
+            new BarContainer(FixedThikness(new BarAxisSlot({pos: 1., thikness: 1.}, null)), Portion(new BarAxisSlot({start: 0., end: 1.}, null))),
+        ];
+
+        var attrs = ColorSet.instance;
+        var cq = new BarWidget(attrs, ph, elements());
+        var colors = new ShapesColorAssigner(attrs, 0, cq.getBuffer());
+        return cq;
+    }
+}
+
+/**
+* Calclulates r attribute values for shape assuming the UVs are normal in Placeholder's normal space.
+**/
+class CircleThicknessCalculator implements AxisApplier {
+    var ph:Placeholder2D;
+    var steps:WidgetToScreenRatio;
+    var rads:RadiusAtt<CircleSet>;
+    var buffer:Bytes;
+
+    public var thikness:Float = 1.;
+
+    public function new(ph, steps, rads, b) {
+        this.ph = ph;
+        this.rads = rads;
+        this.steps = steps;
+        this.buffer = b;
+        ph.axisStates[vertical].addSibling(this);
+    }
+
+    public function apply(pos:Float, size:Float) {
+        calculateRadius();
+    }
+
+    public function calculateRadius() {
+        rads.r2 = 1;
+        var w = ph.axisStates[horizontal].getSize();
+        var h = ph.axisStates[vertical].getSize();
+        var dir = w < h ? horizontal : vertical;
+        var r = 1 - 2 * steps.getRatio()[dir];// * (ph.axisStates[dir].getSize() * thikness);
+        rads.r1 = r*r;
+        rads.writePostions(buffer, 0, null);
     }
 }
 

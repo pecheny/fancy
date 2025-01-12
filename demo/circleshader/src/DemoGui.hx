@@ -40,6 +40,9 @@ class DemoGui extends BaseDkit {
             </base>
 
         </base>
-        <base(b().h(pfr, 1).l().b()) public id="canvas"></base>
+        <base(b().h(pfr, 1).b()) vl={PortionLayout.instance}>
+            <base(b().h(pfr, 1).v(sfr,0.5).l().b()) public id="canvas"></base>
+            <base(b().h(pfr, 1).v(sfr,0.5).l().b()) ></base>
+        </base>
     </demo-gui>
 }
