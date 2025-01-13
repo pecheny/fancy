@@ -52,32 +52,6 @@ class BarsDemo extends Sprite {
         switcher.switchTo(gui.ph);
     }
 
-    // function ngrid(ph, fill = false) {
-    //     fui.lqtr(ph);
-    //     // var attrs = ColorSet.instance;
-    //     var steps = WidgetToScreenRatio.getOrCreate(ph.entity, ph, 0.05);
-    //     var cornerSize = 3;
-    //     var shw = new ShapeWidget(attrs, ph);
-    //     var s = new NineGrid(attrs, ph, cornerSize);
-    //     shw.addChild(s);
-    //     new ShapesColorAssigner(attrs, 0x776A00FF, shw.getBuffer());
-    //     s.writeAttributes = new PhAntialiasing(attrs, ph, fui.ar.getWindowSize()).writePostions;
-    //     var uvs = new graphics.DynamicAttributeAssigner(attrs, shw.getBuffer());
-    //     uvs.fillBuffer = (attrs, buffer) -> {
-    //         var vertOffset = 0;
-    //         var writers = attrs.getWriter(AttribAliases.NAME_UV_0);
-    //         var wwr = new WeightedAttWriter(writers, AVConstructor.create([0, 0.4999, 0.50001, 1], [0, 0.4999, 0.50001, 1]));
-    //         wwr.writeAtts(buffer.getBuffer(), vertOffset, (_, v) -> v);
-    //         var rad = new RadiusAtt(attrs, buffer.getVertCount());
-    //         rad.r2 = 1;
-    //         rad.r1 = 1 - (1 / cornerSize);
-    //         rad.r1 *= rad.r1;
-    //         if (fill)
-    //             rad.r1 = 0;
-    //         rad.writePostions(buffer.getBuffer(), 0, null);
-    //     };
-    //     return shw;
-    // }
     function ngrid(ph) {
         fui.lqtr(ph);
         var steps = WidgetToScreenRatio.getOrCreate(ph.entity, ph, 0.05);
@@ -90,8 +64,8 @@ class BarsDemo extends Sprite {
         var sa = new NGridWeightsWriter(wwr.weights, steps.getRatio(), cornerSize);
         ph.axisStates[vertical].addSibling(new ContainerRefresher(sa));
         shw.addChild(s);
-        new ShapesColorAssigner(attrs, 0x776A00FF, shw.getBuffer());
-        s.writeAttributes = new PhAntialiasing(attrs, ph, fui.ar.getWindowSize()).writePostions;
+        new ShapesColorAssigner(attrs, 0x77BA89FF, shw.getBuffer());
+        s.writeAttributes = new PhAntialiasing(attrs, ph, fui.ar.getWindowSize(), s.getVertsCount()).writePostions;
         var uvs = new graphics.DynamicAttributeAssigner(attrs, shw.getBuffer());
         uvs.fillBuffer = (attrs, buffer) -> {
             var vertOffset = 0;
@@ -118,8 +92,8 @@ class BarsDemo extends Sprite {
         var sa = new TGridWeightsWriter(ph, wwr);
         ph.axisStates[vertical].addSibling(new ContainerRefresher(sa));
         shw.addChild(s);
-        new ShapesColorAssigner(attrs, 0x776A00FF, shw.getBuffer());
-        s.writeAttributes = new PhAntialiasing(attrs, ph, fui.ar.getWindowSize()).writePostions;
+        new ShapesColorAssigner(attrs, 0x77DEC7FF, shw.getBuffer());
+        s.writeAttributes = new PhAntialiasing(attrs, ph, fui.ar.getWindowSize(), s.getVertsCount()).writePostions;
         var uvs = new graphics.DynamicAttributeAssigner(attrs, shw.getBuffer());
         uvs.fillBuffer = (attrs, buffer) -> {
             var vertOffset = 0;
@@ -128,14 +102,6 @@ class BarsDemo extends Sprite {
             wwr.writeAtts(buffer.getBuffer(), vertOffset, (_, v) -> v);
             var rad = new RadiusAtt(attrs, buffer.getVertCount());
             rad.writePostions(buffer.getBuffer(), 0, null);
-            // gui.r1Changed.listen(v -> {
-            //     rad.r1 = v*v;
-            //     rad.writePostions(buffer.getBuffer(), 0, null);
-            // });
-            // gui.r2Changed.listen(v -> {
-            //     rad.r2 = v*v;
-            //     rad.writePostions(buffer.getBuffer(), 0, null);
-            // });
             new CircleThicknessCalculator(ph, steps, rad, buffer.getBuffer());
         };
 
@@ -189,23 +155,29 @@ class CircleThicknessCalculator implements AxisApplier {
     }
 }
 
+
+/**
+    Input should be UV density ie number of pixels in the UV unit.
+**/
 @:access(SquareShape)
 class PhAntialiasing<T:AttribSet> {
     var att:T;
     var ph:Placeholder2D;
     var screenSize:ReadOnlyAVector2D<Int>;
-    var smoothness = 6.;
+    var smoothness = 60.;
+    var count:Int;
 
-    public function new(att, ph, screen) {
+    public function new(att, ph, screen, count) {
         this.att = att;
         this.ph = ph;
         this.screenSize = screen;
+        this.count = count;
     }
 
     public function writePostions(target:Bytes, vertOffset = 0, transformer) {
         var s = Math.min(ph.axisStates[horizontal].getSize(), ph.axisStates[vertical].getSize());
         var aasize = smoothness / (s * screenSize[horizontal]);
-        att.fillFloat(target, CircleSet.AASIZE_IN, aasize, vertOffset, 4);
+        att.fillFloat(target, CircleSet.AASIZE_IN, aasize, vertOffset, count);
     }
 }
 
