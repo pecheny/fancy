@@ -1,13 +1,13 @@
-import al.appliers.ContainerRefresher;
-import al.core.WidgetContainer.Refreshable;
-import graphics.shapes.WeightedAttWriter;
 import Axis2D;
 import SquareShape;
 import a2d.Placeholder2D;
+import a2d.Stage;
 import a2d.Widget;
 import a2d.transform.WidgetToScreenRatio;
 import al.Builder;
+import al.appliers.ContainerRefresher;
 import al.core.AxisApplier;
+import al.core.WidgetContainer.Refreshable;
 import al.ec.WidgetSwitcher;
 import data.IndexCollection;
 import data.aliases.AttribAliases;
@@ -16,12 +16,12 @@ import ec.Entity;
 import fu.graphics.BarWidget;
 import fu.graphics.ShapeWidget;
 import gl.AttribSet;
-import gl.ValueWriter;
 import gl.sets.CircleSet;
 import gl.sets.ColorSet;
 import graphics.ShapesColorAssigner;
 import graphics.shapes.Bar;
 import graphics.shapes.Shape;
+import graphics.shapes.WeightedAttWriter;
 import haxe.io.Bytes;
 import macros.AVConstructor;
 import openfl.display.Sprite;
@@ -59,13 +59,14 @@ class BarsDemo extends Sprite {
         var cornerSize = 3;
         var shw = new ShapeWidget(attrs, ph);
         var writers = attrs.getWriter(AttribAliases.NAME_POSITION);
+
         var wwr = new WeightedAttWriter(writers, AVConstructor.create([0, 0.5, 0.5, 1], [0, 0.5, 0.5, 1]));
         var s = new WeightedGrid(wwr);
         var sa = new NGridWeightsWriter(wwr.weights, steps.getRatio(), cornerSize);
         ph.axisStates[vertical].addSibling(new ContainerRefresher(sa));
         shw.addChild(s);
         new ShapesColorAssigner(attrs, 0x77BA89FF, shw.getBuffer());
-        s.writeAttributes = new PhAntialiasing(attrs, ph, fui.ar.getWindowSize(), s.getVertsCount()).writePostions;
+        // s.writeAttributes = new PhAntialiasing(attrs,  s.getVertsCount()).writePostions;
         var uvs = new graphics.DynamicAttributeAssigner(attrs, shw.getBuffer());
         uvs.fillBuffer = (attrs, buffer) -> {
             var vertOffset = 0;
@@ -75,6 +76,9 @@ class BarsDemo extends Sprite {
             var rad = new RadiusAtt(attrs, buffer.getVertCount());
             rad.r1 = 0;
             rad.r2 = 1;
+            rad.r1 = 1 - (1 / cornerSize);
+            rad.r1 *= rad.r1;
+
             rad.writePostions(buffer.getBuffer(), 0, null);
         };
 
@@ -87,18 +91,27 @@ class BarsDemo extends Sprite {
 
         var shw = new ShapeWidget(attrs, ph);
         var writers = attrs.getWriter(AttribAliases.NAME_POSITION);
-        var wwr = new WeightedAttWriter(writers, AVConstructor.create([0, 0.5, 0.5, 1], [0., 1]));
+        var posWeights = AVConstructor.create(Axis2D, [0, 0.5, 0.5, 1], [0., 1]);
+        var uvWeights = AVConstructor.create(Axis2D, [0, 0.5, 0.5, 1], [0., 1]);
+        var wwr = new WeightedAttWriter(writers, posWeights);
         var s = new WeightedGrid(wwr);
         var sa = new TGridWeightsWriter(ph, wwr);
-        ph.axisStates[vertical].addSibling(new ContainerRefresher(sa));
-        shw.addChild(s);
         new ShapesColorAssigner(attrs, 0x77DEC7FF, shw.getBuffer());
-        s.writeAttributes = new PhAntialiasing(attrs, ph, fui.ar.getWindowSize(), s.getVertsCount()).writePostions;
+
+        var rr = new MultiRefresher();
+        rr.add(sa);
+        ph.axisStates[vertical].addSibling(rr);
+        shw.addChild(s);
+        var wip = new WidgetInPixels(ph);
+        rr.add(wip);
+        var piuv = new WGridPixelDensity(posWeights, uvWeights, wip);
+        rr.add(piuv);
+        s.writeAttributes = new PhAntialiasing(attrs, s.getVertsCount(), piuv).writePostions;
         var uvs = new graphics.DynamicAttributeAssigner(attrs, shw.getBuffer());
         uvs.fillBuffer = (attrs, buffer) -> {
             var vertOffset = 0;
             var writers = attrs.getWriter(AttribAliases.NAME_UV_0);
-            var wwr = new WeightedAttWriter(writers, AVConstructor.create([0, 0.5, 0.5, 1], [0., 1]));
+            var wwr = new WeightedAttWriter(writers, uvWeights);
             wwr.writeAtts(buffer.getBuffer(), vertOffset, (_, v) -> v);
             var rad = new RadiusAtt(attrs, buffer.getVertCount());
             rad.writePostions(buffer.getBuffer(), 0, null);
@@ -155,6 +168,54 @@ class CircleThicknessCalculator implements AxisApplier {
     }
 }
 
+class WidgetInPixels extends Widget implements Refreshable {
+    public var size(default, null):AVector2D<Float> = AVConstructor.create(0, 0);
+
+    @:once var stage:Stage;
+
+    public function refresh() {
+        if (!_inited)
+            return;
+        for (a in Axis2D) {
+            var ws = stage.getAspectRatio()[a] * 2 / ph.axisStates[a].getSize();
+            size[a] = stage.getWindowSize()[a] / ws;
+        }
+    }
+}
+
+interface PixelSizeInUVSpace {
+    public var pixelSizeInUVSpace(default, null):Float;
+}
+
+class WGridPixelDensity implements PixelSizeInUVSpace implements Refreshable {
+    var weights:AVector2D<Array<Float>>;
+    var uvweights:AVector2D<Array<Float>>;
+    var direction:Axis2D = horizontal;
+    var wip:WidgetInPixels;
+
+    public var pixelSizeInUVSpace(default, null):Float;
+
+    public function new(wgs, uvwgs, wip) {
+        this.weights = wgs;
+        this.uvweights = uvwgs;
+        this.wip = wip;
+    }
+
+    public function refresh() {
+        var wgs = weights[direction];
+        var size = wgs[1] - wgs[0];
+        var pxPerQuad = wip.size[direction] * size;
+
+        var wgs = uvweights[direction];
+        var size = wgs[1] - wgs[0];
+        var uvuPerQuad = size;
+
+        trace('pqPq: $pxPerQuad, uvpq: $uvuPerQuad, wip: ${wip.size[direction]}');
+        if (uvuPerQuad == 0)
+            return;
+        pixelSizeInUVSpace = uvuPerQuad / pxPerQuad;
+    }
+}
 
 /**
     Input should be UV density ie number of pixels in the UV unit.
@@ -162,21 +223,18 @@ class CircleThicknessCalculator implements AxisApplier {
 @:access(SquareShape)
 class PhAntialiasing<T:AttribSet> {
     var att:T;
-    var ph:Placeholder2D;
-    var screenSize:ReadOnlyAVector2D<Int>;
-    var smoothness = 60.;
+    var smoothness = 6.;
     var count:Int;
+    var pixelSize:PixelSizeInUVSpace;
 
-    public function new(att, ph, screen, count) {
+    public function new(att, count, piuw) {
         this.att = att;
-        this.ph = ph;
-        this.screenSize = screen;
         this.count = count;
+        this.pixelSize = piuw;
     }
 
     public function writePostions(target:Bytes, vertOffset = 0, transformer) {
-        var s = Math.min(ph.axisStates[horizontal].getSize(), ph.axisStates[vertical].getSize());
-        var aasize = smoothness / (s * screenSize[horizontal]);
+        var aasize = smoothness * pixelSize.pixelSizeInUVSpace;
         att.fillFloat(target, CircleSet.AASIZE_IN, aasize, vertOffset, count);
     }
 }
@@ -246,5 +304,20 @@ class WeightedGrid implements Shape {
 
     public function getIndices() {
         return inds;
+    }
+}
+
+class MultiRefresher implements AxisApplier {
+    var targets:Array<Refreshable> = [];
+
+    public function new() {}
+
+    public function add(r) {
+        targets.push(r);
+    }
+
+    public function apply(pos:Float, size:Float):Void {
+        for (c in targets)
+            c.refresh();
     }
 }
