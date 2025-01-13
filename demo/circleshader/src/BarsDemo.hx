@@ -183,19 +183,19 @@ class PhAntialiasing<T:AttribSet> {
 
 class NGridWeightsWriter implements Refreshable {
     var weights:AVector2D<Array<Float>>;
-    var ratio:ReadOnlyAVector2D<Float>;
+    var lineScale:ReadOnlyAVector2D<Float>;
     var cornerSize:Float;
 
-    public function new(weights, ratio, cornerSize) {
+    public function new(weights, lineScale, cornerSize) {
         this.weights = weights;
-        this.ratio = ratio;
+        this.lineScale = lineScale;
         this.cornerSize = cornerSize;
     }
 
     public function refresh() {
         for (a in Axis2D) {
-            weights[a][1] = Math.min(cornerSize * ratio[a], 0.5);
-            weights[a][2] = Math.max(1 - cornerSize * ratio[a], 0.5);
+            weights[a][1] = Math.min(cornerSize * lineScale[a], 0.5);
+            weights[a][2] = Math.max(1 - cornerSize * lineScale[a], 0.5);
         }
     }
 }
