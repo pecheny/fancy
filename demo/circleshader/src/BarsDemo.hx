@@ -68,9 +68,9 @@ class BarsDemo extends Sprite {
 
     function shapes(ph) {
         fui.lqtr(ph);
+        var steps = WidgetToScreenRatio.getOrCreate(ph.entity, ph, 0.05);
         var fac = new TGridFactory(attrs);
         var shw = fac.create(ph);
-        var steps = WidgetToScreenRatio.getOrCreate(ph.entity, ph, 0.05);
 
         var buffer = shw.getBuffer();
         new ShapesColorAssigner(attrs, 0x77DEC7FF, shw.getBuffer());

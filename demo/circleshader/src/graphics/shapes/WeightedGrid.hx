@@ -1,7 +1,6 @@
 package graphics.shapes;
 
 import Axis2D;
-import SquareShape;
 import a2d.Placeholder2D;
 import a2d.WidgetInPixels;
 import a2d.transform.WidgetToScreenRatio;
@@ -11,7 +10,6 @@ import data.IndexCollection;
 import data.aliases.AttribAliases;
 import fu.graphics.ShapeWidget;
 import gl.AttribSet;
-import graphics.ShapesColorAssigner;
 import graphics.shapes.WeightedAttWriter;
 import haxe.io.Bytes;
 import macros.AVConstructor;
@@ -88,6 +86,9 @@ class TGridFactory<T:AttribSet> {
         var wip = new WidgetInPixels(ph);
         rr.add(wip.refresh);
         var piuv = new WGridPixelDensity(posWeights, uvWeights, wip);
+        rr.add(() -> {
+            piuv.direction = wwr.direction;
+        });
         rr.add(piuv.refresh);
         s.writeAttributes = new PhAntialiasing(attrs, s.getVertsCount(), piuv).writePostions;
         shw.getBuffer().onInit.listen(onBufferInit.bind(shw));
@@ -130,9 +131,9 @@ class NGridFactory<T:AttribSet> {
 
     public var cornerSize = 3;
 
-    public function new(attrs, cornerSize ) {
+    public function new(attrs, cornerSize) {
         this.attrs = attrs;
-        this.cornerSize  = cornerSize ;
+        this.cornerSize = cornerSize;
     }
 
     public function create(ph:Placeholder2D) {
@@ -171,9 +172,9 @@ class NGridFactory<T:AttribSet> {
 class WGridPixelDensity implements PixelSizeInUVSpace implements Refreshable {
     var weights:AVector2D<Array<Float>>;
     var uvweights:AVector2D<Array<Float>>;
-    public var direction:Axis2D = horizontal;
     var wip:WidgetInPixels;
 
+    public var direction:Axis2D = horizontal;
     public var pixelSizeInUVSpace(default, null):Float;
 
     public function new(wgs, uvwgs, wip) {
@@ -183,12 +184,14 @@ class WGridPixelDensity implements PixelSizeInUVSpace implements Refreshable {
     }
 
     public function refresh() {
-        var wgs = weights[direction];
+        // current direction impl supposed for tgrid
+        // which swaps weights according to the ratio
+        // so primary weights applied to given direction is always horizontal 
+        var wgs = weights[horizontal];
         var size = wgs[1] - wgs[0];
         var pxPerQuad = wip.size[direction] * size;
-        var wgs = uvweights[direction];
-        var size = wgs[1] - wgs[0];
-        var uvuPerQuad = size;
+        var wgs = uvweights[horizontal];
+        var uvuPerQuad = wgs[1] - wgs[0];
         pixelSizeInUVSpace = uvuPerQuad / pxPerQuad;
     }
 }
