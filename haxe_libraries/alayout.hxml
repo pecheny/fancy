@@ -1,6 +1,6 @@
-# @install: lix --silent download "gh://github.com/pecheny/alayout#58c37fcb8445d56855d2fa5ee2c390486fc5893e" into alayout/0.0.0-alpha/github/58c37fcb8445d56855d2fa5ee2c390486fc5893e
+# @install: lix --silent download "gh://github.com/pecheny/alayout#fbf1db02205fe6c85286f66ae521f826bbadfab2" into alayout/0.0.0-alpha/github/fbf1db02205fe6c85286f66ae521f826bbadfab2
 -lib fucore
 -lib slec
 -lib taxis
--cp ${HAXE_LIBCACHE}/alayout/0.0.0-alpha/github/58c37fcb8445d56855d2fa5ee2c390486fc5893e/src
+-cp ${HAXE_LIBCACHE}/alayout/0.0.0-alpha/github/fbf1db02205fe6c85286f66ae521f826bbadfab2/src
 -D alayout=0.0.0-alpha
