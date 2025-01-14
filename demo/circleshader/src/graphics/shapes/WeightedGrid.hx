@@ -10,6 +10,7 @@ import data.IndexCollection;
 import data.aliases.AttribAliases;
 import fu.graphics.ShapeWidget;
 import gl.AttribSet;
+import gl.sets.CircleSet;
 import graphics.shapes.WeightedAttWriter;
 import haxe.io.Bytes;
 import macros.AVConstructor;
@@ -63,40 +64,91 @@ class TGridWeightsWriter implements Refreshable {
     }
 }
 
-class TGridFactory<T:AttribSet> {
+class GridFactoryBase<T:AttribSet> {
     var attrs:T;
-    var uvWeights = AVConstructor.create(Axis2D, [0, 0.5, 0.5, 1], [0., 1]);
+    var uvWeights:AVector2D<Array<Float>>;
+    var aaAttrRequired = false;
 
     public function new(attrs) {
         this.attrs = attrs;
+        aaAttrRequired = attrs.hasAttr(CircleSet.AASIZE_IN);
+        uvWeights = createUVWeights();
     }
 
     public function create(ph:Placeholder2D) {
         var shw = new ShapeWidget(attrs, ph);
         var writers = attrs.getWriter(AttribAliases.NAME_POSITION);
-        var posWeights = AVConstructor.create(Axis2D, [0, 0.5, 0.5, 1], [0., 1]);
+        var posWeights = createPosWeights();
         var wwr = new WeightedAttWriter(writers, posWeights);
         var s = new WeightedGrid(wwr);
-        var sa = new TGridWeightsWriter(ph, wwr);
-
+        shw.addChild(s);
+        var sa = createGridWriter(ph, wwr);
         var rr = new MultiRefresher();
         rr.add(sa.refresh);
         ph.axisStates[vertical].addSibling(rr);
-        shw.addChild(s);
+        if (aaAttrRequired)
+            addAACalculator(ph, s, wwr, rr);
+        shw.getBuffer().onInit.listen(addUV.bind(shw));
+        return shw;
+    }
+
+    function createUVWeights():AVector2D<Array<Float>> {
+        throw "abstract: N/A";
+    }
+
+    function createPosWeights():AVector2D<Array<Float>> {
+        throw "abstract: N/A";
+    }
+
+    function createGridWriter(ph, wwr):Refreshable {
+        throw "abstract: N/A";
+    }
+
+    function addAACalculator(ph, s, wwr, rr) {
         var wip = new WidgetInPixels(ph);
         rr.add(wip.refresh);
-        var piuv = new WGridPixelDensity(posWeights, uvWeights, wip);
+        var piuv = new WGridPixelDensity(wwr.weights, uvWeights, wip);
         rr.add(() -> {
             piuv.direction = wwr.direction;
         });
         rr.add(piuv.refresh);
         s.writeAttributes = new PhAntialiasing(attrs, s.getVertsCount(), piuv).writePostions;
-        shw.getBuffer().onInit.listen(onBufferInit.bind(shw));
-
-        return shw;
     }
 
-    function onBufferInit(shw:ShapeWidget<T>) {
+    function addUV(shw:ShapeWidget<T>) {
+        var buffer:ShapesBuffer<T> = shw.getBuffer();
+        var vertOffset = 0;
+        var writers = attrs.getWriter(AttribAliases.NAME_UV_0);
+        var wwr = new WeightedAttWriter(writers, uvWeights);
+        wwr.writeAtts(buffer.getBuffer(), vertOffset, (_, v) -> v);
+    }
+}
+
+class TGridFactory<T:AttribSet> extends GridFactoryBase<T> {
+    override function createUVWeights() {
+        return AVConstructor.create(Axis2D, [0, 0.5, 0.5, 1], [0., 1]);
+    }
+
+    override function createPosWeights() {
+        return AVConstructor.create(Axis2D, [0, 0.5, 0.5, 1], [0., 1]);
+    }
+
+    override function createGridWriter(ph:Placeholder2D, wwr:WeightedAttWriter):Refreshable {
+        return new TGridWeightsWriter(ph, wwr);
+    }
+
+    override function addAACalculator(ph, s, wwr, rr) {
+        var wip = new WidgetInPixels(ph);
+        rr.add(wip.refresh);
+        var piuv = new WGridPixelDensity(wwr.weights, uvWeights, wip);
+        rr.add(() -> {
+            piuv.direction = wwr.direction;
+        });
+        rr.add(piuv.refresh);
+        s.writeAttributes = new PhAntialiasing(attrs, s.getVertsCount(), piuv).writePostions;
+    }
+
+    override function addUV(shw:ShapeWidget<T>) {
         var buffer:ShapesBuffer<T> = shw.getBuffer();
         var vertOffset = 0;
         var writers = attrs.getWriter(AttribAliases.NAME_UV_0);
@@ -124,48 +176,25 @@ class NGridWeightsWriter implements Refreshable {
     }
 }
 
-class NGridFactory<T:AttribSet> {
-    var attrs:T;
-
-    var uvWeights = AVConstructor.create(Axis2D, [0, 0.4999, 0.50001, 1], [0, 0.4999, 0.50001, 1]);
-
+class NGridFactory<T:AttribSet> extends GridFactoryBase<T> {
     public var cornerSize = 3;
 
     public function new(attrs, cornerSize) {
-        this.attrs = attrs;
+        super(attrs);
         this.cornerSize = cornerSize;
     }
 
-    public function create(ph:Placeholder2D) {
+    override function createGridWriter(ph:Placeholder2D, wwr:WeightedAttWriter):Refreshable {
         var steps = WidgetToScreenRatio.getOrCreate(ph.entity, ph, 0.05);
-        var shw = new ShapeWidget(attrs, ph);
-        var writers = attrs.getWriter(AttribAliases.NAME_POSITION);
+        return new NGridWeightsWriter(wwr.weights, steps.getRatio(), cornerSize);
+    }
 
-        var posWeights = AVConstructor.create(Axis2D, [0, 0.5, 0.5, 1], [0, 0.5, 0.5, 1]);
-        var wwr = new WeightedAttWriter(writers, posWeights);
-        var s = new WeightedGrid(wwr);
+    override function createPosWeights():AVector2D<Array<Float>> {
+        return AVConstructor.create(Axis2D, [0, 0.5, 0.5, 1], [0, 0.5, 0.5, 1]);
+    }
 
-        var sa = new NGridWeightsWriter(wwr.weights, steps.getRatio(), cornerSize);
-        var rr = new MultiRefresher();
-        rr.add(sa.refresh);
-        var wip = new WidgetInPixels(ph);
-        rr.add(wip.refresh);
-
-        var piuv = new WGridPixelDensity(posWeights, uvWeights, wip);
-        rr.add(piuv.refresh);
-        s.writeAttributes = new PhAntialiasing(attrs, s.getVertsCount(), piuv).writePostions;
-
-        ph.axisStates[vertical].addSibling(rr);
-        shw.addChild(s);
-        var uvs = new graphics.DynamicAttributeAssigner(attrs, shw.getBuffer());
-        uvs.fillBuffer = (attrs, buffer) -> {
-            var vertOffset = 0;
-            var writers = attrs.getWriter(AttribAliases.NAME_UV_0);
-            var wwr = new WeightedAttWriter(writers, uvWeights);
-            wwr.writeAtts(buffer.getBuffer(), vertOffset, (_, v) -> v);
-        };
-
-        return shw;
+    override function createUVWeights():AVector2D<Array<Float>> {
+        return AVConstructor.create(Axis2D, [0, 0.4999, 0.50001, 1], [0, 0.4999, 0.50001, 1]);
     }
 }
 
