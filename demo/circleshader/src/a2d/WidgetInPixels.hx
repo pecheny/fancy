@@ -1,0 +1,25 @@
+package a2d;
+
+import Axis2D;
+import macros.AVConstructor;
+import al.core.WidgetContainer.Refreshable;
+
+
+class WidgetInPixels extends Widget implements Refreshable {
+    public var size(default, null):AVector2D<Float> = AVConstructor.create(0, 0);
+
+    @:once var stage:Stage;
+
+    public function refresh() {
+        if (!_inited)
+            return;
+        for (a in Axis2D) {
+            var ws = stage.getAspectRatio()[a] / ph.axisStates[a].getSize(); 
+            size[a] = stage.getWindowSize()[a] / ws;
+        }
+    }
+}
+
+interface PixelSizeInUVSpace {
+    public var pixelSizeInUVSpace(default, null):Float;
+}
