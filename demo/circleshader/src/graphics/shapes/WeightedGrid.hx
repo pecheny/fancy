@@ -10,8 +10,8 @@ import data.IndexCollection;
 import data.aliases.AttribAliases;
 import fu.graphics.ShapeWidget;
 import gl.AttribSet;
+import gl.ValueWriter.AttributeWriters;
 import gl.sets.CircleSet;
-import graphics.shapes.WeightedAttWriter;
 import haxe.io.Bytes;
 import macros.AVConstructor;
 
@@ -39,28 +39,6 @@ class WeightedGrid implements Shape {
 
     public function getIndices() {
         return inds;
-    }
-}
-
-class TGridWeightsWriter implements Refreshable {
-    var wwr:WeightedAttWriter;
-    var ph:Placeholder2D;
-
-    public function new(ph, wwr) {
-        this.ph = ph;
-        this.wwr = wwr;
-    }
-
-    public function refresh() {
-        var w = ph.axisStates[horizontal].getSize();
-        var h = ph.axisStates[vertical].getSize();
-        var dir = w > h ? horizontal : vertical;
-        wwr.direction = dir;
-        var cdir = dir.other();
-        var so = ph.axisStates[cdir].getSize() / ph.axisStates[dir].getSize();
-        var aw = wwr.weights[horizontal];
-        aw[1] = so * 0.5;
-        aw[2] = 1 - so * 0.5;
     }
 }
 
@@ -124,77 +102,30 @@ class GridFactoryBase<T:AttribSet> {
     }
 }
 
-class TGridFactory<T:AttribSet> extends GridFactoryBase<T> {
-    override function createUVWeights() {
-        return AVConstructor.create(Axis2D, [0, 0.5, 0.5, 1], [0., 1]);
+class WeightedAttWriter {
+    var writers:AttributeWriters;
+
+    public var direction:Axis2D = horizontal;
+    public var weights(default, null):AVector2D<Array<Float>>;
+
+    public function new(wrs, wghs:AVector2D<Array<Float>>) {
+        this.writers = wrs;
+        this.weights = wghs;
     }
 
-    override function createPosWeights() {
-        return AVConstructor.create(Axis2D, [0, 0.5, 0.5, 1], [0., 1]);
-    }
-
-    override function createGridWriter(ph:Placeholder2D, wwr:WeightedAttWriter):Refreshable {
-        return new TGridWeightsWriter(ph, wwr);
-    }
-
-    override function addAACalculator(ph, s, wwr, rr) {
-        var wip = new WidgetInPixels(ph);
-        rr.add(wip.refresh);
-        var piuv = new WGridPixelDensity(wwr.weights, uvWeights, wip);
-        rr.add(() -> {
-            piuv.direction = wwr.direction;
-        });
-        rr.add(piuv.refresh);
-        s.writeAttributes = new PhAntialiasing(attrs, s.getVertsCount(), piuv).writePostions;
-    }
-
-    override function addUV(shw:ShapeWidget<T>) {
-        var buffer:ShapesBuffer<T> = shw.getBuffer();
-        var vertOffset = 0;
-        var writers = attrs.getWriter(AttribAliases.NAME_UV_0);
-        var wwr = new WeightedAttWriter(writers, uvWeights);
-        wwr.writeAtts(buffer.getBuffer(), vertOffset, (_, v) -> v);
-    }
-}
-
-class NGridWeightsWriter implements Refreshable {
-    var weights:AVector2D<Array<Float>>;
-    var lineScale:ReadOnlyAVector2D<Float>;
-    var cornerSize:Float;
-
-    public function new(weights, lineScale, cornerSize) {
-        this.weights = weights;
-        this.lineScale = lineScale;
-        this.cornerSize = cornerSize;
-    }
-
-    public function refresh() {
-        for (a in Axis2D) {
-            weights[a][1] = Math.min(cornerSize * lineScale[a], 0.5);
-            weights[a][2] = Math.max(1 - cornerSize * lineScale[a], 0.5);
+    public inline function writeAtts(target, vertOffset, tr) {
+        var aw = weights[horizontal];
+        var cw = weights[vertical];
+        for (i in 0...cw.length)
+            writeLine(target, direction, vertOffset + aw.length * i, 1, aw, tr);
+        for (i in 0...aw.length) {
+            writeLine(target, direction.other(), vertOffset + i, aw.length, cw, tr);
         }
     }
-}
 
-class NGridFactory<T:AttribSet> extends GridFactoryBase<T> {
-    public var cornerSize = 3;
-
-    public function new(attrs, cornerSize) {
-        super(attrs);
-        this.cornerSize = cornerSize;
-    }
-
-    override function createGridWriter(ph:Placeholder2D, wwr:WeightedAttWriter):Refreshable {
-        var steps = WidgetToScreenRatio.getOrCreate(ph.entity, ph, 0.05);
-        return new NGridWeightsWriter(wwr.weights, steps.getRatio(), cornerSize);
-    }
-
-    override function createPosWeights():AVector2D<Array<Float>> {
-        return AVConstructor.create(Axis2D, [0, 0.5, 0.5, 1], [0, 0.5, 0.5, 1]);
-    }
-
-    override function createUVWeights():AVector2D<Array<Float>> {
-        return AVConstructor.create(Axis2D, [0, 0.4999, 0.50001, 1], [0, 0.4999, 0.50001, 1]);
+    public inline function writeLine(target, dir:Axis2D, start, offset, weights, tr) {
+        for (i in 0...weights.length)
+            writers[dir].setValue(target, start + i * offset, tr(dir, weights[i]));
     }
 }
 

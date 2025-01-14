@@ -10,7 +10,8 @@ import gl.sets.CircleSet;
 import gl.sets.ColorSet;
 import graphics.ShapesColorAssigner;
 import graphics.shapes.Bar;
-import graphics.shapes.WeightedGrid;
+import graphics.shapes.NGrid.NGridFactory;
+import graphics.shapes.TGrid.TGridFactory;
 import openfl.display.Sprite;
 
 class BarsDemo extends Sprite {
