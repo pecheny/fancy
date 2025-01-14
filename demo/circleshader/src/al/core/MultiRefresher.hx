@@ -1,10 +1,9 @@
 package al.core;
 
-import al.core.WidgetContainer.Refreshable;
 import al.core.AxisApplier;
 
 class MultiRefresher implements AxisApplier {
-    var targets:Array<Refreshable> = [];
+    var targets:Array<Void->Void> = [];
 
     public function new() {}
 
@@ -14,6 +13,6 @@ class MultiRefresher implements AxisApplier {
 
     public function apply(pos:Float, size:Float):Void {
         for (c in targets)
-            c.refresh();
+            c();
     }
 }

@@ -82,13 +82,13 @@ class TGridFactory<T:AttribSet> {
         var sa = new TGridWeightsWriter(ph, wwr);
 
         var rr = new MultiRefresher();
-        rr.add(sa);
+        rr.add(sa.refresh);
         ph.axisStates[vertical].addSibling(rr);
         shw.addChild(s);
         var wip = new WidgetInPixels(ph);
-        rr.add(wip);
+        rr.add(wip.refresh);
         var piuv = new WGridPixelDensity(posWeights, uvWeights, wip);
-        rr.add(piuv);
+        rr.add(piuv.refresh);
         s.writeAttributes = new PhAntialiasing(attrs, s.getVertsCount(), piuv).writePostions;
         shw.getBuffer().onInit.listen(onBufferInit.bind(shw));
 
@@ -146,12 +146,12 @@ class NGridFactory<T:AttribSet> {
 
         var sa = new NGridWeightsWriter(wwr.weights, steps.getRatio(), cornerSize);
         var rr = new MultiRefresher();
-        rr.add(sa);
+        rr.add(sa.refresh);
         var wip = new WidgetInPixels(ph);
-        rr.add(wip);
+        rr.add(wip.refresh);
 
         var piuv = new WGridPixelDensity(posWeights, uvWeights, wip);
-        rr.add(piuv);
+        rr.add(piuv.refresh);
         s.writeAttributes = new PhAntialiasing(attrs, s.getVertsCount(), piuv).writePostions;
 
         ph.axisStates[vertical].addSibling(rr);
@@ -171,7 +171,7 @@ class NGridFactory<T:AttribSet> {
 class WGridPixelDensity implements PixelSizeInUVSpace implements Refreshable {
     var weights:AVector2D<Array<Float>>;
     var uvweights:AVector2D<Array<Float>>;
-    var direction:Axis2D = horizontal;
+    public var direction:Axis2D = horizontal;
     var wip:WidgetInPixels;
 
     public var pixelSizeInUVSpace(default, null):Float;
