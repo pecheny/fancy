@@ -1,4 +1,5 @@
 package fu.graphics;
+
 import Axis2D;
 import SquareShape;
 import a2d.Placeholder2D;
@@ -6,7 +7,6 @@ import a2d.transform.WidgetToScreenRatio;
 import al.core.AxisApplier;
 import gl.sets.CircleSet;
 import haxe.io.Bytes;
-
 
 /**
  * Calclulates r attribute values for shape assuming the UVs are normal in Placeholder's normal space.

@@ -5,8 +5,6 @@ import gl.AttribSet;
 import gl.sets.CircleSet;
 import haxe.io.Bytes;
 
-
-
 /**
     Input should be UV density ie number of pixels in the UV unit.
 **/

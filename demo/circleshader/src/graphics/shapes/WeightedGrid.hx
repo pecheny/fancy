@@ -186,7 +186,7 @@ class WGridPixelDensity implements PixelSizeInUVSpace implements Refreshable {
     public function refresh() {
         // current direction impl supposed for tgrid
         // which swaps weights according to the ratio
-        // so primary weights applied to given direction is always horizontal 
+        // so primary weights applied to given direction is always horizontal
         var wgs = weights[horizontal];
         var size = wgs[1] - wgs[0];
         var pxPerQuad = wip.size[direction] * size;

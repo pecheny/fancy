@@ -2,20 +2,15 @@ import Axis2D;
 import SquareShape;
 import a2d.transform.WidgetToScreenRatio;
 import al.Builder;
-import al.appliers.ContainerRefresher;
 import al.ec.WidgetSwitcher;
-import data.aliases.AttribAliases;
 import dkit.Dkit.BaseDkit;
 import ec.Entity;
 import fu.graphics.BarWidget;
-import fu.graphics.ShapeWidget;
 import gl.sets.CircleSet;
 import gl.sets.ColorSet;
 import graphics.ShapesColorAssigner;
 import graphics.shapes.Bar;
-import graphics.shapes.WeightedAttWriter;
 import graphics.shapes.WeightedGrid;
-import macros.AVConstructor;
 import openfl.display.Sprite;
 
 class BarsDemo extends Sprite {
@@ -37,9 +32,8 @@ class BarsDemo extends Sprite {
 
         switcher = root.getComponent(WidgetSwitcher);
         gui = new DemoGui(Builder.widget());
-        // ngrid(gui.canvas.ph, true);
         ngrid(gui.canvas.ph);
-        shapes(gui.ph);
+        tgrid(gui.ph);
         createBarWidget(gui.canvas.ph);
         switcher.switchTo(gui.ph);
     }
@@ -66,7 +60,7 @@ class BarsDemo extends Sprite {
         return shw;
     }
 
-    function shapes(ph) {
+    function tgrid(ph) {
         fui.lqtr(ph);
         var steps = WidgetToScreenRatio.getOrCreate(ph.entity, ph, 0.05);
         var fac = new TGridFactory(attrs);
