@@ -65,22 +65,21 @@ class TGridWeightsWriter implements Refreshable {
     }
 }
 
-class TGridFactory {
-    var attrs:AttribSet;
+class TGridFactory<T:AttribSet> {
+    var attrs:T;
+    var uvWeights = AVConstructor.create(Axis2D, [0, 0.5, 0.5, 1], [0., 1]);
+
     public function new(attrs) {
         this.attrs = attrs;
     }
-    public function create(ph:Placeholder2D) {
-        var steps = WidgetToScreenRatio.getOrCreate(ph.entity, ph, 0.05);
 
+    public function create(ph:Placeholder2D) {
         var shw = new ShapeWidget(attrs, ph);
         var writers = attrs.getWriter(AttribAliases.NAME_POSITION);
         var posWeights = AVConstructor.create(Axis2D, [0, 0.5, 0.5, 1], [0., 1]);
-        var uvWeights = AVConstructor.create(Axis2D, [0, 0.5, 0.5, 1], [0., 1]);
         var wwr = new WeightedAttWriter(writers, posWeights);
         var s = new WeightedGrid(wwr);
         var sa = new TGridWeightsWriter(ph, wwr);
-        new ShapesColorAssigner(attrs, 0x77DEC7FF, shw.getBuffer());
 
         var rr = new MultiRefresher();
         rr.add(sa);
@@ -91,18 +90,17 @@ class TGridFactory {
         var piuv = new WGridPixelDensity(posWeights, uvWeights, wip);
         rr.add(piuv);
         s.writeAttributes = new PhAntialiasing(attrs, s.getVertsCount(), piuv).writePostions;
-        var uvs = new graphics.DynamicAttributeAssigner(attrs, shw.getBuffer());
-        uvs.fillBuffer = (attrs, buffer) -> {
-            var vertOffset = 0;
-            var writers = attrs.getWriter(AttribAliases.NAME_UV_0);
-            var wwr = new WeightedAttWriter(writers, uvWeights);
-            wwr.writeAtts(buffer.getBuffer(), vertOffset, (_, v) -> v);
-            var rad = new RadiusAtt(attrs, buffer.getVertCount());
-            rad.writePostions(buffer.getBuffer(), 0, null);
-            new fu.graphics.CircleThicknessCalculator(ph, steps, cast rad, buffer.getBuffer());
-        };
+        shw.getBuffer().onInit.listen(onBufferInit.bind(shw));
 
         return shw;
+    }
+
+    function onBufferInit(shw:ShapeWidget<T>) {
+        var buffer:ShapesBuffer<T> = shw.getBuffer();
+        var vertOffset = 0;
+        var writers = attrs.getWriter(AttribAliases.NAME_UV_0);
+        var wwr = new WeightedAttWriter(writers, uvWeights);
+        wwr.writeAtts(buffer.getBuffer(), vertOffset, (_, v) -> v);
     }
 }
 
@@ -125,6 +123,51 @@ class NGridWeightsWriter implements Refreshable {
     }
 }
 
+class NGridFactory<T:AttribSet> {
+    var attrs:T;
+
+    var uvWeights = AVConstructor.create(Axis2D, [0, 0.4999, 0.50001, 1], [0, 0.4999, 0.50001, 1]);
+
+    public var cornerSize = 3;
+
+    public function new(attrs, cornerSize ) {
+        this.attrs = attrs;
+        this.cornerSize  = cornerSize ;
+    }
+
+    public function create(ph:Placeholder2D) {
+        var steps = WidgetToScreenRatio.getOrCreate(ph.entity, ph, 0.05);
+        var shw = new ShapeWidget(attrs, ph);
+        var writers = attrs.getWriter(AttribAliases.NAME_POSITION);
+
+        var posWeights = AVConstructor.create(Axis2D, [0, 0.5, 0.5, 1], [0, 0.5, 0.5, 1]);
+        var wwr = new WeightedAttWriter(writers, posWeights);
+        var s = new WeightedGrid(wwr);
+
+        var sa = new NGridWeightsWriter(wwr.weights, steps.getRatio(), cornerSize);
+        var rr = new MultiRefresher();
+        rr.add(sa);
+        var wip = new WidgetInPixels(ph);
+        rr.add(wip);
+
+        var piuv = new WGridPixelDensity(posWeights, uvWeights, wip);
+        rr.add(piuv);
+        s.writeAttributes = new PhAntialiasing(attrs, s.getVertsCount(), piuv).writePostions;
+
+        ph.axisStates[vertical].addSibling(rr);
+        shw.addChild(s);
+        var uvs = new graphics.DynamicAttributeAssigner(attrs, shw.getBuffer());
+        uvs.fillBuffer = (attrs, buffer) -> {
+            var vertOffset = 0;
+            var writers = attrs.getWriter(AttribAliases.NAME_UV_0);
+            var wwr = new WeightedAttWriter(writers, uvWeights);
+            wwr.writeAtts(buffer.getBuffer(), vertOffset, (_, v) -> v);
+        };
+
+        return shw;
+    }
+}
+
 class WGridPixelDensity implements PixelSizeInUVSpace implements Refreshable {
     var weights:AVector2D<Array<Float>>;
     var uvweights:AVector2D<Array<Float>>;
@@ -143,14 +186,9 @@ class WGridPixelDensity implements PixelSizeInUVSpace implements Refreshable {
         var wgs = weights[direction];
         var size = wgs[1] - wgs[0];
         var pxPerQuad = wip.size[direction] * size;
-
         var wgs = uvweights[direction];
         var size = wgs[1] - wgs[0];
         var uvuPerQuad = size;
-
-        trace('pqPq: $pxPerQuad, uvpq: $uvuPerQuad, wip: ${wip.size[direction]}');
-        if (uvuPerQuad == 0)
-            return;
         pixelSizeInUVSpace = uvuPerQuad / pxPerQuad;
     }
 }

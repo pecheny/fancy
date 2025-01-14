@@ -46,24 +46,15 @@ class BarsDemo extends Sprite {
 
     function ngrid(ph) {
         fui.lqtr(ph);
-        var steps = WidgetToScreenRatio.getOrCreate(ph.entity, ph, 0.05);
         var cornerSize = 3;
-        var shw = new ShapeWidget(attrs, ph);
-        var writers = attrs.getWriter(AttribAliases.NAME_POSITION);
 
-        var wwr = new WeightedAttWriter(writers, AVConstructor.create([0, 0.5, 0.5, 1], [0, 0.5, 0.5, 1]));
-        var s = new WeightedGrid(wwr);
-        var sa = new NGridWeightsWriter(wwr.weights, steps.getRatio(), cornerSize);
-        ph.axisStates[vertical].addSibling(new ContainerRefresher(sa));
-        shw.addChild(s);
+        var fac = new NGridFactory(attrs, cornerSize);
+        var shw = fac.create(ph);
+        var buffer = shw.getBuffer();
+
         new ShapesColorAssigner(attrs, 0x77BA89FF, shw.getBuffer());
-        // s.writeAttributes = new PhAntialiasing(attrs,  s.getVertsCount()).writePostions;
-        var uvs = new graphics.DynamicAttributeAssigner(attrs, shw.getBuffer());
-        uvs.fillBuffer = (attrs, buffer) -> {
-            var vertOffset = 0;
-            var writers = attrs.getWriter(AttribAliases.NAME_UV_0);
-            var wwr = new WeightedAttWriter(writers, AVConstructor.create([0, 0.4999, 0.50001, 1], [0, 0.4999, 0.50001, 1]));
-            wwr.writeAtts(buffer.getBuffer(), vertOffset, (_, v) -> v);
+
+        buffer.onInit.listen(() -> {
             var rad = new RadiusAtt(attrs, buffer.getVertCount());
             rad.r1 = 0;
             rad.r2 = 1;
@@ -71,15 +62,23 @@ class BarsDemo extends Sprite {
             rad.r1 *= rad.r1;
 
             rad.writePostions(buffer.getBuffer(), 0, null);
-        };
-
+        });
         return shw;
     }
 
     function shapes(ph) {
         fui.lqtr(ph);
         var fac = new TGridFactory(attrs);
-        return fac.create(ph);
+        var shw = fac.create(ph);
+        var steps = WidgetToScreenRatio.getOrCreate(ph.entity, ph, 0.05);
+
+        var buffer = shw.getBuffer();
+        new ShapesColorAssigner(attrs, 0x77DEC7FF, shw.getBuffer());
+        buffer.onInit.listen(() -> {
+            var rad = new RadiusAtt(attrs, buffer.getVertCount());
+            rad.writePostions(buffer.getBuffer(), 0, null);
+            new fu.graphics.CircleThicknessCalculator(ph, steps, cast rad, buffer.getBuffer());
+        });
     }
 
     function createBarWidget(ph) {
