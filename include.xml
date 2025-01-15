@@ -18,6 +18,5 @@
 
 
     <haxeflag name="--macro" value='domkit.Macros.registerComponentsPath("dkit.Dkit.$Dkit")'/>
-    <assets path="Assets" include="*" unless="no_fancy_assets" />
 
 </project>
