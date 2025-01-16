@@ -1,5 +1,7 @@
 package;
 
+import ec.macros.InitMacro;
+import dkit.Dkit;
 import FuiBuilder;
 import a2d.ContainerFactory;
 import a2d.Placeholder2D;
@@ -14,15 +16,14 @@ import al.layouts.WholefillLayout;
 import al.layouts.data.LayoutData.FixedSize;
 import al.layouts.data.LayoutData.FractionSize;
 import ec.Entity;
-import fu.GuiDrawcalls;
 import fu.PropStorage;
 import fu.Signal;
 import htext.style.TextStyleContext;
 import openfl.display.Sprite;
 import widgets.WonderButton;
 import widgets.WonderQuad;
+import utils.MacroGenericAliasConverter as MGA;
 
-using a2d.transform.LiquidTransformer;
 using a2d.transform.LiquidTransformer;
 using al.Builder;
 
@@ -33,7 +34,12 @@ class ClickAndButt extends Sprite {
     public function new() {
         super();
         var fuiBuilder = new FuiBuilder();
-        var root:Entity = fuiBuilder.createDefaultRoot(Xml.parse(GuiDrawcalls.DRAWCALLS_LAYOUT).firstChild());
+        BaseDkit.inject(fuiBuilder);
+        var root:Entity = fuiBuilder.createDefaultRoot();
+        var uikit = new FlatUikitExtended(fuiBuilder);
+
+        uikit.configure(root);
+        uikit.createContainer(root);
 
         WonderKit.configure(root);
         ClickAndButtPreset.configure(root);
@@ -43,7 +49,7 @@ class ClickAndButt extends Sprite {
         conts.regStyle("h", new PortionLayout(Forward, new FixedSize(0.)), new WholefillLayout(new FractionSize(0.)));
         root.addComponent(conts);
 
-        var buts = new ButtonFactory(fuiBuilder.placeholderBuilder, fuiBuilder.ar, fuiBuilder.s());
+        var buts = new ButtonFactory(fuiBuilder.placeholderBuilder, fuiBuilder.ar, fuiBuilder.s("fit"));
         root.addComponent(buts);
 
         var screens = root.getComponent(AnimatedSwitcher);
@@ -67,7 +73,7 @@ class ClickAndButt extends Sprite {
 
 class ClickAndButtPreset {
     public static function configure(e:Entity) {
-        var props = e.getComponentUpward(PropStorage);
+        var props = e.getComponentByNameUpward(MGA.toAlias(PropStorage, AnimationPreset));
         var preset = new AnimationPreset({
             layout: "portion",
             name: "screen-one",

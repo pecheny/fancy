@@ -4,7 +4,7 @@ import al.animation.AnimationTree;
 import ec.Entity;
 import fu.PropStorage;
 import widgets.WonderButton;
-
+import utils.MacroGenericAliasConverter as MGA;
 class WonderKit {
     public static function configure(e:Entity) {
         var props = new DummyProps<AnimationPreset>();
@@ -17,6 +17,6 @@ class WonderKit {
         preset.mapping.push(AnimationSlotSelectors.pathMapper.bind([1]));
         preset.mapping.push(AnimationSlotSelectors.pathMapper.bind([1]));
         props.set(AnimationPreset.getId(WonderButton), preset);
-        e.addComponentByType(PropStorage, props);
+        e.addComponentByName(MGA.toAlias(PropStorage, AnimationPreset), props);
     }
 }
