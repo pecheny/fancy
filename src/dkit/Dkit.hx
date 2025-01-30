@@ -139,6 +139,7 @@ class BaseDkit implements domkit.Model<BaseDkit> implements domkit.Object implem
 }
 
 @:uiComp("data-container")
+@:postInit(initDkit)
 class DataContainerDkit extends BaseDkit implements DataView<Array<String>> {
     static var SRC = <data-container vl={PortionLayout.instance}></data-container>
 
@@ -151,15 +152,8 @@ class DataContainerDkit extends BaseDkit implements DataView<Array<String>> {
         return null;
     }
 
-    public function new(ph:Placeholder2D, ?parent:BaseDkit) {
-        super(ph, parent);
-        initComponent();
-        initDkit();
-    }
-
     override function initDkit() {
         super.initDkit();
-        trace(c, vl);
         if (dispatch)
             onChoice = new IntSignal();
         pool = new fu.ui.InteractivePanelBuilder().withContainer(c).withWidget(() -> itemFactory()).withSignal(onChoice).build();

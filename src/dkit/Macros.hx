@@ -7,10 +7,11 @@ import haxe.macro.Context;
 class DefaultConstructorBuilder {
     static var template = macro class Templ {
         public function new(p:a2d.Placeholder2D, ?parent) {
-        super(p, parent);
-        initComponent();
-        initDkit();
-    }
+            super(p, parent);
+            initComponent();
+            if (parent == null)
+                initDkit();
+        }
     };
 
     public static function build():Array<Field> {
@@ -23,7 +24,7 @@ class DefaultConstructorBuilder {
             }
         }
 
-        if(required)
+        if (required)
             fields.push(template.fields[0]);
 
         return fields;
