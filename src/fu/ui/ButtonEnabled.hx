@@ -16,16 +16,16 @@ class ButtonEnabled extends ButtonBase {
     }
 
     override function handler() {
-        if (!toggle.enabled)
+        if (!toggle.value)
             return;
         super.handler();
     }
 
-    var st:ClickTargetViewState;
+    var st:ClickTargetViewState = ClickTargetViewState.Idle;
 
     override function changeViewState(st:ClickTargetViewState) {
         this.st = st;
-        super.changeViewState(toggle.enabled ? st : Idle);
+        super.changeViewState(toggle.value ? st : Idle);
     }
 
     function set_active() {
