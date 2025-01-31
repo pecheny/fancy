@@ -1,5 +1,6 @@
 package dkit;
 
+import fu.ui.ButtonBase;
 import al.core.DataView;
 import fu.Signal.IntSignal;
 import a2d.ContainerStyler;
@@ -152,14 +153,27 @@ class DataContainerDkit extends BaseDkit implements DataView<Array<String>> {
         return null;
     }
 
+    public dynamic function inputFactory(ph:Placeholder2D, n:Int) {
+        if (dispatch) {
+            new ButtonBase(ph, onChoice.dispatch.bind(n));
+        }
+    }
+
     override function initDkit() {
         super.initDkit();
-        if (dispatch)
+        if (dispatch) 
             onChoice = new IntSignal();
-        pool = new fu.ui.InteractivePanelBuilder().withContainer(c).withWidget(() -> itemFactory()).withSignal(onChoice).build();
+        pool = new fu.ui.InteractivePanelBuilder().withContainer(c)
+            .withWidget(() -> itemFactory())
+            .withInput(inputFactory)
+            .build();
     }
 
     public function initData(descr):Void {
         pool.initData(descr);
+    }
+    
+    public function getItems() {
+        return pool.pool;
     }
 }
