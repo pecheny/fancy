@@ -1,5 +1,6 @@
 package;
 
+import fu.ui.PlaceholderBuilderUi;
 import fu.FuCtx;
 import backends.openfl.DrawcallUtils;
 import al.animation.AnimatedSwitcher;
@@ -65,13 +66,13 @@ class FuiBuilder implements FuCtx {
 
 	public var pipeline:RenderingPipeline;
 	public var ar:Stage = new StageImpl(1);
-	public var placeholderBuilder(default, null):PlaceholderBuilder2D;
+	public var placeholderBuilder(default, null):PlaceholderBuilderUi;
 	public var textStyles:TextContextBuilder;
 	public var updater(default, null):Updater;
 
 	public function new() {
 		pipeline = new RenderingPipeline();
-		placeholderBuilder = new PlaceholderBuilder2D(ar);
+		placeholderBuilder = new PlaceholderBuilderUi(ar);
 		textStyles = new TextContextBuilder(fonts, ar);
 		var updater = new RealtimeUpdater();
 		updater.update();
