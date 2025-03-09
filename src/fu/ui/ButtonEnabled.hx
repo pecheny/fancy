@@ -9,8 +9,8 @@ class ButtonEnabled extends ButtonBase {
     var toggle:EnabledProp;
 
     public function new(w:Placeholder2D, h) {
-        super(w, h);
         toggle = EnabledProp.getOrCreate(w.entity);
+        super(w, h);
         toggle.onChange.listen(set_active);
         set_active();
     }
