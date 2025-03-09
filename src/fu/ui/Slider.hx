@@ -1,4 +1,5 @@
-package fu.graphics;
+package fu.ui;
+import fu.graphics.ShapeWidget;
 import al2d.WidgetHitTester2D;
 import data.aliases.AttribAliases;
 import ec.CtxWatcher;

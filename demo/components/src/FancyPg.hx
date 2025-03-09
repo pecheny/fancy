@@ -7,7 +7,7 @@ import backends.openfl.SpriteAspectKeeper;
 import ec.Entity;
 import fu.gl.GuiDrawcalls;
 import fu.graphics.BarWidget;
-import fu.graphics.Slider;
+import fu.ui.Slider;
 import fu.ui.Button;
 import fu.ui.Label;
 import gl.sets.ColorSet;
