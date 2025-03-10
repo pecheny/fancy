@@ -18,6 +18,8 @@ import openfl.display.Sprite;
 
 using a2d.transform.LiquidTransformer;
 using al.Builder;
+using fu.ui.Slider.FlatSlider;
+
 
 class FancyPg extends Sprite {
     var fuiBuilder = new FuiBuilder();
@@ -86,7 +88,7 @@ class FancyPg extends Sprite {
             new Label(b.h(sfr, 1).v(sfr, 0.4).b(), sty("pcl")).withText(sampleText).ph,
             new Label(b.h(sfr, 1).v(sfr, 0.4).b(), sty("pcc")).withText(sampleText).ph,
             new Label(b.h(sfr, 1).v(sfr, 0.4).b(), sty("pcr")).withText(sampleText).ph,
-            new Slider(b.v(sfr, 0.1).b("slider r").withLiquidTransform(ar.getAspectRatio()), horizontal, f -> trace("" + f)).withProgress(0.5).ph,
+            new SliderInput(b.v(sfr, 0.1).b("slider r").withLiquidTransform(ar.getAspectRatio()), horizontal).withFlat().withProgress(0.5).ph,
             fuiBuilder.texturedQuad(b.h(sfr, 1).v(sfr, 0.5).b().withLiquidTransform(ar.getAspectRatio()), pictureFile).ph,
             new Button(b.h(sfr, 1).v(px, 60).b().withLiquidTransform(ar.getAspectRatio()), null, "Button caption", sty("fit")).ph,
             new Button(b.h(sfr, 1).v(sfr, 0.2).b().withLiquidTransform(ar.getAspectRatio()), null, "Button", sty("fit")).ph,

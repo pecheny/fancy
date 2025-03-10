@@ -1,74 +1,64 @@
 package fu.ui;
-import fu.graphics.ShapeWidget;
+
+import fu.Signal;
+import a2d.AspectRatioProvider;
+import a2d.Widget;
+import a2d.Placeholder2D;
 import al2d.WidgetHitTester2D;
-import data.aliases.AttribAliases;
 import ec.CtxWatcher;
 import ecbind.InputBinder;
-import format.png.Data.Color;
+import fu.graphics.ShapeWidget;
 import gl.sets.ColorSet;
 import graphics.ShapesColorAssigner;
-import mesh.providers.AttrProviders.SolidColorProvider;
+import graphics.shapes.ProgressBar;
 import shimp.InputSystem;
 import shimp.Point;
 import utils.Mathu;
-import a2d.Placeholder2D;
-import graphics.shapes.ProgressBar;
 
-
-class Slider extends ShapeWidget<ColorSet> {
-    public var q:ProgressBar<ColorSet>;
-
-    var mainAxis:Axis2D;
-    var progress:Float;
-    var handler:Float->Void;
-
-    public function new(w:Placeholder2D, direction:Axis2D, h) {
-        this.handler = h;
-        this.mainAxis = direction;
-        super(ColorSet.instance, w);
-        new ShapesColorAssigner(ColorSet.instance, 0xffffff, getBuffer());
-    }
-
-    public function withProgress(v) {
-        progress = v;
-        if (q != null)
-            q.setVal(mainAxis, v);
-        if (handler != null)
-            handler(v);
-        return this;
-    }
-
-    override function createShapes() {
-        var aspectRatio = ratioProvider.getAspectRatio();
-        q = new ProgressBar(ColorSet.instance);
-        q.setVal(mainAxis, progress);
-        addChild(q);
-        var inp = new SliderInput(ph, cast ratioProvider, mainAxis, (v) -> withProgress(v));
-        ph.entity.addComponentByType(InputSystemTarget, inp);
-        new CtxWatcher(InputBinder, ph.entity);
+class FlatSlider {
+    public static function withFlat(s:SliderInput) {
+        var sw = new ShapeWidget(ColorSet.instance, s.ph, true);
+        var q = new ProgressBar(ColorSet.instance);
+        q.setVal(s.mainAxis, s.value);
+        s.onChange.listen(v -> q.setVal(s.mainAxis, v));
+        sw.addChild(q);
+        sw.manInit();
+        new ShapesColorAssigner(ColorSet.instance, 0xffffff, sw.getBuffer());
+        return s;
     }
 }
 
-class SliderInput implements InputSystemTarget<Point> {
+class SliderInput implements InputSystemTarget<Point> extends Widget {
+    public var onChange(default, null):Signal<Float->Void> = new Signal();
+    public var onRelease(default, null):Signal<Void->Void> = new Signal();
+    public var value(default, null):Float;
+    public var mainAxis(default, null):Axis2D;
+
     var hitTester:HitTester<Point>;
     var pos:Point;
     var pressed = false;
     var toLocal:ToWidgetSpace;
-    var a:Axis2D;
-    var handler:Float->Void;
 
-    public function new(w, stage, a, h) {
-        this.hitTester = new WidgetHitTester2D(w);
-        this.toLocal = new ToWidgetSpace(w, stage);
-        this.handler = h;
-        this.a = a;
+    public function new(ph, a) {
+        super(ph);
+        this.hitTester = new WidgetHitTester2D(ph);
+        this.toLocal = new ToWidgetSpace(ph);
+        this.mainAxis = a;
+        ph.entity.addComponentByType(InputSystemTarget, this);
+        new CtxWatcher(InputBinder, ph.entity);
+    }
+
+    public function withProgress(v) {
+        value = v;
+        onChange.dispatch(v);
+        return this;
     }
 
     public function setPos(pos:Point):Void {
         this.pos = pos;
         if (pressed) {
-            var v = toLocal.transformValue(a, posVal(pos, a));
-            handler(Mathu.clamp(v, 0, 1));
+            var v = toLocal.transformValue(mainAxis, posVal(pos, mainAxis));
+            withProgress(Mathu.clamp(v, 0, 1));
         }
     }
 
@@ -95,13 +85,14 @@ class SliderInput implements InputSystemTarget<Point> {
 
     public function release():Void {
         pressed = false;
+        onRelease.dispatch();
     }
 }
 
 class ToWidgetSpace {
     var w:Placeholder2D;
 
-    public function new(w, s) {
+    public function new(w) {
         this.w = w;
     }
 
