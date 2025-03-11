@@ -75,7 +75,7 @@ class SliderInput implements InputSystemTarget<Point> extends Widget {
 
     public function setActive(val:Bool):Void {
         if (!val)
-            pressed = false;
+            release();
     }
 
     public function press():Void {
