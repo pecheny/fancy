@@ -1,6 +1,8 @@
 package fu.ui;
 
-
+import Axis2D;
+import htext.TextLayouter;
+import htext.Align;
 import a2d.Stage;
 import ec.CtxWatcher;
 import ecbind.RenderableBinder;
@@ -14,11 +16,15 @@ import a2d.transform.TransformerBase;
 import a2d.Widget;
 
 using htext.TextTransformer;
+
 class LabelBase<T:AttribSet> extends Widget {
     var textStyleContext:TextStyleContext;
     var text:String = "";
     var render:ITextRender<T>;
     var attrs:T;
+    var layouter:TextLayouter;
+    var transformer:TextTransformer;
+
     @:once var stage:Stage;
 
     public function new(w, tc, attrs:T) {
@@ -38,13 +44,20 @@ class LabelBase<T:AttribSet> extends Widget {
         return new TextRender(attrs, l, tt);
     }
 
+    public function setAlign(?align:Align) {
+        transformer.align[horizontal] = align; // if null - the value from ctx used
+        if (align == null)
+            align = @:privateAccess textStyleContext.align[horizontal];
+        layouter.setTextAlign(align);
+    }
+
     override function init() {
-        var l = textStyleContext.createLayouter();
+        layouter = textStyleContext.createLayouter();
         TextTransformer.withTextTransform(ph, stage.getAspectRatio(), textStyleContext);
-        var tt = ph.entity.getComponent(TextTransformer);
-        var aw = new TextAutoWidth(ph, l, tt, textStyleContext);
-        render = createTextRender(attrs, l, tt);
-        var as = new htext.TextAutoScale(ph.entity, tt, render, aw);
+        transformer = ph.entity.getComponent(TextTransformer);
+        var aw = new TextAutoWidth(ph, layouter, transformer, textStyleContext);
+        render = createTextRender(attrs, layouter, transformer);
+        var as = new htext.TextAutoScale(ph.entity, transformer, render, aw);
         render.setText(this.text);
         var drawcallsData = RenderablesComponent.get(attrs, ph.entity, textStyleContext.getDrawcallName());
         drawcallsData.views.push(render);
