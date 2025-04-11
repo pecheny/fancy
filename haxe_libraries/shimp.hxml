@@ -1,5 +1,5 @@
-# @install: lix --silent download "gh://github.com/pecheny/shimp#a0f06475bfd41cebb805e89c84c0896c38741c71" into shimp/0.1.0/github/a0f06475bfd41cebb805e89c84c0896c38741c71
+# @install: lix --silent download "gh://github.com/pecheny/shimp#198e6220f6119f3bc151e9d2fc299e31725fe347" into shimp/0.1.0/github/198e6220f6119f3bc151e9d2fc299e31725fe347
 -lib fsm
 -lib taxis
--cp ${HAXE_LIBCACHE}/shimp/0.1.0/github/a0f06475bfd41cebb805e89c84c0896c38741c71/src
+-cp ${HAXE_LIBCACHE}/shimp/0.1.0/github/198e6220f6119f3bc151e9d2fc299e31725fe347/src
 -D shimp=0.1.0
