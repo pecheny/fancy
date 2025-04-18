@@ -19,7 +19,6 @@ class BarsDemo extends Sprite {
     public var switcher:WidgetSwitcher<Axis2D>;
 
     var attrs = CircleSet.instance;
-    var gui:DemoGui;
 
     public function new() {
         super();
@@ -32,11 +31,11 @@ class BarsDemo extends Sprite {
         uikit.createContainer(root);
 
         switcher = root.getComponent(WidgetSwitcher);
-        gui = new DemoGui(Builder.widget());
-        ngrid(gui.canvas.ph);
-        tgrid(gui.ph);
-        createBarWidget(gui.canvas.ph);
-        switcher.switchTo(gui.ph);
+        var ph = Builder.widget();
+        ngrid(ph);
+        tgrid(ph);
+        createBarWidget(ph);
+        switcher.switchTo(ph);
     }
 
     function ngrid(ph) {
@@ -47,15 +46,13 @@ class BarsDemo extends Sprite {
         var shw = fac.create(ph);
         var buffer = shw.getBuffer();
 
-        new ShapesColorAssigner(attrs, 0x77BA89FF, shw.getBuffer());
+        new ShapesColorAssigner(attrs, 0x9789FFC8, shw.getBuffer());
 
         buffer.onInit.listen(() -> {
             var rad = new RadiusAtt(attrs, buffer.getVertCount());
-            rad.r1 = 0;
             rad.r2 = 1;
             rad.r1 = 1 - (1 / cornerSize);
             rad.r1 *= rad.r1;
-
             rad.writePostions(buffer.getBuffer(), 0, null);
         });
         return shw;
@@ -71,7 +68,11 @@ class BarsDemo extends Sprite {
         new ShapesColorAssigner(attrs, 0x77DEC7FF, shw.getBuffer());
         buffer.onInit.listen(() -> {
             var rad = new RadiusAtt(attrs, buffer.getVertCount());
+            // for solid fill
+            // rad.r1 = 0;
+            // rad.r2 = 1;
             rad.writePostions(buffer.getBuffer(), 0, null);
+            //for border of line thickness
             new fu.graphics.CircleThicknessCalculator(ph, steps, cast rad, buffer.getBuffer());
         });
     }
@@ -84,7 +85,7 @@ class BarsDemo extends Sprite {
 
         var attrs = ColorSet.instance;
         var cq = new BarWidget(attrs, ph, elements());
-        var colors = new ShapesColorAssigner(attrs, 0, cq.getBuffer());
+        new ShapesColorAssigner(attrs, 0xffff7b7b, cq.getBuffer());
         return cq;
     }
 }

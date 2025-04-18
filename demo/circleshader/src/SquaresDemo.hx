@@ -12,7 +12,6 @@ import dkit.Dkit.BaseDkit;
 import ec.Entity;
 import fu.Signal;
 import fu.graphics.ShapeWidget;
-import fu.graphics.Slider;
 import gl.AttribSet;
 import gl.ValueWriter;
 import gl.sets.CircleSet;
