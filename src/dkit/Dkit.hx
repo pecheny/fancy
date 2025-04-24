@@ -1,5 +1,6 @@
 package dkit;
 
+import al.ec.WidgetSwitcher;
 import fu.ui.ButtonBase;
 import al.core.DataView;
 import fu.Signal.IntSignal;
@@ -163,7 +164,7 @@ class DataContainerDkit extends BaseDkit implements DataView<Array<String>> {
 
     override function initDkit() {
         super.initDkit();
-        if (dispatch) 
+        if (dispatch)
             onChoice = new IntSignal();
         pool = new fu.ui.InteractivePanelBuilder().withContainer(c)
             .withWidget(() -> itemFactory())
@@ -174,8 +175,22 @@ class DataContainerDkit extends BaseDkit implements DataView<Array<String>> {
     public function initData(descr):Void {
         pool.initData(descr);
     }
-    
+
     public function getItems() {
         return pool.pool;
+    }
+}
+
+@:uiComp("switcher")
+@:postInit(initDkit)
+class SwitcherDkit extends BaseDkit {
+    var switcher:WidgetSwitcher<Axis2D>;
+
+    override function initDkit() {
+        switcher = new WidgetSwitcher(ph.getInnerPh());
+    }
+    
+    public function switchTo(ph) {
+        switcher.switchTo(ph);
     }
 }
