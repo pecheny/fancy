@@ -22,7 +22,9 @@ class Dkit {
 
 @:uiComp("base")
 @:postInit(initDkit)
+#if (!macro && !completion && !display)
 @:autoBuild(dkit.Macros.DefaultConstructorBuilder.build())
+#end
 class BaseDkit implements domkit.Model<BaseDkit> implements domkit.Object implements IWidget<Axis2D> {
     public var ph(get, null):Placeholder2D;
     public var entity(get, null):Entity;
