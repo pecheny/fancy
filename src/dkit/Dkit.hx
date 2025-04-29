@@ -140,6 +140,10 @@ class BaseDkit implements domkit.Model<BaseDkit> implements domkit.Object implem
         setLayouts();
         return value;
     }
+
+    public function getChildRefPosition(first:Bool):Int {
+        throw new haxe.exceptions.NotImplementedException();
+    }
 }
 
 @:uiComp("data-container")
