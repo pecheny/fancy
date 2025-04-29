@@ -84,7 +84,12 @@ class BaseDkit implements domkit.Model<BaseDkit> implements domkit.Object implem
         return false;
     }
 
+    var dkitInited = false;
     public function initDkit() {
+        if (dkitInited)
+            return;
+        dkitInited = true;
+
         if (onConstruct != null)
             onConstruct(ph);
         if (containerRequired()) {
