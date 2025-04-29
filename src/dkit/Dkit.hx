@@ -53,7 +53,7 @@ class BaseDkit implements domkit.Model<BaseDkit> implements domkit.Object implem
     public function getChildren()
         return children;
 
-    public function new(p:Placeholder2D, ?parent:BaseDkit) {
+    public function new(p:a2d.Placeholder2D, ?parent:dkit.Dkit.BaseDkit) {
         if (p == null)
             this.ph = b().b();
         else
