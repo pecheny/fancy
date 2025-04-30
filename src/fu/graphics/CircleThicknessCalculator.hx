@@ -1,7 +1,6 @@
 package fu.graphics;
 
 import Axis2D;
-import SquareShape;
 import a2d.Placeholder2D;
 import a2d.transform.WidgetToScreenRatio;
 import al.core.AxisApplier;

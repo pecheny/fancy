@@ -1,5 +1,4 @@
 import Axis2D;
-import SquareShape;
 import a2d.transform.WidgetToScreenRatio;
 import al.Builder;
 import al.ec.WidgetSwitcher;
