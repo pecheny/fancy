@@ -1,15 +1,16 @@
 package htext;
+import htext.TextLayouter.TextWidthConstraint;
 import a2d.Placeholder2D;
 import al.core.AxisApplier;
 import Axis2D;
 import htext.style.TextStyleContext;
 import a2d.transform.TransformerBase;
 class TextAutoWidth implements AxisApplier {
-    var textLayouter:TextLayouter;
+    var textLayouter:TextWidthConstraint;
     var tr:TextTransformer;
     var ctx:TextStyleContext;
 
-    public function new(w:Placeholder2D, l:TextLayouter, tr:TextTransformer, ctx) {
+    public function new(w:Placeholder2D, l:TextWidthConstraint, tr:TextTransformer, ctx) {
         this.textLayouter = l;
         this.tr = tr;
         this.ctx = ctx;
