@@ -40,7 +40,7 @@ class LabelBase<T:AttribSet> extends Widget {
         return this;
     }
 
-    dynamic function createTextRender(attrs:T, l, tt:TransformerBase):ITextRender<T> {
+    function createTextRender(attrs:T, l:TextLayouter, tt:TransformerBase):ITextRender<T> {
         return new TextRender(attrs, l, tt);
     }
 
@@ -51,8 +51,12 @@ class LabelBase<T:AttribSet> extends Widget {
         layouter.setTextAlign(align);
     }
 
+    function createLayouter() {
+        return textStyleContext.createLayouter();
+    }
+
     override function init() {
-        layouter = textStyleContext.createLayouter();
+        layouter = createLayouter();
         TextTransformer.withTextTransform(ph, stage.getAspectRatio(), textStyleContext);
         transformer = ph.entity.getComponent(TextTransformer);
         var aw = new TextAutoWidth(ph, layouter, transformer, textStyleContext);
