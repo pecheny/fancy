@@ -6,7 +6,7 @@ import haxe.macro.Context;
 
 class DefaultConstructorBuilder {
     static var template = macro class Templ {
-        public function new(p:a2d.Placeholder2D, ?parent:dkit.BaseDkit) {
+        public function new(p:a2d.Placeholder2D, ?parent:dkit.Dkit.BaseDkit) {
             super(p, parent);
             initComponent();
             if (parent == null)
