@@ -72,7 +72,7 @@ class BaseDkit implements domkit.Model<BaseDkit> implements domkit.Object implem
 
     function _init(e:Entity) {}
 
-    inline function containerRequired() {
+    function containerRequired() {
         if (children.length > 0)
             return true;
         if (layouts != "")
@@ -154,7 +154,7 @@ class BaseDkit implements domkit.Model<BaseDkit> implements domkit.Object implem
 @:uiComp("data-container")
 @:postInit(initDkit)
 class DataContainerDkit extends BaseDkit implements DataView<Array<String>> {
-    static var SRC = <data-container vl={PortionLayout.instance}></data-container>
+    static var SRC = <data-container></data-container>
 
     var pool:a2d.ChildrenPool.DataChildrenPool<Dynamic, Dynamic>;
 
@@ -169,6 +169,10 @@ class DataContainerDkit extends BaseDkit implements DataView<Array<String>> {
         if (dispatch) {
             new ButtonBase(ph, onChoice.dispatch.bind(n));
         }
+    }
+    
+    override function containerRequired():Bool {
+        return true;
     }
 
     override function initDkit() {
