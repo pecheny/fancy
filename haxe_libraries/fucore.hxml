@@ -1,3 +1,3 @@
-# @install: lix --silent download "gh://github.com/pecheny/fucore#da27ba191d79f8466364caadd8be7cf5f3ff0414" into fucore/1.0.0/github/da27ba191d79f8466364caadd8be7cf5f3ff0414
--cp ${HAXE_LIBCACHE}/fucore/1.0.0/github/da27ba191d79f8466364caadd8be7cf5f3ff0414/src
+# @install: lix --silent download "gh://github.com/pecheny/fucore#d89115397946298260abe8ead5b4d7146852d69d" into fucore/1.0.0/github/d89115397946298260abe8ead5b4d7146852d69d
+-cp ${HAXE_LIBCACHE}/fucore/1.0.0/github/d89115397946298260abe8ead5b4d7146852d69d/src
 -D fucore=1.0.0
