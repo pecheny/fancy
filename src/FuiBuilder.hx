@@ -185,7 +185,6 @@ class FuiBuilder implements FuCtx {
 		uvs.fillBuffer = (attrs:TexSet, buffer) -> {
 			var writer = attrs.getWriter(AttribAliases.NAME_UV_0);
 			QuadGraphicElement.writeQuadPostions(buffer.getBuffer(), writer, 0, (a, wg) -> wg);
-			trace(attrs.printVertex(buffer.getBuffer(), 1));
 		};
 		if (createGldo) {
 			DrawcallUtils.createContainer(pipeline, w.entity, Xml.parse(PictureDrawcalls.DRAWCALLS_LAYOUT(filename)).firstElement());
