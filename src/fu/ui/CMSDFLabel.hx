@@ -25,6 +25,10 @@ class CMSDFLabel extends LabelBase<CMSDFSet> {
         glyphs.color = c;
         if (cw == null)
             return;
+        // to trigger XmlText relayout assigned text should differ from previous one.
+        // TODO maybe if text contains no color tags filling color attribute instead on relayouting would be more efficient
+        layouter.setText("");
+        layouter.setText(text);
         rend.setDirty();
     }
 
