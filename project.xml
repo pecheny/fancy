@@ -2,6 +2,11 @@
 <project>
     <include path="include.xml" />
     <!-- <include path="demo/circleshader/project.xml" /> -->
-    <include path="demo/animation/project.xml" />
+    <!-- <include path="demo/smoothing/project.xml" /> -->
+    <include path="demo/radiogroup/project.xml" />
+    <!-- <include path="demo/animation/project.xml" /> -->
     <!-- <include path="demo/components/project.xml" /> -->
+    -D 
+    <haxeflag name="-D" value="message.reporting=classic" />
+
 </project>
