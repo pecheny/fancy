@@ -14,28 +14,27 @@ import htext.animation.VUnfoldAnimTextRender;
 using htext.TextTransformer;
 
 class AnimatedLabel extends LabelBase<CMSDFSet> implements Animatable {
-	public function new(w, tc) {
-		super(w, tc, CMSDFSet.instance);
-	}
+    public function new(w, tc) {
+        super(w, tc, CMSDFSet.instance);
+    }
 
-	var _render:VUnfoldAnimTextRender<CMSDFSet>;
+    var _render:VUnfoldAnimTextRender<CMSDFSet>;
 
-	override function createTextRender(attrs:CMSDFSet, l:TextLayouter, tt:TransformerBase):ITextRender<CMSDFSet> {
-		var dpiWriter = attrs.getWriter(CMSDFSet.NAME_DPI);
+    override function createTextRender(attrs:CMSDFSet, l:TextLayouter, tt:TransformerBase):ITextRender<CMSDFSet> {
+        var dpiWriter = attrs.getWriter(CMSDFSet.NAME_DPI);
         var wrs = new AttFillContainer();
         wrs.addChild(new SmothnessWriter(dpiWriter[0], l, textStyleContext, tt, stage.getWindowSize()));
         var cw = new TextColorFiller(CMSDFSet.instance, l);
         cw.color = 0xffffff;
         wrs.addChild(cw);
-		_render = new VUnfoldAnimTextRender(attrs, l, tt, wrs);
-		return _render;
-	}
+        _render = new VUnfoldAnimTextRender(attrs, l, tt, wrs);
+        return _render;
+    }
 
-	public function setTime(t:Float):Void {
-		_render.setTime(t);
-	}
+    public function setTime(t:Float):Void {
+        _render.setTime(t);
+    }
 }
-
 
 class TextColorFiller<T:AttribSet> implements AttributeFiller {
     var attr:T;
@@ -53,4 +52,3 @@ class TextColorFiller<T:AttribSet> implements AttributeFiller {
         attr.writeColor(target, color, start, 4 * layouter.getTiles().length);
     }
 }
-
