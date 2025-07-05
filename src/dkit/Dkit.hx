@@ -157,6 +157,7 @@ class DataContainerDkit extends BaseDkit implements DataView<Array<String>> {
     static var SRC = <data-container></data-container>
 
     var pool:a2d.ChildrenPool.DataChildrenPool<Dynamic, Dynamic>;
+    var data:Array<String>;
 
     public var onChoice(default, null):IntSignal;
     public var dispatch:Bool;
@@ -183,10 +184,13 @@ class DataContainerDkit extends BaseDkit implements DataView<Array<String>> {
             .withWidget(() -> itemFactory())
             .withInput(inputFactory)
             .build();
+        if (data != null)
+            initData(data);
     }
 
     public function initData(descr):Void {
-        pool.initData(descr);
+        data = descr;
+        pool?.initData(descr);
     }
 
     public function getItems() {
