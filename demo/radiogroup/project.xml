@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 
-    <meta title="Sample" package="shoo.fancy.LevelupDemo" version="1.0.0" company="shoo"/>
+    <meta title="Sample" package="shoo.fancy.RadiogroupDemo" version="1.0.0" company="shoo"/>
     <app main="RadiogroupDemo" />
 
     <window antialiasing="4"/>

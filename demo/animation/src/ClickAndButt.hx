@@ -36,6 +36,8 @@ class ClickAndButt extends Sprite {
         var fuiBuilder = new FuiBuilder();
         BaseDkit.inject(fuiBuilder);
         var root:Entity = fuiBuilder.createDefaultRoot();
+        root.addComponent(new al.openfl.display.FlashDisplayRoot(this));
+
         var uikit = new FlatUikitExtended(fuiBuilder);
 
         uikit.configure(root);

@@ -33,6 +33,7 @@ class FancyPg extends Sprite {
         ar = fuiBuilder.ar;
         b = new PlaceholderBuilder2D(fuiBuilder.ar);
         var root:Entity = fuiBuilder.createDefaultRoot();
+        root.addComponent(new al.openfl.display.FlashDisplayRoot(this));
         var uikit = new FlatUikit(fuiBuilder);
         uikit.drawcallsLayout.addChild(Xml.parse(PictureDrawcalls.DRAWCALLS_LAYOUT(pictureFile)).firstElement());
         uikit.configure(root);
