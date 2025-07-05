@@ -65,6 +65,7 @@ class FuiBuilder implements FuCtx {
 	public var fonts(default, null) = new FontStorage(new BMFontFactory());
 
 	public var pipeline:RenderingPipeline;
+	public var stage (get, null):Stage;
 	public var ar:Stage = new StageImpl(1);
 	public var placeholderBuilder(default, null):PlaceholderBuilderUi;
 	public var textStyles:TextContextBuilder;
@@ -203,4 +204,8 @@ class FuiBuilder implements FuCtx {
         return placeholder;
     }
 
+
+    function get_stage():Stage {
+        return ar;
+    }
 }
