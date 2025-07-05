@@ -1,3 +1,3 @@
-# @install: lix --silent download "gh://github.com/pecheny/domkit#1039b9f186a49e68e5abd25c993eb63ec404cb7d" into domkit/0.3.0/github/1039b9f186a49e68e5abd25c993eb63ec404cb7d
--cp ${HAXE_LIBCACHE}/domkit/0.3.0/github/1039b9f186a49e68e5abd25c993eb63ec404cb7d/
+# @install: lix --silent download "gh://github.com/pecheny/domkit#84a12f48e4124db082ebf070e75c90251cb0b50a" into domkit/0.3.0/github/84a12f48e4124db082ebf070e75c90251cb0b50a
+-cp ${HAXE_LIBCACHE}/domkit/0.3.0/github/84a12f48e4124db082ebf070e75c90251cb0b50a/
 -D domkit=0.3.0

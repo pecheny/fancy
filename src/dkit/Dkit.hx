@@ -153,11 +153,11 @@ class BaseDkit implements domkit.Model<BaseDkit> implements domkit.Object implem
 
 @:uiComp("data-container")
 @:postInit(initDkit)
-class DataContainerDkit extends BaseDkit implements DataView<Array<String>> {
+class DataContainerDkit<T> extends BaseDkit implements DataView<Array<T>> {
     static var SRC = <data-container></data-container>
 
     var pool:a2d.ChildrenPool.DataChildrenPool<Dynamic, Dynamic>;
-    var data:Array<String>;
+    var data:Array<T>;
 
     public var onChoice(default, null):IntSignal;
     public var dispatch:Bool;
@@ -188,7 +188,7 @@ class DataContainerDkit extends BaseDkit implements DataView<Array<String>> {
             initData(data);
     }
 
-    public function initData(descr):Void {
+    public function initData(descr:Array<T>):Void {
         data = descr;
         pool?.initData(descr);
     }
