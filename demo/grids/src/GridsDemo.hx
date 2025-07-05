@@ -44,7 +44,7 @@ class GridsDemo extends Sprite {
         var wdg = Builder.widget();
         fui.makeClickInput(wdg);
         var axisFac = new Axis2DStateFactory(horizontal, fui.stage);
-        var wdc = new GridWidgetContainer(wdg.grantInnerTransformPh(), vertical, [axisFac.create(), axisFac.create(), axisFac.create()], axisFac.create);
+        var wdc = new TableWidgetContainer(wdg.grantInnerTransformPh(), vertical, [axisFac.create(), axisFac.create(), axisFac.create()], axisFac.create);
 
         var b = new PlaceholderBuilder2D(fui.ar, true);
         b.keepStateAfterBuild = true;
@@ -64,7 +64,7 @@ class GridsDemo extends Sprite {
     This container limits number/position of children per line according to refRow layout 
     moving the rest to new lines forming a table appearance.
 **/
-class GridWidgetContainer extends Widget2DContainer {
+class TableWidgetContainer extends Widget2DContainer {
     var refRow:Array<AxisState>;
     var refCol:Array<AxisState>;
     var colFac:() -> AxisState;
