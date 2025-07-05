@@ -85,6 +85,7 @@ class BaseDkit implements domkit.Model<BaseDkit> implements domkit.Object implem
     }
 
     var dkitInited = false;
+
     public function initDkit() {
         if (dkitInited)
             return;
@@ -93,12 +94,16 @@ class BaseDkit implements domkit.Model<BaseDkit> implements domkit.Object implem
         if (onConstruct != null)
             onConstruct(ph);
         if (containerRequired()) {
-            c = new Widget2DContainer(ph.getInnerPh(), 2);
+            c = ph.entity.getComponent(Widget2DContainer);
+            if (c == null) {
+                c = new Widget2DContainer(ph.getInnerPh(), 2);
+                ph.entity.addComponent(c);
+                setLayouts();
+            }
+
             for (a in Axis2D) {
                 ph.getInnerPh().axisStates[a].addSibling(new ContainerRefresher(c));
             }
-            setLayouts();
-            ph.entity.addComponent(c);
             for (ch in children) {
                 c.addChild(ch.ph);
                 c.entity.addChild(ch.ph.entity);
@@ -171,7 +176,7 @@ class DataContainerDkit<T> extends BaseDkit implements DataView<Array<T>> {
             new ButtonBase(ph, onChoice.dispatch.bind(n));
         }
     }
-    
+
     override function containerRequired():Bool {
         return true;
     }
@@ -206,7 +211,7 @@ class SwitcherDkit extends BaseDkit {
     override function initDkit() {
         switcher = new WidgetSwitcher(ph.getInnerPh());
     }
-    
+
     public function switchTo(ph) {
         switcher.switchTo(ph);
     }
