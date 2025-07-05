@@ -1,0 +1,38 @@
+[
+    {
+        "share": true,
+        "pngName":"fonts/atlas.png",
+        "charset": [
+          "CYRILLIC" , "LATIN"
+        ],
+        "options": [],
+        "fontSize": 24,
+        "padding": {
+            "top": 0,
+            "bottom": 0,
+            "left": 0,
+            "right": 0
+        },
+        "spacing": {
+            "x": 2,
+            "y": 2
+        },
+        "dfSize": 2,
+        "mode": "sdf"
+    },
+    {
+        "inputs": [
+            "RobotoSlab-Regular.ttf"
+        ],
+        "dfSize": 2,
+        "output": "fonts/RobotoSlab-24-df2.fnt"
+    },
+
+    {
+        "inputs": [
+            "RobotoSlab-Regular.ttf"
+        ],
+        "dfSize": 8,
+        "output": "fonts/RobotoSlab-24-df8.fnt"
+    }
+]
