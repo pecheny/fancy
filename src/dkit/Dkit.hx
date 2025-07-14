@@ -1,5 +1,7 @@
 package dkit;
 
+import al.Builder;
+import fu.Uikit;
 import al.ec.WidgetSwitcher;
 import fu.ui.ButtonBase;
 import al.core.DataView;
@@ -35,6 +37,7 @@ class BaseDkit implements domkit.Model<BaseDkit> implements domkit.Object implem
 
     var hl:AxisLayout = WholefillLayout.instance;
     var vl:AxisLayout = WholefillLayout.instance;
+    var scroll = false;
     @:isVar var layouts(default, set):String = "";
 
     static var _fui:FuiBuilder;
@@ -72,6 +75,10 @@ class BaseDkit implements domkit.Model<BaseDkit> implements domkit.Object implem
 
     function _init(e:Entity) {}
 
+    function scrollboxRequired() {
+        return scroll;
+    }
+
     function containerRequired() {
         if (children.length > 0)
             return true;
@@ -93,14 +100,26 @@ class BaseDkit implements domkit.Model<BaseDkit> implements domkit.Object implem
 
         if (onConstruct != null)
             onConstruct(ph);
-        if (containerRequired()) {
+        if (scrollboxRequired()) {
+            c = ph.entity.getComponent(Widget2DContainer);
+            if (c == null) {
+                c = al.Builder.createContainer(b().b(), horizontal, Center);
+                fui.makeClickInput(c.ph);
+                setLayouts();
+                fui.createScrollbox(c, ph, fui.uikit.drawcallsLayout);
+            } else
+                throw "Scrolls for predefined containers not supported";
+            for (ch in children) {
+                c.addChild(ch.ph);
+                c.entity.addChild(ch.ph.entity);
+            }
+        } else if (containerRequired()) {
             c = ph.entity.getComponent(Widget2DContainer);
             if (c == null) {
                 c = new Widget2DContainer(ph.getInnerPh(), 2);
                 ph.entity.addComponent(c);
                 setLayouts();
             }
-
             for (a in Axis2D) {
                 ph.getInnerPh().axisStates[a].addSibling(new ContainerRefresher(c));
             }

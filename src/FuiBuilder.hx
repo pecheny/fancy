@@ -1,5 +1,6 @@
 package;
 
+import fu.Uikit;
 import fu.ui.PlaceholderBuilderUi;
 import fu.FuCtx;
 import backends.openfl.DrawcallUtils;
@@ -71,7 +72,8 @@ class FuiBuilder implements FuCtx {
 	public var textStyles:TextContextBuilder;
 	public var updater(default, null):Updater;
 
-	public function new() {
+    public function new(uikit = null) {
+        this.uikit = uikit ?? new Uikit(this);
 		pipeline = new RenderingPipeline();
 		placeholderBuilder = new PlaceholderBuilderUi(ar);
 		textStyles = new TextContextBuilder(fonts, ar);
