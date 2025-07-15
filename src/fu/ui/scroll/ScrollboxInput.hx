@@ -1,4 +1,5 @@
 package fu.ui.scroll;
+
 import shimp.Point;
 import Axis2D;
 import fsm.FSM;
@@ -8,10 +9,9 @@ import Math.abs as abs;
 import fu.ui.scroll.ScrollableContent;
 import fu.ui.scroll.Scrollbar;
 
-
 // handles input and indicators
 
-@:enum abstract ScrollboxStateName(String) to String{
+@:enum abstract ScrollboxStateName(String) to String {
     var pressed = "pressed";
     var open = "open";
     var dragged = "dragged";
@@ -19,9 +19,11 @@ import fu.ui.scroll.Scrollbar;
 
 typedef TPos = Point;
 
-
 class ScrollboxInput extends FSM<ScrollboxStateName, ScrollboxInput> implements InputSystemTarget<TPos> {
     public static inline var THRESHOLD = 0.05;
+
+    public final onOffset:Signal<(Axis2D, Float) -> Void> = new Signal();
+
     var content:ScrollableContent;
     var scrollbars:AVector2D<Scrollbar>;
     var hitester:HitTester<TPos>;
@@ -56,15 +58,7 @@ class ScrollboxInput extends FSM<ScrollboxStateName, ScrollboxInput> implements 
     }
 
     public function setOffset(a, val) {
-        var offset = content.setOffset(a, val);
-        var cs = content.getContentSize(a);
-        var vs = visSize.getVisibleSize(a);
-        var hndlSize =
-        if (cs > vs)
-            vs / cs
-        else 0 ;
-        scrollbars[a].setHandlerSize(hndlSize);
-        scrollbars[a].setHandlerPos(-offset / (cs - vs));
+        onOffset.dispatch(a, val);
     }
 
     var enabled = true;
@@ -93,15 +87,13 @@ class SBState extends State<ScrollboxStateName, ScrollboxInput> {
         fsm.pos.setValue(pos);
     }
 
-    public function press():Void {
-    }
+    public function press():Void {}
 
-    public function release():Void {
-    }
+    public function release():Void {}
 }
+
 @:access(fu.ui.scroll.ScrollboxInput)
 class SBOpenState extends SBState {
-
     override public function onEnter():Void {
         super.onEnter();
         fsm.inputPassthrough.setActive(true);
@@ -121,10 +113,9 @@ class SBOpenState extends SBState {
 
 @:access(fu.ui.scroll.ScrollboxInput)
 class SBPressedState extends SBState {
-
     override public function setPos(pos:TPos):Void {
         super.setPos(pos);
-        var o= fsm.pressOrigin;
+        var o = fsm.pressOrigin;
         if (abs(o.x - pos.x) > ScrollboxInput.THRESHOLD || abs(o.y - pos.y) > ScrollboxInput.THRESHOLD) {
             fsm.changeState(dragged);
             return;
@@ -159,7 +150,6 @@ class SBDragState extends SBState {
         fsm.changeState(open);
     }
 }
-
 
 interface VisibleSizeProvider {
     function getVisibleSize(a:Axis2D):Float;
