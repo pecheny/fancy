@@ -1,28 +1,30 @@
 package fu.ui.scroll;
 
-import al.core.WidgetContainer.Refreshable;
-import ec.PropertyComponent;
-import macros.AVConstructor;
-import shimp.Point;
+import Axis2D;
 import a2d.Placeholder2D;
 import a2d.Widget2DContainer;
-import al.appliers.ContainerRefresher;
-import al.Builder;
-import al.layouts.data.LayoutData.FixedSize;
-import al.layouts.PortionLayout;
-import Axis2D;
 import a2d.Widget;
-import ec.CtxWatcher;
+import al.Builder;
+import al.appliers.ContainerRefresher;
+import al.core.WidgetContainer.Refreshable;
+import al.layouts.PortionLayout;
+import al.layouts.data.LayoutData.FixedSize;
 import al2d.WidgetHitTester2D;
-import shimp.InputSystemsContainer;
-import shimp.InputSystem;
+import ec.CtxWatcher;
 import ecbind.InputBinder;
+import fu.ui.scroll.ScrollableContent.Scrollable;
 import fu.ui.scroll.ScrollboxInput;
+import macros.AVConstructor;
+import openfl.events.MouseEvent;
+import shimp.InputSystem;
+import shimp.InputSystemsContainer;
+import shimp.Point;
 
-class ScrollboxWidget extends Widget implements VisibleSizeProvider implements Refreshable {
+class ScrollboxWidget extends Widget implements VisibleSizeProvider implements Refreshable implements Scrollable {
     var scrollbars:AVector2D<WidgetScrollbar>;
     var content:ScrollableContent;
-    var offsets:AVector2D<PropertyComponent<Float>>;
+    var offsets:AVector2D<Float>;
+    var scrollbox:ScrollboxInput;
 
     public function new(w:Placeholder2D, content:ScrollableContent, ar) {
         super(w);
@@ -35,23 +37,23 @@ class ScrollboxWidget extends Widget implements VisibleSizeProvider implements R
         var binder = new InputBinder(inputPassthrough);
         content.ph.entity.addComponent(binder);
         wireAxis(ar);
-        offsets = AVConstructor.create(@:privateAccess new PropertyComponent(), @:privateAccess new PropertyComponent());
-        for (a in Axis2D) {
-            offsets[a].value = 0;
-            offsets[a].onChange.listen(() -> setOffset(a, offsets[a].value));
-        }
-        var scrollbox = new ScrollboxInput(offsets, hitester, inputPassthrough);
+        offsets = AVConstructor.create(0, 0);
+        scrollbox = new ScrollboxInput(this, hitester, inputPassthrough);
         w.entity.addComponentByType(InputSystemTarget, scrollbox);
         w.axisStates[vertical].addSibling(new ContainerRefresher(this));
+        w.entity.addComponentByType(Scrollable, this);
     }
 
-    function setOffset(a, val) {
+
+    public function setOffset(a, val):Float {
         var offset = content.setOffset(a, val);
+        offsets[a] = offset;
         var cs = content.getContentSize(a);
         var vs = getVisibleSize(a);
         var hndlSize = if (cs > vs) vs / cs else 0;
         scrollbars[a].setHandlerSize(hndlSize);
         scrollbars[a].setHandlerPos(-offset / (cs - vs));
+        return offset;
     }
 
     function wireAxis(ar) {
@@ -97,7 +99,11 @@ class ScrollboxWidget extends Widget implements VisibleSizeProvider implements R
 
     public function refresh() {
         for (a in Axis2D) {
-            offsets[a].value = offsets[a].value;
+            setOffset(a, getOffset(a));
         }
+    }
+
+    public function getOffset(a:Axis2D):Float {
+        return offsets[a];
     }
 }

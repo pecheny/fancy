@@ -19,17 +19,15 @@ import fu.ui.scroll.Scrollbar;
 }
 
 typedef TPos = Point;
-typedef Target = AVector2D<PropertyComponent<Float>>;
 
 class ScrollboxInput extends FSM<ScrollboxStateName, ScrollboxInput> implements InputSystemTarget<TPos> {
     public static inline var THRESHOLD = 0.05;
-
 
     var hitester:HitTester<TPos>;
     var inputPassthrough:InputSystemTarget<TPos>;
     var pressOrigin:TPos = new TPos();
     var pos = new TPos();
-    var target:Target;
+    var target:Scrollable;
 
     public function new(target, hittester, subsystem) {
         super();
@@ -55,7 +53,7 @@ class ScrollboxInput extends FSM<ScrollboxStateName, ScrollboxInput> implements 
     }
 
     public function setOffset(a, val) {
-        target[a].value = val;
+        target.setOffset(a, val);
     }
 
     var enabled = true;
@@ -132,8 +130,8 @@ class SBDragState extends SBState {
 
     override public function onEnter():Void {
         fsm.inputPassthrough.setActive(false);
-        initialOffset.x = fsm.target[horizontal].value;
-        initialOffset.y = fsm.target[vertical].value;
+        initialOffset.x = fsm.target.getOffset(horizontal);
+        initialOffset.y = fsm.target.getOffset(vertical);
     }
 
     override public function setPos(pos:TPos):Void {

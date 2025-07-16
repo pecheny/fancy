@@ -1,4 +1,5 @@
 package fu.ui.scroll;
+
 import al.core.ResizableWidget;
 import al.core.WidgetContainer;
 import macros.AVConstructor;
@@ -11,7 +12,12 @@ import a2d.Widget;
 import ec.Signal;
 
 // provides content size, store ofset, apply offset
-class ScrollableContent extends Widget {
+interface Scrollable {
+    function setOffset(a:Axis2D, val:Float):Float;
+    function getOffset(a:Axis2D):Float;
+}
+
+class ScrollableContent extends Widget implements Scrollable {
     var axis:AVector2D<ScrollableAxisState> = AVConstructor.create(null, null);
 
     public function new(placeholder:Placeholder2D) {
@@ -42,7 +48,8 @@ class ScrollableContent extends Widget {
 
 class W2CScrollableContent extends ScrollableContent implements ContentSizeProvider<Axis2D> {
     var w2c:ResizableWidget2D;
-    public var contentSizeChanged(default, null) = new Signal<Axis2D -> Void>();
+
+    public var contentSizeChanged(default, null) = new Signal<Axis2D->Void>();
 
     public function new(content:ResizableWidget2D, placeholder:Placeholder2D) {
         super(placeholder);
@@ -63,10 +70,10 @@ class W2CScrollableContent extends ScrollableContent implements ContentSizeProvi
     }
 }
 
-
 class W2DScrollableContent extends ScrollableContent implements ContentSizeProvider<Axis2D> {
     var contentSize:AVector2D<Float> = AVConstructor.create(0, 0);
-    public var contentSizeChanged(default, null) = new Signal<Axis2D -> Void>();
+
+    public var contentSizeChanged(default, null) = new Signal<Axis2D->Void>();
 
     public function new(content:Placeholder2D, placeholder:Placeholder2D) {
         super(placeholder);
@@ -97,6 +104,7 @@ class W2DScrollableContent extends ScrollableContent implements ContentSizeProvi
 class ScrollableAxisState implements AxisApplier {
     public var visibleSize:Float = 0;
     public var offset(default, null):Float = 0;
+
     var contentSize:ContentSizeProvider<Axis2D>;
     var target:AxisApplier;
     var axis:Axis2D;
@@ -130,7 +138,3 @@ class ScrollableAxisState implements AxisApplier {
         target.apply(pos + offset, cs);
     }
 }
-
-
-
-
