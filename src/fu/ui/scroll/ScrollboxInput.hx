@@ -1,5 +1,6 @@
 package fu.ui.scroll;
 
+import ec.PropertyComponent;
 import shimp.Point;
 import Axis2D;
 import fsm.FSM;
@@ -18,26 +19,22 @@ import fu.ui.scroll.Scrollbar;
 }
 
 typedef TPos = Point;
+typedef Target = AVector2D<PropertyComponent<Float>>;
 
 class ScrollboxInput extends FSM<ScrollboxStateName, ScrollboxInput> implements InputSystemTarget<TPos> {
     public static inline var THRESHOLD = 0.05;
 
-    public final onOffset:Signal<(Axis2D, Float) -> Void> = new Signal();
 
-    var content:ScrollableContent;
-    var scrollbars:AVector2D<Scrollbar>;
     var hitester:HitTester<TPos>;
     var inputPassthrough:InputSystemTarget<TPos>;
     var pressOrigin:TPos = new TPos();
     var pos = new TPos();
-    var visSize:VisibleSizeProvider;
+    var target:Target;
 
-    public function new(content:ScrollableContent, visSize:VisibleSizeProvider, scrollbars, hittester, subsystem) {
+    public function new(target, hittester, subsystem) {
         super();
-        this.visSize = visSize;
+        this.target = target;
         this.hitester = hittester;
-        this.scrollbars = scrollbars;
-        this.content = content;
         this.inputPassthrough = subsystem;
         addState(pressed, new SBPressedState());
         addState(open, new SBOpenState());
@@ -58,7 +55,7 @@ class ScrollboxInput extends FSM<ScrollboxStateName, ScrollboxInput> implements 
     }
 
     public function setOffset(a, val) {
-        onOffset.dispatch(a, val);
+        target[a].value = val;
     }
 
     var enabled = true;
@@ -135,8 +132,8 @@ class SBDragState extends SBState {
 
     override public function onEnter():Void {
         fsm.inputPassthrough.setActive(false);
-        initialOffset.x = fsm.content.getOffset(horizontal);
-        initialOffset.y = fsm.content.getOffset(vertical);
+        initialOffset.x = fsm.target[horizontal].value;
+        initialOffset.y = fsm.target[vertical].value;
     }
 
     override public function setPos(pos:TPos):Void {

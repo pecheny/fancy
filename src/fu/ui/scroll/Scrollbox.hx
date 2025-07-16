@@ -1,5 +1,7 @@
 package fu.ui.scroll;
 
+import ec.PropertyComponent;
+import macros.AVConstructor;
 import shimp.Point;
 import a2d.Placeholder2D;
 import a2d.Widget2DContainer;
@@ -32,8 +34,12 @@ class ScrollboxWidget extends Widget implements VisibleSizeProvider {
         var binder = new InputBinder(inputPassthrough);
         content.ph.entity.addComponent(binder);
         wireAxis(ar);
-        var scrollbox = new ScrollboxInput(content, this, cast scrollbars, hitester, inputPassthrough);
-        scrollbox.onOffset.listen(setOffset);
+        var target:AVector2D<PropertyComponent<Float>> = AVConstructor.create(@:privateAccess new PropertyComponent(), @:privateAccess new PropertyComponent());
+        for (a in Axis2D) {
+            target[a].value = 0;
+            target[a].onChange.listen(() -> setOffset(a, target[a].value));
+        }
+        var scrollbox = new ScrollboxInput(target, hitester, inputPassthrough);
         w.entity.addComponentByType(InputSystemTarget, scrollbox);
     }
 
