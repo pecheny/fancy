@@ -44,7 +44,6 @@ class ScrollboxWidget extends Widget implements VisibleSizeProvider implements R
         w.entity.addComponentByType(Scrollable, this);
     }
 
-
     public function setOffset(a, val):Float {
         var offset = content.setOffset(a, val);
         offsets[a] = offset;
