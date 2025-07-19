@@ -1,5 +1,6 @@
 package fu.ui.scroll;
 
+import al.core.ResizableWidget.ContentSizeProvider;
 import Axis2D;
 import a2d.Placeholder2D;
 import a2d.Widget2DContainer;
@@ -29,6 +30,9 @@ class ScrollboxWidget extends Widget implements VisibleSizeProvider implements R
     public function new(w:Placeholder2D, content:ScrollableContent, ar) {
         super(w);
         this.content = content;
+        if (Std.isOfType(content, ContentSizeProvider)) {
+            cast(content, ContentSizeProvider<Dynamic>).contentSizeChanged.listen(a -> setOffset(a, getOffset(a)));
+        }
         var hitester = new WidgetHitTester2D(w);
         new CtxWatcher(InputBinder, w.entity, true); // send upstream to scrollbox
         var inputPassthrough = new InputSystemsContainer(new Point(), hitester);

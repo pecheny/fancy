@@ -49,7 +49,7 @@ class ScrollableContent extends Widget implements Scrollable {
 class W2CScrollableContent extends ScrollableContent implements ContentSizeProvider<Axis2D> {
     var w2c:ResizableWidget2D;
 
-    public var contentSizeChanged(default, null) = new Signal<Axis2D->Void>();
+    public var contentSizeChanged(default, null):Signal<Axis2D->Void>;
 
     public function new(content:ResizableWidget2D, placeholder:Placeholder2D) {
         super(placeholder);
