@@ -31,7 +31,11 @@ class ScrollboxWidget extends Widget implements VisibleSizeProvider implements R
         super(w);
         this.content = content;
         if (Std.isOfType(content, ContentSizeProvider)) {
-            cast(content, ContentSizeProvider<Dynamic>).contentSizeChanged.listen(a -> setOffset(a, getOffset(a)));
+            //without explicit type hl can crash with 'Access violation'
+            var arr:ec.Signal<Axis2D->Void> = cast cast(content, ContentSizeProvider<Dynamic>).contentSizeChanged;
+            arr.listen((a:Axis2D) -> {
+                setOffset(a, getOffset(a));
+            });
         }
         var hitester = new WidgetHitTester2D(w);
         new CtxWatcher(InputBinder, w.entity, true); // send upstream to scrollbox
