@@ -56,17 +56,16 @@ class W2CScrollableContent extends ScrollableContent implements ContentSizeProvi
         w2c = content;
         contentSizeChanged = w2c.contentSizeChanged;
         var c = content;
-        var w = placeholder;
         placeholder.entity.addChild(content.entity);
         for (a in Axis2D) {
             var offsetAxis = new ScrollableAxisState(c.ph.axisStates[a], a, this);
             axis[a] = offsetAxis;
-            w.axisStates[a].addSibling(offsetAxis);
+            ph.axisStates[a].addSibling(offsetAxis);
         }
     }
 
     public override function getContentSize(a:Axis2D):Float {
-        return w2c.getContentSize(a);
+        return Math.max(w2c.getContentSize(a), ph.axisStates[a].getSize());
     }
 }
 
@@ -78,17 +77,16 @@ class W2DScrollableContent extends ScrollableContent implements ContentSizeProvi
     public function new(content:Placeholder2D, placeholder:Placeholder2D) {
         super(placeholder);
         var c = content;
-        var w = placeholder;
-        placeholder.entity.addChild(content.entity);
+        ph.entity.addChild(content.entity);
         for (a in Axis2D) {
             var fixed = c.axisStates[a].size.getFixed();
             if (fixed > 0) {
                 var offsetAxis = new ScrollableAxisState(c.axisStates[a], a, this);
                 contentSize[a] = fixed;
                 axis[a] = offsetAxis;
-                w.axisStates[a].addSibling(offsetAxis);
+                ph.axisStates[a].addSibling(offsetAxis);
             } else {
-                w.axisStates[a].addSibling(c.axisStates[a]);
+                ph.axisStates[a].addSibling(c.axisStates[a]);
             }
         }
     }
