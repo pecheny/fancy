@@ -121,7 +121,7 @@ class ScrollableAxisState implements AxisApplier {
         return offset = Mathu.clamp(val, -maxOffset, 0);
     }
 
-    function refresh(a) {
+    function refresh(a:Axis2D) {
         if (a != axis)
             return;
         apply(lastPos, lastSize);
@@ -133,6 +133,6 @@ class ScrollableAxisState implements AxisApplier {
         visibleSize = size;
         var cs = contentSize.getContentSize(axis);
         maxOffset = Math.max(cs - visibleSize, 0);
-        target.apply(pos + offset, cs);
+        target.apply(pos + offset, size);
     }
 }
