@@ -7,11 +7,9 @@ class TextAutoScale extends Component {
     @:once var scale:ScaleComponent;
     var tr:TextTransformer;
     var consumer:htext.ITextRender.ITextConsumer;
-    var autoWidth:Null<TextAutoWidth>;
 
-    public function new(e, tr, cons, aw) {
+    public function new(e, tr, cons) {
         this.tr = tr;
-        this.autoWidth = aw;
         this.consumer = cons;
         super(e);
     }
@@ -25,6 +23,5 @@ class TextAutoScale extends Component {
     function onChange() {
         tr.scale = scale.value;
         consumer.setDirty();
-        autoWidth?.apply(0, 0);
     }
 }

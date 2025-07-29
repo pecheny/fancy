@@ -1,9 +1,9 @@
-# @install: lix --silent download "gh://github.com/pecheny/uikit-flat#df6c749a9e3e53ab7cd1855c2e06573e52a071cb" into uikit-flat/1.0.0/github/df6c749a9e3e53ab7cd1855c2e06573e52a071cb
+# @install: lix --silent download "gh://github.com/pecheny/uikit-flat#80fde10f7c3bd9558a49d991716766c458493506" into uikit-flat/1.0.0/github/80fde10f7c3bd9558a49d991716766c458493506
 -lib alayout
 -lib domkit
 -lib fancy
 -lib flgl
 -lib htext
 -lib slec
--cp ${HAXE_LIBCACHE}/uikit-flat/1.0.0/github/df6c749a9e3e53ab7cd1855c2e06573e52a071cb/src
+-cp ${HAXE_LIBCACHE}/uikit-flat/1.0.0/github/80fde10f7c3bd9558a49d991716766c458493506/src
 -D uikit-flat=1.0.0

@@ -1,5 +1,7 @@
 package dkit;
 
+import a2d.Widget.ResizableWidget2D;
+import al.core.ResizableWidget;
 import al.Builder;
 import fu.Uikit;
 import al.ec.WidgetSwitcher;
@@ -101,17 +103,20 @@ class BaseDkit implements domkit.Model<BaseDkit> implements domkit.Object implem
         if (onConstruct != null)
             onConstruct(ph);
         if (scrollboxRequired()) {
-            c = ph.entity.getComponent(Widget2DContainer);
-            if (c == null) {
+            var content = ph.entity.getComponent(ResizableWidget2D);
+            if (content == null) {
                 c = al.Builder.createContainer(b().b(), horizontal, Center);
                 fui.makeClickInput(c.ph);
                 setLayouts();
                 fui.createScrollbox(c, ph, fui.uikit.drawcallsLayout);
-            } else
-                throw "Scrolls for predefined containers not supported";
-            for (ch in children) {
-                c.addChild(ch.ph);
-                c.entity.addChild(ch.ph.entity);
+                for (ch in children) {
+                    c.addChild(ch.ph);
+                    c.entity.addChild(ch.ph.entity);
+                }
+            } else {
+                // the case with custom resizables works but not well
+                // tested with label, works with incorrect offset
+                fui.createScrollbox(content, ph, fui.uikit.drawcallsLayout);
             }
         } else if (containerRequired()) {
             c = ph.entity.getComponent(Widget2DContainer);
