@@ -25,6 +25,6 @@ class WheelHandler extends Widget {
 
     function onWheel(e:openfl.events.MouseEvent) {
         if (sinput != null && @:privateAccess sinput.enabled)
-            scrollable.setOffset(horizontal, scrollable.getOffset(direction) + e.delta * 0.1);
+            scrollable.setOffset(direction, scrollable.getOffset(direction) + e.delta * 0.1);
     }
 }
