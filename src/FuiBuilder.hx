@@ -109,13 +109,13 @@ class FuiBuilder implements FuCtx {
         new InputRoot(s, ar.getAspectRatio());
     }
 
-    public function makeClickInput(w:Placeholder2D) {
+    public function makeClickInput(w:Placeholder2D, ?hits:Placeholder2D) {
         var input = new ClicksInputSystem(new Point());
         w.entity.addComponent(new ClickInputBinder(input));
         var outside = new Point();
         outside.x = -9999999;
         outside.y = -9999999;
-        w.entity.addComponentByType(InputSystemTarget, new SwitchableInputAdapter(input, new WidgetHitTester2D(w), new Point(), outside));
+        w.entity.addComponentByType(InputSystemTarget, new SwitchableInputAdapter(input, new WidgetHitTester2D(hits??w), new Point(), outside));
         new CtxWatcher(InputBinder, w.entity);
         return w;
     }

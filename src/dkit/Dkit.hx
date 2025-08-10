@@ -106,7 +106,7 @@ class BaseDkit implements domkit.Model<BaseDkit> implements domkit.Object implem
             var content = ph.entity.getComponent(ResizableWidget2D);
             if (content == null) {
                 c = al.Builder.createContainer(b().b(), horizontal, Center);
-                fui.makeClickInput(c.ph);
+                fui.makeClickInput(c.ph, ph);
                 setLayouts();
                 fui.createScrollbox(c, ph, fui.uikit.drawcallsLayout);
                 for (ch in children) {
