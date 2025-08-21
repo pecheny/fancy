@@ -1,5 +1,7 @@
 package;
 
+import fu.input.FocusInputRoot;
+import backends.lime.MouseRoot;
 import a2d.AspectRatioProvider;
 import a2d.Placeholder2D;
 import a2d.PlaceholderBuilder2D;
@@ -106,7 +108,9 @@ class FuiBuilder implements FuCtx {
     public function configureInput(root:Entity) {
         var s = new InputSystemsContainer(new Point(), null);
         root.addComponent(new InputBinder<Point>(s));
-        new InputRoot(s, ar.getAspectRatio());
+//      new InputRoot(s, ar.getAspectRatio());
+        new MouseRoot(s, stage);
+        root.addComponent(new FocusInputRoot(s));
     }
 
     public function makeClickInput(w:Placeholder2D, ?hits:Placeholder2D) {
