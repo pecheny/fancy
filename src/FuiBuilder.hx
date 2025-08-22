@@ -1,7 +1,5 @@
 package;
 
-import fu.input.FocusInputRoot;
-import backends.lime.MouseRoot;
 import a2d.AspectRatioProvider;
 import a2d.Placeholder2D;
 import a2d.PlaceholderBuilder2D;
@@ -16,6 +14,7 @@ import al.ec.WidgetSwitcher;
 import al.layouts.OffsetLayout;
 import al.openfl.StageAspectResizer;
 import al2d.WidgetHitTester2D;
+import backends.lime.MouseRoot;
 import backends.openfl.DrawcallUtils;
 import backends.openfl.OpenflBackend;
 import data.aliases.AttribAliases;
@@ -29,6 +28,10 @@ import fu.FuCtx;
 import fu.Uikit;
 import fu.gl.GuiDrawcalls;
 import fu.graphics.ShapeWidget;
+import fu.input.ButtonSignals;
+import fu.input.FocusInputRoot;
+import fu.input.FocusManager;
+import fu.input.NavigationButtons;
 import fu.ui.PlaceholderBuilderUi;
 import fu.ui.scroll.ScrollableContent.W2CScrollableContent;
 import fu.ui.scroll.ScrollboxItem;
@@ -46,6 +49,12 @@ import shimp.Point;
 import update.RealtimeUpdater;
 import update.UpdateBinder;
 import update.Updater;
+import utils.MacroGenericAliasConverter as MGA;
+#if ginp
+import ginp.ButtonInputBinder;
+import ginp.ButtonsMapper;
+import ginp.presets.BasicGamepad;
+#end
 
 class FuiBuilder implements FuCtx {
     public var fonts(default, null) = new FontStorage(new BMFontFactory());
@@ -108,7 +117,7 @@ class FuiBuilder implements FuCtx {
     public function configureInput(root:Entity) {
         var s = new InputSystemsContainer(new Point(), null);
         root.addComponent(new InputBinder<Point>(s));
-//      new InputRoot(s, ar.getAspectRatio());
+        //      new InputRoot(s, ar.getAspectRatio());
         new MouseRoot(s, stage);
         root.addComponent(new FocusInputRoot(s));
     }
@@ -119,9 +128,20 @@ class FuiBuilder implements FuCtx {
         var outside = new Point();
         outside.x = -9999999;
         outside.y = -9999999;
-        w.entity.addComponentByType(InputSystemTarget, new SwitchableInputAdapter(input, new WidgetHitTester2D(hits??w), new Point(), outside));
+        w.entity.addComponentByType(InputSystemTarget, new SwitchableInputAdapter(input, new WidgetHitTester2D(hits ?? w), new Point(), outside));
         new CtxWatcher(InputBinder, w.entity);
         return w;
+    }
+
+    public function createVerticalNavigation(e:Entity) {
+        #if ginp
+        new LinearFocusManager(e);
+        var input:ButtonsMapper<BasicGamepadButtons, NavigationButtons> = new ButtonsMapper([down => forward, up => backward]);
+        ButtonInputBinder.addListener(BasicGamepadButtons, e, input);
+        var buttonsToSignals = new ButtonSignals();
+        input.addListener(buttonsToSignals);
+        e.addComponentByName(MGA.toAlias(ButtonSignals, NavigationButtons), buttonsToSignals);
+        #end
     }
 
     public function configureScreen(root:Entity) {
