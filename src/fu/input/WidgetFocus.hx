@@ -24,6 +24,7 @@ class WidgetFocus extends Widget implements FocusDispatcher {
             var as = ph.axisStates[a];
             pos.vec[a] = as.getPos() + as.getSize() / 2;
         }
+        pos.x += (Math.random() * 0.001) - 0.0005; // focus changed with keyboard within a scrollbox can keep axact position but still need reevaluation 
         focusRequest.dispatch(pos);
     }
 }
