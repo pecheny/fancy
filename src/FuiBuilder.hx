@@ -133,16 +133,39 @@ class FuiBuilder implements FuCtx {
         return w;
     }
 
-    public function createVerticalNavigation(e:Entity) {
-        #if ginp
-        new LinearFocusManager(e);
-        var input:ButtonsMapper<BasicGamepadButtons, NavigationButtons> = new ButtonsMapper([down => forward, up => backward]);
+    #if ginp
+    public function createArrowNavigationSignals(e:Entity, align:Axis2D) {
+        switch align {
+            case horizontal:
+                createHorizontalNavigationSignals(e);
+            case vertical:
+                createVerticalNavigationSignals(e);
+        }
+    }
+
+    public function createVerticalNavigationSignals(e:Entity) {
+        createNavigationButtonSignals(e, [down => forward, up => backward]);
+    }
+
+    public function createHorizontalNavigationSignals(e:Entity) {
+        createNavigationButtonSignals(e, [right => forward, left => backward]);
+    }
+
+    public function createTabNavigationSignals(e:Entity) {
+        createNavigationButtonSignals(e, [tright => forward, tleft => backward]);
+    }
+
+    /**
+        Creates ButtonSignals<NavigationButtons> with given mapping, listening for BasicGamepadButtons ctx.
+    **/
+    public function createNavigationButtonSignals(e:Entity, mapping:Map<BasicGamepadButtons, NavigationButtons>) {
+        var input:ButtonsMapper<BasicGamepadButtons, NavigationButtons> = new ButtonsMapper(mapping);
         ButtonInputBinder.addListener(BasicGamepadButtons, e, input);
         var buttonsToSignals = new ButtonSignals();
         input.addListener(buttonsToSignals);
         e.addComponentByName(MGA.toAlias(ButtonSignals, NavigationButtons), buttonsToSignals);
-        #end
     }
+    #end
 
     public function configureScreen(root:Entity) {
         root.addComponentByType(Stage, ar);
