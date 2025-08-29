@@ -1,5 +1,6 @@
 package fu.input;
 
+import fu.ui.Properties.EnabledProp;
 import ec.Component;
 import ec.CtxWatcher.CtxBinder;
 import ec.Entity;
@@ -42,7 +43,12 @@ class LinearFocusManager implements FocusManager extends Component {
             activeButton = (activeButton + buttons.length) % buttons.length; // assuming delta magnitude not greater number of buttons, sum for cases activeButton < 0 
         else
             activeButton = utils.Mathu.clamp(activeButton, 0, buttons.length - 1);
-        buttons[activeButton].focus();
+
+        var toFocus = buttons[activeButton];
+        if (toFocus.entity.hasComponent(EnabledProp) && !toFocus.entity.getComponent(EnabledProp).value)
+            gotoButton(delta);
+        else
+            toFocus.focus();
     }
 
     public function bind(e:Entity) {
