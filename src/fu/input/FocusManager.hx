@@ -38,6 +38,8 @@ class LinearFocusManager implements FocusManager extends Component {
     var activeButton:Int = -1;
 
     function gotoButton(delta:Int) {
+        if (activeButton < 0 && delta < 0)
+            activeButton = 0;
         activeButton += delta;
         if (loop)
             activeButton = (activeButton + buttons.length) % buttons.length; // assuming delta magnitude not greater number of buttons, sum for cases activeButton < 0 
