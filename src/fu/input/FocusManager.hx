@@ -28,31 +28,37 @@ class LinearFocusManager implements FocusManager extends Component {
     function buttonHandler(b) {
         switch b {
             case backward:
-                gotoButton(-1);
+                traverseButtons(-1);
             case forward:
-                gotoButton(1);
+                traverseButtons(1);
             case _:
         }
     }
 
     var activeButton:Int = -1;
 
-    function gotoButton(delta:Int) {
+    function traverseButtons(delta:Int) {
         if (buttons.length == 0)
             return;
         if (activeButton < 0 && delta < 0)
             activeButton = 0;
         activeButton += delta;
         if (loop)
-            activeButton = (activeButton + buttons.length) % buttons.length; // assuming delta magnitude not greater number of buttons, sum for cases activeButton < 0 
+            activeButton = (activeButton +
+                buttons.length) % buttons.length; // assuming delta magnitude not greater number of buttons, sum for cases activeButton < 0
         else
             activeButton = utils.Mathu.clamp(activeButton, 0, buttons.length - 1);
-
         var toFocus = buttons[activeButton];
         if (toFocus.entity.hasComponent(EnabledProp) && !toFocus.entity.getComponent(EnabledProp).value)
-            gotoButton(delta);
+            traverseButtons(delta);
         else
-            toFocus.focus();
+            gotoButton(activeButton);
+    }
+
+    function gotoButton(activeButton:Int) {
+        this.activeButton = activeButton;
+        var toFocus = buttons[activeButton];
+        toFocus.focus();
     }
 
     public function bind(e:Entity) {

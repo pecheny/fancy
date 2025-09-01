@@ -21,18 +21,9 @@ class DataContainerFocus extends LinearFocusManager {
     override function init() {
         super.init();
     }
-
-    override function gotoButton(delta:Int) {
-        activeButton += delta;
-        if (loop)
-            activeButton = (activeButton +
-                buttons.length) % buttons.length; // assuming delta magnitude not greater number of buttons, sum for cases activeButton < 0
-        else
-            activeButton = utils.Mathu.clamp(activeButton, 0, buttons.length - 1);
-
-        var a:Axis2D = horizontal;
+    
+    override function gotoButton(activeButton:Int) {
         var chn = dcontainer.getItems();
-
         for (a in Axis2D) {
             var bas = chn[activeButton].ph.axisStates;
             var bph:AxisState = bas[a]; // workaround for hl target
@@ -41,7 +32,6 @@ class DataContainerFocus extends LinearFocusManager {
             var localPos:Float = bph.getPos() - cph.getPos() - scroll.getOffset(a);
             scroll.setOffset(a, -localPos);
         }
-
-        buttons[activeButton].focus();
+        super.gotoButton(activeButton);
     }
 }
