@@ -1,6 +1,6 @@
 package fu.ui.scroll;
 import fu.graphics.ColouredQuad;
-import fu.ui.ButtonBase.ClickViewProcessor;
+import shimp.ClicksInputSystem.ClickViewProcessor;
 import fu.graphics.ShapeWidget;
 import a2d.AspectRatio;
 import a2d.Placeholder2D;

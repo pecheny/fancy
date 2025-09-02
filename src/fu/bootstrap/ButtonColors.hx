@@ -1,7 +1,7 @@
 package fu.bootstrap;
 
 import fu.graphics.ColouredQuad.InteractiveColors;
-import fu.ui.ButtonBase.ClickViewProcessor;
+import shimp.ClicksInputSystem.ClickViewProcessor;
 import graphics.ShapesColorAssigner;
 import ec.Component;
 

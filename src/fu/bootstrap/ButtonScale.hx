@@ -2,7 +2,7 @@ package fu.bootstrap;
 
 import al.prop.ScaleComponent;
 import shimp.ClicksInputSystem.ClickTargetViewState;
-import fu.ui.ButtonBase.ClickViewProcessor;
+import shimp.ClicksInputSystem.ClickViewProcessor;
 import ec.Component;
 import macros.AVConstructor;
 

@@ -1,5 +1,6 @@
 package;
 
+import shimp.ClicksInputSystem.ClickViewProcessor;
 import ec.Entity;
 import al.openfl.display.FlashDisplayRoot;
 import al.ec.WidgetSwitcher;

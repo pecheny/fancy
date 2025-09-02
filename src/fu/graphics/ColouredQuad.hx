@@ -3,7 +3,7 @@ package fu.graphics;
 import Axis2D;
 import a2d.Placeholder2D;
 import a2d.Widget;
-import fu.ui.ButtonBase.ClickViewProcessor;
+import shimp.ClicksInputSystem.ClickViewProcessor;
 import gl.sets.ColorSet;
 import graphics.ShapesBuffer;
 import graphics.ShapesColorAssigner;

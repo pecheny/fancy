@@ -1,20 +1,23 @@
 package fu.ui;
+
 import a2d.Placeholder2D;
+import a2d.Widget;
+import al2d.WidgetHitTester2D;
 import ec.CtxWatcher;
 import ec.Entity;
 import ecbind.ClickInputBinder;
 import shimp.ClicksInputSystem.ClickTarget;
 import shimp.ClicksInputSystem.ClickTargetViewState;
+import shimp.ClicksInputSystem.ClickViewProcessor;
 import shimp.Point;
-import a2d.Widget;
-import al2d.WidgetHitTester2D;
 
 class ButtonBase implements ClickTarget<Point> extends Widget implements ClickViewProcessor {
-    var hittester:WidgetHitTester2D;
-    public var clickHandler:Void -> Void;
-    var interactives:Array<ClickTargetViewState -> Void> = [];
+    public var hittester(default, null):WidgetHitTester2D;
+    public var clickHandler:Void->Void;
 
-    public function new(w:Placeholder2D, handler:Void -> Void = null) {
+    var interactives:Array<ClickTargetViewState->Void> = [];
+
+    public function new(w:Placeholder2D, handler:Void->Void = null) {
         super(w);
         clickHandler = handler;
         hittester = new WidgetHitTester2D(w);
@@ -37,10 +40,7 @@ class ButtonBase implements ClickTarget<Point> extends Widget implements ClickVi
             clickHandler();
     }
 
-    public function addHandler(h:ClickTargetViewState -> Void):Void {
+    public function addHandler(h:ClickTargetViewState->Void):Void {
         interactives.push(h);
     }
-}
-interface ClickViewProcessor {
-    function addHandler(h:ClickTargetViewState->Void):Void;
 }
