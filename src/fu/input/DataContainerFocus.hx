@@ -22,16 +22,20 @@ class DataContainerFocus extends LinearFocusManager {
         super.init();
     }
     
-    override function focusOn(activeButton:Int) {
+    override function focusOn(on:Int) {
+        if (on < 0 || on > buttons.length - 1){
+            super.focusOn(on);
+            return;
+        }
         var chn = dcontainer.getItems();
         for (a in Axis2D) {
-            var bas = chn[activeButton].ph.axisStates;
+            var bas = chn[on].ph.axisStates;
             var bph:AxisState = bas[a]; // workaround for hl target
             var cas = dcontainer.ph.axisStates;
             var cph:AxisState = cas[a];
             var localPos:Float = bph.getPos() - cph.getPos() - scroll.getOffset(a);
             scroll.setOffset(a, -localPos);
         }
-        super.focusOn(activeButton);
+        super.focusOn(on);
     }
 }

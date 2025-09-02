@@ -1,5 +1,6 @@
 package backends.lime;
 
+import fu.input.MainPointer;
 import a2d.Stage;
 import Axis2D;
 import a2d.AspectRatio;
@@ -7,7 +8,7 @@ import lime.ui.MouseButton;
 import shimp.InputSystem;
 import shimp.Point;
 
-class MouseRoot {
+class MouseRoot implements MainPointer<Point>{
     var stage:Stage;
     var ar:AspectRatio;
     var wndSize:ReadOnlyAVector2D<Int>;
@@ -48,5 +49,9 @@ class MouseRoot {
     function onMoved(x:Float, y:Float) {
         setPos(x, y);
         target.setPos(pos);
+    }
+
+    public function getPos():Point {
+        return pos;
     }
 }

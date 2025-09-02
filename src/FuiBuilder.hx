@@ -1,5 +1,6 @@
 package;
 
+import fu.input.MainPointer;
 import a2d.AspectRatioProvider;
 import a2d.Placeholder2D;
 import a2d.PlaceholderBuilder2D;
@@ -118,7 +119,8 @@ class FuiBuilder implements FuCtx {
         var s = new InputSystemsContainer(new Point(), null);
         root.addComponent(new InputBinder<Point>(s));
         //      new InputRoot(s, ar.getAspectRatio());
-        new MouseRoot(s, stage);
+        var mouse = new MouseRoot(s, stage);
+        root.addComponentByType(MainPointer, mouse);
         root.addComponent(new FocusInputRoot(s));
     }
 
