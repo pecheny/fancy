@@ -43,8 +43,17 @@ class LinearFocusManager implements FocusManager extends Component {
     }
 
     function traverseButtons(delta:Int) {
-        if (buttons.length == 0)
+        var ebuttons = buttons.filter(toFocus -> !(toFocus.entity.hasComponent(EnabledProp) && !toFocus.entity.getComponent(EnabledProp).value));
+        if (ebuttons.length == 0)
             return;
+        if (ebuttons.length == 1) {
+            focusOn(buttons.indexOf(ebuttons[0]));
+            return;
+        }
+        if (delta < -1)
+            delta = -1;
+        if (delta > 1)
+            delta = 1;
         if (activeButton < 0 && delta < 0)
             activeButton = 0;
         activeButton += delta;
