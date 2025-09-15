@@ -1,5 +1,6 @@
 package fu.input;
 
+import fu.input.FocusManager.FocusRequestSource;
 import Axis2D.AVector2D;
 import al.core.AxisState;
 import dkit.Dkit.DataContainerDkit;
@@ -23,9 +24,9 @@ class DataContainerFocus extends LinearFocusManager {
         super.init();
     }
 
-    override function focusOn(on:Int) {
-        if (on < 0 || on > buttons.length - 1) {
-            super.focusOn(on);
+    override function focusOn(on:Int, source:FocusRequestSource) {
+        if (on < 0 || on > buttons.length - 1 || !_inited || source == view_state) {
+            super.focusOn(on, source);
             return;
         }
         var chn = dcontainer.getItems();
@@ -36,14 +37,16 @@ class DataContainerFocus extends LinearFocusManager {
             var bph:AxisState = bas[a]; // workaround for hl target
             var vph:AxisState = vas[a];
             if (bph.getPos() < vph.getPos()) {
+                trace("left, ", bph.getPos(), vph.getPos());
                 var localPos:Float = bph.getPos() - vph.getPos() - scroll.getOffset(a);
                 scroll.setOffset(a, -localPos);
             } else if (bph.getPos() + bph.getSize() > vph.getPos() + vph.getSize()) {
+                trace("right, ", bph.getPos() + bph.getSize(), vph.getPos() + vph.getSize());
                 var localPos:Float = bph.getPos() - vph.getPos() - scroll.getOffset(a);
                 var offset = bph.getSize() - (vph.getSize() - localPos);
                 scroll.setOffset(a, -offset);
             }
         }
-        super.focusOn(on);
+        super.focusOn(on, source);
     }
 }

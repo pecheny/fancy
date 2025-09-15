@@ -13,6 +13,11 @@ import fu.input.AutoFocusComponent;
 
 interface FocusManager extends CtxBinder {}
 
+enum abstract FocusRequestSource(Int) {
+    var input_internal;
+    var view_state;
+}
+
 class LinearFocusManager implements FocusManager extends Component {
     public var loop:Bool = true;
 
@@ -43,11 +48,12 @@ class LinearFocusManager implements FocusManager extends Component {
     }
 
     function traverseButtons(delta:Int) {
-        var ebuttons = buttons.filter(toFocus -> !(toFocus.entity.hasComponent(EnabledProp) && !toFocus.entity.getComponent(EnabledProp).value));
+        var ebuttons = buttons.filter(toFocus -> !(toFocus.entity.hasComponent(EnabledProp)
+            && !toFocus.entity.getComponent(EnabledProp).value));
         if (ebuttons.length == 0)
             return;
         if (ebuttons.length == 1) {
-            focusOn(buttons.indexOf(ebuttons[0]));
+            focusOn(buttons.indexOf(ebuttons[0]), input_internal);
             return;
         }
         if (delta < -1)
@@ -66,15 +72,16 @@ class LinearFocusManager implements FocusManager extends Component {
         if (toFocus.entity.hasComponent(EnabledProp) && !toFocus.entity.getComponent(EnabledProp).value)
             traverseButtons(delta);
         else
-            focusOn(activeButton);
+            focusOn(activeButton, input_internal);
     }
 
-    function focusOn(on:Int) {
+    function focusOn(on:Int, source:FocusRequestSource) {
         this.activeButton = on;
         if (on < 0 || on > buttons.length - 1)
             return;
         var toFocus = buttons[on];
-        toFocus.focus();
+        if (source == input_internal)
+            toFocus.focus();
     }
 
     function resetFocus() {
@@ -82,23 +89,25 @@ class LinearFocusManager implements FocusManager extends Component {
             var button = buttons[i];
             var hits = button.entity.getComponent(WidgetHitTester2D);
             if (hits != null && hits.isUnder(pointer.getPos())) {
-                focusOn(i);
+                focusOn(i, input_internal);
                 return;
             }
             var autoFocus = button.entity.hasComponent(AutoFocusComponent);
-            if(autoFocus) {
-                focusOn(i);
+            if (autoFocus) {
+                focusOn(i, input_internal);
                 return;
             }
         }
-        focusOn(-1);
+        focusOn(-1, input_internal);
     }
-    
+
     public function bind(e:Entity) {
         var button = e.getComponent(WidgetFocus);
         if (button != null) {
             var idx = buttons.length;
-            var listener = () -> focusOn(buttons.indexOf(button)) ;
+            var listener = () -> focusOn(buttons.indexOf(button), view_state);
+            if (pointerListeners.exists(button))
+                throw "wrong";
             pointerListeners.set(button, listener);
             button.focusReceivedFromPointer.listen(listener);
             buttons.push(button);
