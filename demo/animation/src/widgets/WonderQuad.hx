@@ -1,4 +1,8 @@
 package widgets;
+
+import ec.Entity;
+import al.animation.AnimationTree.Channels;
+import al.animation.AnimationTree.AnimationTreeProp;
 import fu.graphics.BarWidget;
 import a2d.Stage;
 import graphics.ShapesColorAssigner;
@@ -8,44 +12,43 @@ import al.animation.Animation.AnimationPlaceholder;
 import al.animation.AnimationTreeBuilder;
 import gl.sets.ColorSet;
 import graphics.shapes.Bar;
-class WonderQuad extends BarWidget<ColorSet>  implements Animatable {
+
+class WonderQuad extends BarWidget<ColorSet> implements Channels {
     var tree:AnimationPlaceholder;
     var text:String;
     @:once var stage:Stage;
-    public function new(w:Placeholder2D, c ){
+
+    public var channels(default, null):Array<Float->Void>;
+
+    public function new(w:Placeholder2D, c) {
         var elements = [
-            new BarContainer(Portion(new BarAxisSlot ({start:0., end:1.}, null)), Portion(new BarAxisSlot ({start:0., end:1.}, null)) ),
+            new BarContainer(Portion(new BarAxisSlot({start: 0., end: 1.}, null)), Portion(new BarAxisSlot({start: 0., end: 1.}, null))),
         ];
 
         super(ColorSet.instance, w, elements);
         var colors = new ShapesColorAssigner(ColorSet.instance, c, getBuffer());
-//        w.entity.addComponentByName(Entity.getComponentId(ClickTarget), this);
-//        new CtxWatcher(ClickInputBinder, w.entity);
-        tree = new AnimationTreeBuilder().build(
-            { layout:"wholefill",
-                children:[ {
-                    layout:"portion",
-                    children:[
-                        {size:{value:.4 }},
-                        {size:{value:1. }},
-                    ]
-                } ] }
-        );
-        tree.bindDeep([0, 0], BarAnimationUtils.directUnfold(elements[0], Axis2D.vertical));
-//        tree.bindDeep([0,1], BarAnimationUtils.directUnfold(elements[0]));
+        tree = AnimationTreeBuilder.animationWidget(new Entity("wq"), {size: {value: 1.}});
+        // tree = new AnimationTreeBuilder().build({
+        //     layout: "portion",
+        //     children: [
+        //         {
+        //             layout: "portion",
+        //             children: [{size: {value: .4}}, {size: {value: 1.}},]
+        //         }
+        //     ]
+        // });
+        // tree.bindDeep([0, 0], BarAnimationUtils.directUnfold(elements[0], Axis2D.vertical));
+        setBgT = BarAnimationUtils.directUnfold(elements[0], Axis2D.vertical);
+        tree.channels.push(setTime);
+        //        tree.bindDeep([0,1], BarAnimationUtils.directUnfold(elements[0]));
+        var prop = AnimationTreeProp.getOrCreate(entity);
+        prop.value = tree;
     }
 
+    var setBgT:Float->Void;
 
-
-    public function setTime(t:Float):Void {
-        if (!_inited)
-            return;
-        tree.setTime(t);
-//        for (a in Axis2D) {
-//            var axis = w.axisStates[a];
-//            axis.apply(axis.getPos(), axis.getSize());
-//        }
-//        transformer.changed.dispatch();
-//        fluidTransform.reapplyAll();
+    function setTime(t) {
+        // trace(t);
+        setBgT(t);
     }
 }

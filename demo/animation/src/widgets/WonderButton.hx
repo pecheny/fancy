@@ -38,9 +38,4 @@ class WonderButton extends ButtonBase implements Channels {
         channels.push(BarAnimationUtils.directUnfold(elements[0]));
         channels.push(lbl.setTime);
     }
-    
-
-    public function setTime(t):Void {
-        tree.value.setTime(t);
-    }
 }

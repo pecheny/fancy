@@ -81,18 +81,34 @@ class ClickAndButtPreset {
             name: "screen-one",
             children: [
                 {
-                    size: {value: 14.4},
+                    size: {value: 1.5},
                     name: "buttons",
                     layout: "offset",
                     children: []
                 },
-                {size: {value: .1}, name: "content"},
-                {size: {value: .1}, name: "flick"},
+                {size: {value: 1.5}, name: "content"},
             ]
         });
 
+        // {size: {value: .1}, name: "flick"},
         preset.addChildBinder(WonderButton, "", AnimationSlotSelectors.nameSelector.bind("buttons"));
+        preset.addChildBinder(WonderQuad, "", AnimationSlotSelectors.nameSelector.bind("content"));
         props.set(AnimationPreset.getId(ScreenOne), preset);
+        
+        var preset = new AnimationPreset({
+            layout: "portion",
+            name: "screen-two",
+            children: [
+                {
+                    size: {value: 1.5},
+                    name: "buttons",
+                    layout: "offset",
+                    children: []
+                },
+                {size: {value: 1.5}, name: "content"},
+            ]
+        });
+        preset.addChildBinder(WonderButton, "", AnimationSlotSelectors.nameSelector.bind("buttons"));
         props.set(AnimationPreset.getId(ScreenTwo), preset);
     }
 }
@@ -124,6 +140,7 @@ class ScreenOne extends Screen {
     override public function init() {
         super.init();
         pnl = containerFactory.create(Builder.widget(), "v");
+        
         fuiBuilder.makeClickInput(pnl.ph);
 
         addButton("Carrot");
@@ -132,6 +149,7 @@ class ScreenOne extends Screen {
         addButton("Broccoli");
 
         var content = new WonderQuad(Builder.widget().withLiquidTransform(stage.getAspectRatio()), 0x505050);
+        binder.addChild(content);
 
         containerFactory.create(ph, "h").withChildren([pnl.ph, content.ph]);
     }
