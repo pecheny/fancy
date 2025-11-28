@@ -43,9 +43,12 @@ import update.RealtimeUpdater;
 import update.UpdateBinder;
 import update.Updater;
 #if ginp
+import fu.input.ButtonSignals;
+import fu.input.NavigationButtons;
 import ginp.ButtonInputBinder;
 import ginp.ButtonsMapper;
 import ginp.presets.BasicGamepad;
+import utils.MacroGenericAliasConverter as MGA;
 #end
 
 class FuiBuilder {
