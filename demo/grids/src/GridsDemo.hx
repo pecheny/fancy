@@ -1,5 +1,6 @@
 package;
 
+import backends.openfl.OpenflBackend.StageImpl;
 import a2d.Placeholder2D;
 import a2d.PlaceholderBuilder2D;
 import a2d.TableWidgetContainer;
@@ -18,15 +19,15 @@ using al.Builder;
 class GridsDemo extends Sprite {
     public function new() {
         super();
-        var fui = new FuiBuilder();
+        var stage = new StageImpl(1);
+        var fui = new FuiBuilder(stage);
 
         BaseDkit.inject(fui);
         var root:Entity = fui.createDefaultRoot();
         root.addComponent(new FlashDisplayRoot(this));
 
-        var uikit = new FlatUikitExtended(fui);
-        uikit.configure(root);
-        uikit.createContainer(root);
+        fui.uikit.configure(root);
+        fui.uikit.createContainer(root);
 
         var switcher = root.getComponent(WidgetSwitcher);
 
@@ -35,7 +36,7 @@ class GridsDemo extends Sprite {
         var axisFac = new Axis2DStateFactory(horizontal, fui.stage);
         var wdc = new TableWidgetContainer(wdg.grantInnerTransformPh(), vertical, [axisFac.create(), axisFac.create(), axisFac.create()], axisFac.create);
 
-        var b = new PlaceholderBuilder2D(fui.ar, true);
+        var b = new PlaceholderBuilder2D(fui.stage, true);
         b.keepStateAfterBuild = true;
         b.v(sfr, 0.15).h(sfr, 0.7);
 

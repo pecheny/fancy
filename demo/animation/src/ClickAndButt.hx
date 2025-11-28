@@ -1,5 +1,6 @@
 package;
 
+import backends.openfl.OpenflBackend.StageImpl;
 import ec.macros.InitMacro;
 import dkit.Dkit;
 import FuiBuilder;
@@ -33,15 +34,15 @@ class ClickAndButt extends Sprite {
 
     public function new() {
         super();
-        var fuiBuilder = new FuiBuilder();
-        BaseDkit.inject(fuiBuilder);
-        var root:Entity = fuiBuilder.createDefaultRoot();
+        var stage = new StageImpl(1);
+        var fui = new FuiBuilder(stage);
+        BaseDkit.inject(fui);
+        var root:Entity = fui.createDefaultRoot();
         root.addComponent(new al.openfl.display.FlashDisplayRoot(this));
 
-        var uikit = new FlatUikitExtended(fuiBuilder);
 
-        uikit.configure(root);
-        uikit.createContainer(root);
+        fui.uikit.configure(root);
+        fui.uikit.createContainer(root);
 
         WonderKit.configure(root);
         ClickAndButtPreset.configure(root);
@@ -51,7 +52,7 @@ class ClickAndButt extends Sprite {
         conts.regStyle("h", new PortionLayout(Forward, new FixedSize(0.)), new WholefillLayout(new FractionSize(0.)));
         root.addComponent(conts);
 
-        var buts = new ButtonFactory(fuiBuilder.placeholderBuilder, fuiBuilder.ar, fuiBuilder.s("fit"));
+        var buts = new ButtonFactory(fui.placeholderBuilder, fui.ar, fui.s("fit"));
         root.addComponent(buts);
 
         var screens = root.getComponent(AnimatedSwitcher);

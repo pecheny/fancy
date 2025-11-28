@@ -1,5 +1,6 @@
 package;
 
+import backends.openfl.OpenflBackend.StageImpl;
 import fu.ui.CMSDFLabel;
 import dkit.Dkit;
 
@@ -33,16 +34,18 @@ class Main extends Sprite {
 
     public function new() {
         super();
-        fui = new FuiBuilder();
+        var stage = new StageImpl(1);
+        var uikit = new JiUikit(stage);
+        fui = new FuiBuilder(stage, uikit);
+
         BaseDkit.inject(fui);
         var root:Entity = fui.createDefaultRoot();
         root.addComponent(new al.openfl.display.FlashDisplayRoot(this));
 
-        var uikit = new JiUikit(fui);
         uikit.configure(root);
         uikit.createContainer(root);
         
-        var fitStyle = fui.textStyles.newStyle("fit")
+        var fitStyle = uikit.textStyles.newStyle("fit")
         .withSize(sfr, .25)
         .withAlign(horizontal, Forward)
         .withAlign(vertical, Center)
@@ -50,7 +53,7 @@ class Main extends Sprite {
         .withPadding(vertical, pfr, 0.33)
         .build();
 
-        label = new CMSDFLabel(Builder.widget(), fui.textStyles.getStyle("fit"));
+        label = new CMSDFLabel(Builder.widget(), uikit.textStyles.getStyle("fit"));
         label.withText(text);
 
         switcher = root.getComponent(WidgetSwitcher);

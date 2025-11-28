@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+
+    <meta title="Sample" package="shoo.fancy.GridsDemo" version="1.0.0" company="shoo"/>
+    <app main="TransformDemo" />
+
+    <window antialiasing="4"/>
+    <window background="#303030" fps="60" />
+    <window background="#303030" fps="60" width="1280" height="760" unless="html5"/>
+    <source path="src"/>
+
+    <haxelib name="openfl"/>
+    <haxelib name="lime"/>
+    <haxelib name="fancy"/>
+    <haxelib name="flgl"/>
+    <haxelib name="uikit-flat"/>
+ 
+
+</project>

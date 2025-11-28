@@ -1,5 +1,6 @@
 package;
 
+import backends.openfl.OpenflBackend.StageImpl;
 import a2d.AspectRatioProvider;
 import a2d.PlaceholderBuilder2D;
 import al.ec.WidgetSwitcher;
@@ -20,21 +21,22 @@ using a2d.transform.LiquidTransformer;
 using al.Builder;
 using fu.ui.Slider.FlatSlider;
 
-
 class FancyPg extends Sprite {
-    var fuiBuilder = new FuiBuilder();
     var sampleText = "FoEo Bar AbAb Aboo Distance Field texture Ad Ae Af Bd Be Bf Bb Ab Dd De Df Cd Ce Cf";
     var b:PlaceholderBuilder2D;
     var ar:AspectRatioProvider;
     var pictureFile = "Assets/bunie.png";
+    var fuiBuilder:FuiBuilder;
 
     public function new() {
         super();
-        ar = fuiBuilder.ar;
+        var stage = new StageImpl(1);
+        fuiBuilder = new FuiBuilder(stage);
+        ar = stage;
         b = new PlaceholderBuilder2D(fuiBuilder.ar);
         var root:Entity = fuiBuilder.createDefaultRoot();
         root.addComponent(new al.openfl.display.FlashDisplayRoot(this));
-        var uikit = new FlatUikit(fuiBuilder);
+        var uikit = fuiBuilder.uikit;
         uikit.drawcallsLayout.addChild(Xml.parse(PictureDrawcalls.DRAWCALLS_LAYOUT(pictureFile)).firstElement());
         uikit.configure(root);
         uikit.createContainer(root);
@@ -58,15 +60,15 @@ class FancyPg extends Sprite {
     }
 
     function createTextStyles() {
-        var pxStyle = fuiBuilder.textStyles.newStyle("px").withSize(px, 64).build();
+        var pxStyle = fuiBuilder.uikit.textStyles.newStyle("px").withSize(px, 64).build();
 
-        var pcStyle = fuiBuilder.textStyles.newStyle("pcl") //        .withAlign(vertical, Center)
+        var pcStyle = fuiBuilder.uikit.textStyles.newStyle("pcl") //        .withAlign(vertical, Center)
             .withSize(sfr, .1)
             .withPadding(horizontal, sfr, 0.3)
             .build();
 
-        var pcStyleR = fuiBuilder.textStyles.newStyle("pcr").withAlign(horizontal, Backward).build();
-        var pcStyleC = fuiBuilder.textStyles.newStyle("pcc").withAlign(horizontal, Center).build();
+        var pcStyleR = fuiBuilder.uikit.textStyles.newStyle("pcr").withAlign(horizontal, Backward).build();
+        var pcStyleC = fuiBuilder.uikit.textStyles.newStyle("pcc").withAlign(horizontal, Center).build();
     }
 
     function createBarWidget() {
@@ -106,8 +108,7 @@ class FancyPg extends Sprite {
     }
 
     function sty(name) {
-        // fuiBuilder.textStyles.
-        return fuiBuilder.textStyles.getStyle(name);
+        return fuiBuilder.uikit.textStyles.getStyle(name);
     }
 
     function getSampleText() {

@@ -1,3 +1,4 @@
+import backends.openfl.OpenflBackend.StageImpl;
 import Axis2D;
 import a2d.transform.WidgetToScreenRatio;
 import al.Builder;
@@ -21,12 +22,12 @@ class BarsDemo extends Sprite {
 
     public function new() {
         super();
-        fui = new FuiBuilder();
+        var stage = new StageImpl(1);
+        var uikit = new FlatUikitExtended(stage);
+        fui = new FuiBuilder(stage, uikit);
         BaseDkit.inject(fui);
         var root:Entity = fui.createDefaultRoot();
         root.addComponent(new al.openfl.display.FlashDisplayRoot(this));
-        var uikit = new FlatUikitExtended(fui);
-
         uikit.configure(root);
         uikit.createContainer(root);
 

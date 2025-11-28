@@ -1,5 +1,6 @@
 package;
 
+import backends.openfl.OpenflBackend.StageImpl;
 import shimp.ClicksInputSystem.ClickViewProcessor;
 import ec.Entity;
 import al.openfl.display.FlashDisplayRoot;
@@ -26,15 +27,15 @@ using al.Builder;
 class RadiogroupDemo extends Sprite {
     public function new() {
         super();
-        var fui = new FuiBuilder();
+        var stage = new StageImpl(1);
+        var fui = new FuiBuilder(stage);
         
         BaseDkit.inject(fui);
         var root:Entity = fui.createDefaultRoot();
         root.addComponent(new FlashDisplayRoot(this));
 
-        var uikit = new FlatUikitExtended(fui);
-        uikit.configure(root);
-        uikit.createContainer(root);
+        fui.uikit.configure(root);
+        fui.uikit.createContainer(root);
 
         var switcher = root.getComponent(WidgetSwitcher);
         

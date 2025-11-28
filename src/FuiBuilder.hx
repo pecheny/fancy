@@ -1,6 +1,5 @@
 package;
 
-import fu.input.MainPointer;
 import a2d.AspectRatioProvider;
 import a2d.Placeholder2D;
 import a2d.PlaceholderBuilder2D;
@@ -17,26 +16,19 @@ import al.openfl.StageAspectResizer;
 import al2d.WidgetHitTester2D;
 import backends.lime.MouseRoot;
 import backends.openfl.DrawcallUtils;
-import backends.openfl.OpenflBackend;
 import data.aliases.AttribAliases;
 import ec.CtxWatcher;
 import ec.Entity;
 import ecbind.ClickInputBinder;
 import ecbind.InputBinder;
-import font.FontStorage;
-import font.bmf.BMFont.BMFontFactory;
-import fu.FuCtx;
 import fu.Uikit;
 import fu.gl.GuiDrawcalls;
 import fu.graphics.ShapeWidget;
-import fu.input.ButtonSignals;
 import fu.input.FocusInputRoot;
-import fu.input.FocusManager;
-import fu.input.NavigationButtons;
+import fu.input.MainPointer;
 import fu.ui.PlaceholderBuilderUi;
 import fu.ui.scroll.ScrollableContent.W2CScrollableContent;
 import fu.ui.scroll.ScrollboxItem;
-import gl.RenderingPipeline;
 import gl.aspects.ScissorAspect;
 import gl.sets.ColorSet;
 import gl.sets.TexSet;
@@ -50,29 +42,23 @@ import shimp.Point;
 import update.RealtimeUpdater;
 import update.UpdateBinder;
 import update.Updater;
-import utils.MacroGenericAliasConverter as MGA;
 #if ginp
 import ginp.ButtonInputBinder;
 import ginp.ButtonsMapper;
 import ginp.presets.BasicGamepad;
 #end
 
-class FuiBuilder implements FuCtx {
-    public var fonts(default, null) = new FontStorage(new BMFontFactory());
-
-    public var pipeline:RenderingPipeline;
+class FuiBuilder {
     public var stage(get, null):Stage;
-    public var ar:Stage = new StageImpl(1);
+    @:deprecated public var ar:Stage;
     public var placeholderBuilder(default, null):PlaceholderBuilderUi;
-    public var textStyles:TextContextBuilder;
     public var updater(default, null):Updater;
     public var uikit(default, null):Uikit;
 
-    public function new(uikit = null) {
-        this.uikit = uikit ?? new Uikit(this);
-        pipeline = new RenderingPipeline();
+    public function new(stage:Stage, uikit = null) {
+        this.ar = stage;
+        this.uikit = uikit ?? new Uikit(stage);
         placeholderBuilder = new PlaceholderBuilderUi(ar);
-        textStyles = new TextContextBuilder(fonts, ar);
         var updater = new RealtimeUpdater();
         updater.update();
         this.updater = updater;
@@ -84,41 +70,30 @@ class FuiBuilder implements FuCtx {
     public function createDefaultRoot() {
         var rw = Builder.widget();
         var rootEntity = rw.entity;
-        // this.regDefaultDrawcalls();
         var ar = this.ar;
-        // this.addBmFont("", font); // todo
         this.configureInput(rootEntity);
         this.configureScreen(rootEntity);
         this.configureAnimation(rootEntity);
         rootEntity.addComponent(this);
-
         rootEntity.addComponent(new UpdateBinder(updater));
         var v = new StageAspectResizer(rw, 2);
         var switcher = new WidgetSwitcher(rw);
         rootEntity.addComponent(switcher);
-
         var screens = new AnimatedSwitcher(switcher);
         updater.addUpdatable(screens);
         rootEntity.addComponent(screens);
-
-        rootEntity.addComponentByType(TextContextStorage, textStyles);
+        rootEntity.addComponentByType(TextContextStorage, uikit.textStyles);
         return rootEntity;
     }
 
     public function addScissors(w:Placeholder2D) {
         var sc = new ScissorAspect(w, ar.getAspectRatio());
-        pipeline.addAspect(sc);
+        uikit.pipeline.addAspect(sc);
     }
-
-    // public function addBmFont(fontName, fntPath) {
-    // 	var font = fonts.initFont(fontName, fntPath, null);
-    // 	return this;
-    // }
 
     public function configureInput(root:Entity) {
         var s = new InputSystemsContainer(new Point(), null);
         root.addComponent(new InputBinder<Point>(s));
-        //      new InputRoot(s, ar.getAspectRatio());
         var mouse = new MouseRoot(s, stage);
         root.addComponentByType(MainPointer, mouse);
         root.addComponent(new FocusInputRoot(s));
@@ -188,7 +163,7 @@ class FuiBuilder implements FuCtx {
 
     /// Shortcuts
     public inline function s(name = null) {
-        return name == null ? textStyles.defaultStyle() : textStyles.getStyle(name);
+        return name == null ? uikit.textStyles.defaultStyle() : uikit.textStyles.getStyle(name);
     }
 
     public function lqtr(ph) {
@@ -221,19 +196,18 @@ class FuiBuilder implements FuCtx {
             QuadGraphicElement.writeQuadPostions(buffer.getBuffer(), writer, 0, (a, wg) -> wg);
         };
         if (createGldo) {
-            DrawcallUtils.createContainer(pipeline, w.entity, Xml.parse(PictureDrawcalls.DRAWCALLS_LAYOUT(filename)).firstElement());
+            DrawcallUtils.createContainer(uikit.pipeline, w.entity, Xml.parse(PictureDrawcalls.DRAWCALLS_LAYOUT(filename)).firstElement());
         }
         return shw;
     }
 
     public function createScrollbox(content:ResizableWidget2D, placeholder:Placeholder2D, dl) {
         var scroll = new W2CScrollableContent(content, placeholder);
-
         placeholder.entity.name = "placeholder";
         var scroller = new ScrollboxItem(placeholder, scroll, ar.getAspectRatio());
         addScissors(placeholder);
-        DrawcallUtils.createContainer(pipeline, scroller.ph.entity, dl);
-        pipeline.renderAspectBuilder.reset();
+        DrawcallUtils.createContainer(uikit.pipeline, scroller.ph.entity, dl);
+        uikit.pipeline.renderAspectBuilder.reset();
         return placeholder;
     }
 

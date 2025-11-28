@@ -19,9 +19,9 @@ class JiUikit extends FlatUikitExtended {
 
     override function configure(e:Entity) {
         // var fntPath = "Assets/fonts/robo.fnt";
-        ctx.fonts.initFont("", "Assets/fonts/RobotoSlab-24-df2.fnt", null);
-        ctx.fonts.initFont("24-2", "Assets/fonts/RobotoSlab-24-df2.fnt", null);
-        ctx.fonts.initFont("24-8", "Assets/fonts/RobotoSlab-24-df8.fnt", null);
+        fonts.initFont("", "Assets/fonts/RobotoSlab-24-df2.fnt", null);
+        fonts.initFont("24-2", "Assets/fonts/RobotoSlab-24-df2.fnt", null);
+        fonts.initFont("24-8", "Assets/fonts/RobotoSlab-24-df8.fnt", null);
 
         regDefaultDrawcalls();
         regStyles(e);
