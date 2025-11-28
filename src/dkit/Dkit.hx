@@ -75,8 +75,6 @@ class BaseDkit implements domkit.Model<BaseDkit> implements domkit.Object implem
         watch(entity);
     }
 
-    function _init(e:Entity) {}
-
     function scrollboxRequired() {
         return scroll;
     }
@@ -175,6 +173,7 @@ class BaseDkit implements domkit.Model<BaseDkit> implements domkit.Object implem
         return value;
     }
 
+    // required by domkit.
     public function getChildRefPosition(first:Bool):Int {
         throw new haxe.exceptions.NotImplementedException();
     }
