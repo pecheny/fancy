@@ -37,11 +37,9 @@ class DataContainerFocus extends LinearFocusManager {
             var bph:AxisState = bas[a]; // workaround for hl target
             var vph:AxisState = vas[a];
             if (bph.getPos() < vph.getPos()) {
-                trace("left, ", bph.getPos(), vph.getPos());
                 var localPos:Float = bph.getPos() - vph.getPos() - scroll.getOffset(a);
                 scroll.setOffset(a, -localPos);
             } else if (bph.getPos() + bph.getSize() > vph.getPos() + vph.getSize()) {
-                trace("right, ", bph.getPos() + bph.getSize(), vph.getPos() + vph.getSize());
                 var localPos:Float = bph.getPos() - vph.getPos() - scroll.getOffset(a);
                 var offset = bph.getSize() - (vph.getSize() - localPos);
                 scroll.setOffset(a, -offset);
