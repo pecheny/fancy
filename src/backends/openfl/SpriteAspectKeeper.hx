@@ -53,7 +53,7 @@ class SpriteAspectKeeper extends Widget {
 
         for (a in Axis2D) {
             var free = size[a] - bounds.size[a] * scale;
-            var pos = pos[a] + free / 2;
+            var pos = pos[a] + free / 2 - bounds.pos[a] * scale;
             apply(a, pos, scale);
         }
     }
