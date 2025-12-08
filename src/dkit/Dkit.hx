@@ -239,3 +239,19 @@ class SwitcherDkit extends BaseDkit {
         switcher.switchTo(ph);
     }
 }
+
+#if swf
+@:uiComp("swf")
+@:postInit(initDkit)
+class SwfDkit extends BaseDkit {
+    public var lib:String = "swf";
+    public var name:String;
+    public var mc(default, null):openfl.display.MovieClip;
+    public var mode:backends.openfl.SpriteAspectKeeper.ScaleMode = fit;
+
+    override function initDkit() {
+        mc = openfl.utils.Assets.getMovieClip('$lib:$name');
+        new backends.openfl.SpriteAspectKeeper(ph, mc, null, mode);
+    }
+}
+#end
