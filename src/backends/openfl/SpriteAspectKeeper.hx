@@ -1,17 +1,21 @@
 package backends.openfl;
 
-import al.openfl.display.FlashDisplayRoot;
-import al.openfl.display.DrawcallDataProvider;
-import ec.CtxWatcher;
 import Axis2D;
 import a2d.Boundbox;
-import a2d.Stage;
 import a2d.Placeholder2D;
+import a2d.Stage;
+import a2d.Widget;
 import al.core.AxisApplier;
-import ec.Entity;
+import al.openfl.display.DrawcallDataProvider;
+import al.openfl.display.FlashDisplayRoot;
+import ec.CtxWatcher;
 import macros.AVConstructor;
 import openfl.display.Sprite;
-import a2d.Widget;
+
+enum abstract ScaleMode(Int) {
+    var fit;
+    var overflow;
+}
 
 class SpriteAspectKeeper extends Widget {
     var spr:Sprite;
@@ -19,9 +23,11 @@ class SpriteAspectKeeper extends Widget {
     var size = AVConstructor.create(Axis2D, 1., 1.);
     var pos = AVConstructor.create(Axis2D, 0., 0.);
     var ownSizeAppliers:AVector2D<AxisApplier>;
+    var mode:ScaleMode;
     @:once var s:Stage;
 
-    public function new(w:Placeholder2D, spr:Sprite, bounds = null) {
+    public function new(w:Placeholder2D, spr:Sprite, bounds = null, mode:ScaleMode = fit) {
+        this.mode = mode;
         var dp = DrawcallDataProvider.get(w.entity);
         new CtxWatcher(FlashDisplayRoot, w.entity);
         dp.views.push(spr);
@@ -44,13 +50,23 @@ class SpriteAspectKeeper extends Widget {
     public function refresh() {
         if (!_inited)
             return;
-        var scale = 9999.;
-        for (a in Axis2D) {
-            var _scale = size[a] / bounds.size[a];
-            if (_scale < scale)
-                scale = _scale;
+        var scale:Float;
+        switch mode {
+            case overflow:
+                scale = 0;
+                for (a in Axis2D) {
+                    var _scale = size[a] / bounds.size[a];
+                    if (_scale > scale)
+                        scale = _scale;
+                }
+            case fit:
+                scale = 9999;
+                for (a in Axis2D) {
+                    var _scale = size[a] / bounds.size[a];
+                    if (_scale < scale)
+                        scale = _scale;
+                }
         }
-
         for (a in Axis2D) {
             var free = size[a] - bounds.size[a] * scale;
             var pos = pos[a] + free / 2 - bounds.pos[a] * scale;
