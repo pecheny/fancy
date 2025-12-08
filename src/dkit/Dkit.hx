@@ -1,22 +1,18 @@
 package dkit;
 
-import a2d.Widget.ResizableWidget2D;
-import al.core.ResizableWidget;
-import al.Builder;
-import fu.Uikit;
-import al.ec.WidgetSwitcher;
-import fu.ui.ButtonBase;
-import al.core.DataView;
-import fu.Signal.IntSignal;
 import a2d.ContainerStyler;
 import a2d.Placeholder2D;
+import a2d.Widget.ResizableWidget2D;
 import a2d.Widget2DContainer;
 import al.appliers.ContainerRefresher;
+import al.core.DataView;
 import al.core.TWidget;
+import al.ec.WidgetSwitcher;
 import al.layouts.AxisLayout;
 import al.layouts.WholefillLayout;
-import al.layouts.PortionLayout;
 import ec.Entity;
+import fu.Signal.IntSignal;
+import fu.ui.ButtonBase;
 
 using a2d.ProxyWidgetTransform;
 
