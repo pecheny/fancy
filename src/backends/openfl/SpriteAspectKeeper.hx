@@ -14,6 +14,8 @@ import openfl.display.Sprite;
 
 enum abstract ScaleMode(Int) {
     var fit;
+    var fit_vertical;
+    var fit_horizontal;
     var overflow;
 }
 
@@ -66,6 +68,12 @@ class SpriteAspectKeeper extends Widget {
                     if (_scale < scale)
                         scale = _scale;
                 }
+            case fit_horizontal:
+                var a = horizontal;
+                scale = size[a] / bounds.size[a];
+            case fit_vertical:
+                var a = vertical;
+                scale = size[a] / bounds.size[a];
         }
         for (a in Axis2D) {
             var free = size[a] - bounds.size[a] * scale;
