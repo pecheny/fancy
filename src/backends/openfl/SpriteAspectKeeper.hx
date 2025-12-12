@@ -21,6 +21,7 @@ enum abstract ScaleMode(Int) {
 
 class SpriteAspectKeeper extends Widget {
     var spr:Sprite;
+    var mask:Sprite;
     var bounds:a2d.Boundbox;
     var size = AVConstructor.create(Axis2D, 1., 1.);
     var pos = AVConstructor.create(Axis2D, 0., 0.);
@@ -28,16 +29,25 @@ class SpriteAspectKeeper extends Widget {
     var mode:ScaleMode;
     @:once var s:Stage;
 
-    public function new(w:Placeholder2D, spr:Sprite, bounds = null, mode:ScaleMode = fit) {
+    public function new(w:Placeholder2D, spr:Sprite, bounds = null, mode:ScaleMode = fit, hideOverflow = false) {
         this.mode = mode;
         var dp = DrawcallDataProvider.get(w.entity);
         new CtxWatcher(FlashDisplayRoot, w.entity);
         dp.views.push(spr);
         this.spr = spr;
+
         this.bounds = if (bounds == null) {
             var b = spr.getBounds(spr);
             new Boundbox(b.left, b.top, b.width, b.height);
         } else bounds;
+
+        if (hideOverflow) {
+            mask = new Sprite();
+            mask.graphics.beginFill(0xffffff);
+            mask.graphics.drawRect(0, 0, 2000, 2000);
+            spr.mask = mask;
+        }
+
         super(w);
         for (a in Axis2D) {
             w.axisStates[a].addSibling(new KeeperAxisApplier(pos, size, this, a));
@@ -79,6 +89,20 @@ class SpriteAspectKeeper extends Widget {
             var free = size[a] - bounds.size[a] * scale;
             var pos = pos[a] + free / 2 - bounds.pos[a] * scale;
             apply(a, pos, scale);
+            if (mask!=null) applyMask(a);
+        }
+    }
+
+    function applyMask(axis:Axis2D) {
+        var size = ph.axisStates[axis].getSize() * s.getWindowSize()[axis] / 2 / s.getAspectRatio()[axis];
+        var pos = ph.axisStates[axis].getPos() * s.getWindowSize()[axis] / 2 / s.getAspectRatio()[axis];
+        switch axis {
+            case horizontal:
+                mask.width = size;
+                mask.x = pos;
+            case vertical:
+                mask.height = size;
+                mask.y = pos;
         }
     }
 
@@ -91,8 +115,6 @@ class SpriteAspectKeeper extends Widget {
                 spr.y = w2scr(a, pos);
                 spr.scaleY = w2scr(a, scale);
         }
-        // trace(this.pos[a]  + " " + size[a]);
-        // trace(spr.x  +" " + spr.scaleX  + " " + spr.width);
     }
 
     inline function w2scr(a, val:Float) {
