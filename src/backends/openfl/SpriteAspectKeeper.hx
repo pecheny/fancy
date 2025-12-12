@@ -36,10 +36,15 @@ class SpriteAspectKeeper extends Widget {
         dp.views.push(spr);
         this.spr = spr;
 
-        this.bounds = if (bounds == null) {
-            var b = spr.getBounds(spr);
+        this.bounds = if (bounds != null) bounds else {
+            var _bounds = spr.getChildByName("_bounds");
+            if (_bounds == null)
+                _bounds = spr;
+            var b = _bounds.getBounds(spr);
             new Boundbox(b.left, b.top, b.width, b.height);
-        } else bounds;
+        }
+
+        bounds;
 
         if (hideOverflow) {
             mask = new Sprite();
@@ -89,7 +94,8 @@ class SpriteAspectKeeper extends Widget {
             var free = size[a] - bounds.size[a] * scale;
             var pos = pos[a] + free / 2 - bounds.pos[a] * scale;
             apply(a, pos, scale);
-            if (mask!=null) applyMask(a);
+            if (mask != null)
+                applyMask(a);
         }
     }
 
