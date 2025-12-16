@@ -27,10 +27,9 @@ class BarsDemo extends Sprite {
         fui = new FuiBuilder(stage, uikit);
         BaseDkit.inject(fui);
         var root:Entity = fui.createDefaultRoot();
-        root.addComponent(new al.openfl.display.FlashDisplayRoot(this));
         uikit.configure(root);
         uikit.createContainer(root);
-
+        fui.configureDisplayRoot(root, this);
         switcher = root.getComponent(WidgetSwitcher);
         var ph = Builder.widget();
         ngrid(ph);

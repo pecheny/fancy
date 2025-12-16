@@ -1,30 +1,15 @@
 package backends.openfl;
 
-import al.openfl.display.DrawcallDataProvider;
-import al.openfl.display.FlashDisplayRoot;
-import ec.CtxWatcher;
-import ec.Entity;
 import ecbind.RenderableBinder;
 import gl.AttribSet;
 import gl.GLNode;
-import gl.OflGLNodeAdapter;
-import gl.RenderingPipeline;
-import gl.aspects.AlphaBlendingAspect;
 
 class DrawcallUtils {
-    public static function createContainer(pipeline:RenderingPipeline, e:Entity, descr):Entity {
-        RenderableBinder.getOrCreate(e); // to prevent
-        var node = pipeline.createContainer(descr);
-        node.addAspect(new AlphaBlendingAspect());
-        bindLayer(e, node);
-        var adapter = new OflGLNodeAdapter();
-        adapter.addNode(node);
-        DrawcallDataProvider.get(e).addView(adapter);
-        new CtxWatcher(FlashDisplayRoot, e);
-        return e;
-    }
-
-    static function bindLayer(e, glnode:GLNode) {
+    /** 
+        Registers all drawcalls provided by `glnode` as a `CtxBinder`. All `Renderable` in the descendant hierarchy of `e` 
+        would be collected and rendered by these drawcalls until other descending CtxBinder.
+    **/
+    public static function bindLayer(e, glnode:GLNode) {
         var binder = RenderableBinder.getOrCreate(e);
         if (Std.isOfType(glnode, ContainerGLNode)) {
             var c = cast(glnode, ContainerGLNode);

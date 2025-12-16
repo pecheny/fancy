@@ -32,11 +32,10 @@ class RadiogroupDemo extends Sprite {
         
         BaseDkit.inject(fui);
         var root:Entity = fui.createDefaultRoot();
-        root.addComponent(new FlashDisplayRoot(this));
 
         fui.uikit.configure(root);
         fui.uikit.createContainer(root);
-
+        fui.configureDisplayRoot(root, this);
         var switcher = root.getComponent(WidgetSwitcher);
         
 

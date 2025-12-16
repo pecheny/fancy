@@ -31,10 +31,9 @@ class TransformDemo extends Sprite {
 
         BaseDkit.inject(fui);
         var root:Entity = fui.createDefaultRoot();
-        root.addComponent(new FlashDisplayRoot(this));
         uikit.configure(root);
         uikit.createContainer(root);
-
+        fui.configureDisplayRoot(root, this);
         root.getComponent(TransformAspect).matrix.appendScale(0.5, 0.5, 0.5);
 
         var wdg = Builder.widget();

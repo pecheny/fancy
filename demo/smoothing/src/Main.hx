@@ -40,11 +40,10 @@ class Main extends Sprite {
 
         BaseDkit.inject(fui);
         var root:Entity = fui.createDefaultRoot();
-        root.addComponent(new al.openfl.display.FlashDisplayRoot(this));
 
         uikit.configure(root);
         uikit.createContainer(root);
-        
+        fui.configureDisplayRoot(root, this);
         var fitStyle = uikit.textStyles.newStyle("fit")
         .withSize(sfr, .25)
         .withAlign(horizontal, Forward)

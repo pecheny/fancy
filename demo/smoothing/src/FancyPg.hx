@@ -37,6 +37,7 @@ class FancyPg extends Sprite {
         uikit.drawcallsLayout.addChild(Xml.parse(PictureDrawcalls.DRAWCALLS_LAYOUT(pictureFile)).firstElement());
         uikit.configure(root);
         uikit.createContainer(root);
+        fui.configureDisplayRoot(root, this);
         createTextStyles();
 
         var rw = Builder.h();

@@ -1,5 +1,7 @@
 package;
 
+import al.openfl.display.FlashBinder;
+import openfl.display.DisplayObjectContainer;
 import a2d.AspectRatioProvider;
 import a2d.Placeholder2D;
 import a2d.PlaceholderBuilder2D;
@@ -152,8 +154,19 @@ class FuiBuilder {
         root.addComponentByType(AspectRatioProvider, ar);
         root.addComponentByType(WindowSizeProvider, ar);
         root.addComponentByType(PlaceholderBuilder2D, placeholderBuilder);
-
         return root;
+    }
+
+    public function configureDisplayRoot(root:Entity, target:DisplayObjectContainer) {
+        var fdr = root.getComponent(FlashBinder);
+        if (fdr != null) {
+            var canvas = fdr.container;
+            target.addChild(canvas);
+        } else {
+            fdr = new FlashBinder(target);
+            root.addComponent(fdr);
+        }
+        fdr.bind(root);
     }
 
     public function configureAnimation(root:Entity) {
@@ -199,7 +212,7 @@ class FuiBuilder {
             QuadGraphicElement.writeQuadPostions(buffer.getBuffer(), writer, 0, (a, wg) -> wg);
         };
         if (createGldo) {
-            DrawcallUtils.createContainer(uikit.pipeline, w.entity, Xml.parse(PictureDrawcalls.DRAWCALLS_LAYOUT(filename)).firstElement());
+            uikit.createContainer(w.entity, Xml.parse(PictureDrawcalls.DRAWCALLS_LAYOUT(filename)).firstElement());
         }
         return shw;
     }
@@ -209,7 +222,7 @@ class FuiBuilder {
         placeholder.entity.name = "placeholder";
         var scroller = new ScrollboxItem(placeholder, scroll, ar.getAspectRatio());
         addScissors(placeholder);
-        DrawcallUtils.createContainer(uikit.pipeline, scroller.ph.entity, dl);
+        uikit.createContainer(scroller.ph.entity, dl);
         uikit.pipeline.renderAspectBuilder.reset();
         return placeholder;
     }

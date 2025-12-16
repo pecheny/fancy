@@ -28,11 +28,10 @@ class SquaresDemo extends Sprite {
         fui = new FuiBuilder();
         BaseDkit.inject(fui);
         var root:Entity = fui.createDefaultRoot();
-        root.addComponent(new al.openfl.display.FlashDisplayRoot(this));
         var uikit = new FlatUikitExtended(fui);
         uikit.configure(root);
         uikit.createContainer(root);
-
+        fui.configureDisplayRoot(root, this);
         switcher = root.getComponent(WidgetSwitcher);
 
         gui = new DemoGui(Builder.widget());

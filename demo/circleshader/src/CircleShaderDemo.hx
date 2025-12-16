@@ -29,10 +29,10 @@ class CircleShaderDemo extends Sprite {
         fui = new FuiBuilder();
         BaseDkit.inject(fui);
         var root:Entity = fui.createDefaultRoot();
-        root.addComponent(new al.openfl.display.FlashDisplayRoot(this));
         var uikit = new FlatUikitExtended(fui);
         uikit.configure(root);
         uikit.createContainer(root);
+        fui.configureDisplayRoot(root, this);
 
         switcher = root.getComponent(WidgetSwitcher);
         var wdg = quad(fui.placeholderBuilder.h(sfr, 1).v(sfr, 1).b(), 0x6a00ff);

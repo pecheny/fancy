@@ -1,5 +1,6 @@
 package;
 
+import al.openfl.display.FlashBinder;
 import backends.openfl.OpenflBackend.StageImpl;
 import ec.macros.InitMacro;
 import dkit.Dkit;
@@ -38,11 +39,9 @@ class ClickAndButt extends Sprite {
         var fui = new FuiBuilder(stage);
         BaseDkit.inject(fui);
         var root:Entity = fui.createDefaultRoot();
-        root.addComponent(new al.openfl.display.FlashDisplayRoot(this));
-
-
         fui.uikit.configure(root);
         fui.uikit.createContainer(root);
+        fui.configureDisplayRoot(root, this);
 
         WonderKit.configure(root);
         ClickAndButtPreset.configure(root);
