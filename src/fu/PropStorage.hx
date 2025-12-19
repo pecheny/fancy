@@ -2,8 +2,8 @@ package fu;
 
 import ec.Entity;
 import ec.IComponent;
-import ec.Component;
 
+typedef ClassMap<V> = haxe.ds.ObjectMap<Dynamic, V>;
 interface PropStorage<T> {
     public function get(name:String):T;
     public function set(name:String, val:T):Void;
@@ -23,6 +23,50 @@ class DummyProps<T> implements PropStorage<T> {
     public function new() {}
 }
 
+class MultiPropStorage implements IComponent {
+    var strings:Map<String, String> = new Map();
+    var ints:Map<String, Int> = new Map();
+    var insts:ClassMap<Dynamic> = new ClassMap();
+
+    public function new() {}
+
+    public function setInstance<T>(k:Class<T>, val:T) {
+        insts.set(k, val);
+    }
+
+    public function getInstance<T>(k:Class<T>):T {
+        return insts.get(k) ?? parent()?.getInstance(k);
+    }
+
+    public function setString(k:String, val:String) {
+        strings.set(k, val);
+    }
+
+    public function getString(k:String):String {
+        return strings.get(k) ?? parent()?.getString(k);
+    }
+
+    public function setInt(k:String, val:Int) {
+        ints.set(k, val);
+    }
+
+    public function getInt(k:String):Int {
+        return ints.get(k) ?? parent()?.getInt(k);
+    }
+
+    @:isVar public var entity(get, set):Entity;
+
+    function get_entity()
+        return entity;
+
+    function set_entity(value:Entity)
+        return entity = value;
+
+    inline function parent() {
+        return entity?.parent?.getComponentUpward(MultiPropStorage);
+    }
+}
+
 class CascadeProps<T> extends DummyProps<T> implements IComponent {
     var name:String;
     var defaultVal:T;
@@ -35,7 +79,7 @@ class CascadeProps<T> extends DummyProps<T> implements IComponent {
         this.defaultVal = defaultVal;
     }
 
-    inline function paretn() {
+    inline function parent() {
         return entity?.parent?.getComponentUpward(PropStorage);
     }
 
@@ -43,7 +87,7 @@ class CascadeProps<T> extends DummyProps<T> implements IComponent {
         var val = super.get(alias);
         if (val != null)
             return val;
-        var up = paretn();
+        var up = parent();
         if (up == null)
             return defaultVal;
         return up.get(alias);
@@ -58,24 +102,21 @@ class CascadeProps<T> extends DummyProps<T> implements IComponent {
     }
 }
 
-class PropsAccess<T> {
-    var p:PropStorage<T>;
-
-    function new() {}
-
-    public static function getOrCreateStr<T>(e:Entity):PropsAccess<T> {
-        var pa = new PropsAccess<T>();
-        pa.p = null;
-        pa.p = e.getComponent(PropStorage);
-        if (pa.p != null)
-            return pa;
-        pa.p = new CascadeProps<T>(null, e.name + "-props");
-        e.addComponentByType(PropStorage, pa.p);
-        return pa;
-    }
-
-    public function with(name, val:T) {
-        p.set(name, val);
-        return this;
-    }
-}
+// class PropsAccess<T> {
+//     var p:PropStorage<T>;
+//     function new() {}
+//     public static function getOrCreateStr<T>(e:Entity):PropsAccess<T> {
+//         var pa = new PropsAccess<T>();
+//         pa.p = null;
+//         pa.p = e.getComponent(PropStorage);
+//         if (pa.p != null)
+//             return pa;
+//         pa.p = new CascadeProps<T>(null, e.name + "-props");
+//         e.addComponentByType(PropStorage, pa.p);
+//         return pa;
+//     }
+//     public function with(name, val:T) {
+//         p.set(name, val);
+//         return this;
+//     }
+// }

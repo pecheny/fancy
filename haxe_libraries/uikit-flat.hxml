@@ -1,3 +1,3 @@
-# @install: lix --silent download "gh://github.com/pecheny/uikit-flat#8ce5fc2502710e28b9562d18d783da9fa9501a6e" into uikit-flat/1.0.0/github/8ce5fc2502710e28b9562d18d783da9fa9501a6e
--cp ${HAXE_LIBCACHE}/uikit-flat/1.0.0/github/8ce5fc2502710e28b9562d18d783da9fa9501a6e/src
+# @install: lix --silent download "gh://github.com/pecheny/uikit-flat#2a9eddb18d92e9b32996182801e17af31fdc82da" into uikit-flat/1.0.0/github/2a9eddb18d92e9b32996182801e17af31fdc82da
+-cp ${HAXE_LIBCACHE}/uikit-flat/1.0.0/github/2a9eddb18d92e9b32996182801e17af31fdc82da/src
 -D uikit-flat=1.0.0

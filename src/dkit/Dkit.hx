@@ -102,7 +102,7 @@ class BaseDkit implements domkit.Model<BaseDkit> implements domkit.Object implem
                 c = al.Builder.createContainer(b().b(), horizontal, Center);
                 fui.makeClickInput(c.ph, ph);
                 setLayouts();
-                fui.createScrollbox(c, ph, fui.uikit.drawcallsLayout);
+                fui.uikit.createScrollbox(c, ph);
                 for (ch in children) {
                     c.addChild(ch.ph);
                     c.entity.addChild(ch.ph.entity);
@@ -110,7 +110,7 @@ class BaseDkit implements domkit.Model<BaseDkit> implements domkit.Object implem
             } else {
                 // the case with custom resizables works but not well
                 // tested with label, works with incorrect offset
-                fui.createScrollbox(content, ph, fui.uikit.drawcallsLayout);
+                fui.uikit.createScrollbox(content, ph);
             }
         } else if (containerRequired()) {
             c = ph.entity.getComponent(Widget2DContainer);

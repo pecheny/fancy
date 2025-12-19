@@ -91,11 +91,6 @@ class FuiBuilder {
         return rootEntity;
     }
 
-    public function addScissors(w:Placeholder2D) {
-        var sc = new ScissorAspect(w, ar.getAspectRatio());
-        uikit.pipeline.addAspect(sc);
-    }
-
     public function configureInput(root:Entity) {
         var s = new InputSystemsContainer(new Point(), null);
         root.addComponent(new InputBinder<Point>(s));
@@ -215,16 +210,6 @@ class FuiBuilder {
             uikit.createContainer(w.entity, Xml.parse(PictureDrawcalls.DRAWCALLS_LAYOUT(filename)).firstElement());
         }
         return shw;
-    }
-
-    public function createScrollbox(content:ResizableWidget2D, placeholder:Placeholder2D, dl) {
-        var scroll = new W2CScrollableContent(content, placeholder);
-        placeholder.entity.name = "placeholder";
-        var scroller = new ScrollboxItem(placeholder, scroll, ar.getAspectRatio());
-        addScissors(placeholder);
-        uikit.createContainer(scroller.ph.entity, dl);
-        uikit.pipeline.renderAspectBuilder.reset();
-        return placeholder;
     }
 
     function get_stage():Stage {
