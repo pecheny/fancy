@@ -30,7 +30,7 @@ class UikitBase {
     public var pipeline:RenderingPipeline;
     public var fonts(default, null) = new FontStorage(new BMFontFactory());
     public var textStyles(default, null):TextContextBuilder;
-    public var containers:ContainerStyler;
+    public var containers(default, null):ContainerStyler;
     public var properties(default, null):MultiPropStorage;
     public var stage:Stage;
 
@@ -44,6 +44,7 @@ class UikitBase {
         this.fontPath = defaultFontPath;
         textStyles = new TextContextBuilder(fonts, stage);
         properties = new MultiPropStorage();
+        containers = new ContainerStyler();
     }
 
     public function configure(e:Entity) {
@@ -51,6 +52,8 @@ class UikitBase {
         regDefaultDrawcalls();
         regStyles(e);
         regLayouts(e);
+        e.addComponent(properties);
+        e.addComponent(containers);
     }
 
     function regStyles(e:Entity) {
