@@ -18,6 +18,7 @@
         "openfl": "",
         "domkit": "git:https://github.com/pecheny/domkit#postinit",
         "slec": "git:https://github.com/pecheny/slec",
+        "uikit-flat": "git:https://github.com/pecheny/uikit-flat",
         "taxis": "git:https://github.com/pecheny/taxis",
         "alayout": "git:https://github.com/pecheny/alayout",
         "shimp": "git:https://github.com/pecheny/shimp",

@@ -54,17 +54,18 @@ class UikitBase {
         regLayouts(e);
         e.addComponent(properties);
         e.addComponent(containers);
+        e.addComponentByType(TextContextStorage, textStyles);
+        e.addComponent(textStyles.getStyle(TextContextBuilder.DEFAULT_STYLE));
     }
 
     function regStyles(e:Entity) {
-        var default_text_style = "default";
-        textStyles.newStyle(default_text_style)
+        textStyles.newStyle(TextContextBuilder.DEFAULT_STYLE)
             .withSize(sfr, .07)
             .withPadding(horizontal, sfr, 0.1)
             .withAlign(vertical, Center)
             .build();
         textStyles.resetToDefaults();
-        properties.setString(Dkit.TEXT_STYLE, default_text_style);
+        properties.setString(Dkit.TEXT_STYLE, TextContextBuilder.DEFAULT_STYLE);
     }
 
     function regLayouts(e:Entity) {}
