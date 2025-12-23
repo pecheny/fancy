@@ -87,7 +87,6 @@ class FuiBuilder {
         var screens = new AnimatedSwitcher(switcher);
         updater.addUpdatable(screens);
         rootEntity.addComponent(screens);
-        rootEntity.addComponentByType(TextContextStorage, uikit.textStyles);
         return rootEntity;
     }
 
