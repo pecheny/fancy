@@ -34,56 +34,14 @@ class BarsDemo extends Sprite {
         fui.configureDisplayRoot(root, this);
         switcher = root.getComponent(WidgetSwitcher);
         var ph = Builder.widget();
-        ngrid(ph);
-        tgrid(ph);
+        fui.lqtr(ph);
+        var shw = new ShapeWidget(CircleSet.instance, ph);
+        shw.addChild(new FlatBubble(ph, 0x93ff0080));
+        shw.addChild(new EdgedBubble(ph, 0xabff9900));
+        shw.addChild(new FlatBallon(ph, 0x9F00AAFF));
+        shw.addChild(new EdgedBallon(ph, 0x93EE0000));
         createBarWidget(ph);
         switcher.switchTo(ph);
-    }
-
-    function ngrid(ph) {
-        fui.lqtr(ph);
-        var cornerSize = 3;
-
-        // var fac = new NGridFactory(attrs, cornerSize);
-        var shw = new ShapeWidget(CircleSet.instance, ph);
-        var shape = new RoundNGrid(ph);
-        shw.addChild(shape);
-
-        var buffer = shw.getBuffer();
-
-        new ShapesColorAssigner(attrs, 0x9789FFC8, shw.getBuffer());
-
-        buffer.onInit.listen(() -> {
-            var rad = new RadiusAtt(attrs, buffer.getVertCount());
-            rad.r2 = 1;
-            rad.r1 = 1 - (1 / cornerSize);
-            rad.r1 *= rad.r1;
-            rad.writePostions(buffer.getBuffer(), 0, null);
-        });
-        return shw;
-    }
-
-    function tgrid(ph) {
-        fui.lqtr(ph);
-        var steps = WidgetToScreenRatio.getOrCreate(ph.entity, ph, 0.05);
-        // var fac = new TGridFactory(attrs);
-        var shw = new ShapeWidget(CircleSet.instance, ph);
-        var shape = new RoundTGrid(ph);
-        shw.addChild(shape);
-        var buffer = shw.getBuffer();
-        // buffer.onInit.listen(() -> fac.addUV(buffer));
-        // call addUv in iteration over children
-
-        new ShapesColorAssigner(attrs, 0x77DEC7FF, shw.getBuffer());
-        buffer.onInit.listen(() -> {
-            var rad = new RadiusAtt(attrs, buffer.getVertCount());
-            // for solid fill
-            // rad.r1 = 0;
-            // rad.r2 = 1;
-            rad.writePostions(buffer.getBuffer(), 0, null);
-            //for border of line thickness
-            new fu.graphics.CircleThicknessCalculator(ph, steps, cast rad, buffer.getBuffer());
-        });
     }
 
     function createBarWidget(ph) {
