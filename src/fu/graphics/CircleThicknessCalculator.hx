@@ -15,14 +15,16 @@ class CircleThicknessCalculator implements AxisApplier {
     var steps:WidgetToScreenRatio;
     var rads:RadiusAtt<CircleSet>;
     var buffer:Bytes;
+    var vertOffset:Int;
 
     public var thikness:Float = 1.;
 
-    public function new(ph, steps, rads, b) {
+    public function new(ph, steps, rads, b, vertOffset) {
         this.ph = ph;
         this.rads = rads;
         this.steps = steps;
         this.buffer = b;
+        this.vertOffset = vertOffset;
         ph.axisStates[vertical].addSibling(this);
     }
 
@@ -37,6 +39,6 @@ class CircleThicknessCalculator implements AxisApplier {
         var dir = w < h ? horizontal : vertical;
         var r = 1 - 2 * steps.getRatio()[dir]; // * (ph.axisStates[dir].getSize() * thikness);
         rads.r1 = r * r;
-        rads.writePostions(buffer, 0, null);
+        rads.writePostions(buffer, vertOffset, null);
     }
 }
