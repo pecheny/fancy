@@ -51,6 +51,11 @@ class ShapeWidget<T:AttribSet> extends Widget implements Renderable<T> {
         shapeRenderer.transform = transformer.transformValue;
         createShapes();
         shapeRenderer.initChildren(children);
+        var vertsCount = 0;
+        for (sh in children) {
+            sh.initInBuffer(shapeRenderer.buffer, vertsCount);
+            vertsCount += sh.getVertsCount();
+        }
         inited = true;
         onShapesDone.dispatch();
     }
