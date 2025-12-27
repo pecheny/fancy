@@ -26,6 +26,7 @@ class DummyProps<T> implements PropStorage<T> {
 class MultiPropStorage implements IComponent {
     var strings:Map<String, String> = new Map();
     var ints:Map<String, Int> = new Map();
+    var floats:Map<String, Float> = new Map();
     var insts:ClassMap<Dynamic> = new ClassMap();
 
     public function new() {}
@@ -53,6 +54,15 @@ class MultiPropStorage implements IComponent {
     public function getInt(k:String):Int {
         return ints.get(k) ?? parent()?.getInt(k);
     }
+    
+    public function setFloat(k:String, val:Float) {
+        floats.set(k, val);
+    }
+
+    public function getFloat(k:String):Float {
+        return floats.get(k) ?? parent()?.getFloat(k);
+    }
+
 
     @:isVar public var entity(get, set):Entity;
 
