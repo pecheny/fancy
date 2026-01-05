@@ -123,6 +123,8 @@ class BaseDkit implements domkit.Model<BaseDkit> implements domkit.Object implem
                 ph.getInnerPh().axisStates[a].addSibling(new ContainerRefresher(c));
             }
             for (ch in children) {
+                if (Std.is(ch, OrphansDkit))
+                    continue;
                 c.addChild(ch.ph);
                 c.entity.addChild(ch.ph.entity);
             }
@@ -236,6 +238,20 @@ class SwitcherDkit extends BaseDkit {
     }
 
     override function containerRequired():Bool {
+        return false;
+    }
+}
+
+@:uiComp("orphans")
+class OrphansDkit extends BaseDkit {
+    public function new(?parent) {
+        super(null, parent);
+        initComponent();
+    }
+
+    override function containerRequired():Bool {
+        // in fact it is not reauired for now since there is no @:postInit and initDkit() would not called from markup
+        // leave it for a case of ridding of manual initDkit() setup for components.
         return false;
     }
 }
