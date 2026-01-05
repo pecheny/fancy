@@ -234,6 +234,10 @@ class SwitcherDkit extends BaseDkit {
     public function switchTo(ph) {
         switcher.switchTo(ph);
     }
+
+    override function containerRequired():Bool {
+        return false;
+    }
 }
 
 #if swf
