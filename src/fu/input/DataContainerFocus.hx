@@ -1,5 +1,8 @@
 package fu.input;
 
+import a2d.Widget;
+import al.core.DataView;
+import al.core.TWidget.IWidget;
 import fu.input.FocusManager.FocusRequestSource;
 import Axis2D.AVector2D;
 import al.core.AxisState;
@@ -13,7 +16,8 @@ import fu.ui.scroll.ScrollableContent.Scrollable;
 class DataContainerFocus extends LinearFocusManager {
     @:once var scroll:Scrollable;
 
-    var dcontainer:DataContainerDkit<Any>;
+    var dcontainer:DataContainerDkit<Any, Dynamic>;
+    // var dcontainer:DataContainerDkit<Dynamic, Dynamic<IWidget<Axis2D> & DataView<Dynamic>>>;
 
     public function new(dcontainer) {
         this.dcontainer = dcontainer;
@@ -33,8 +37,9 @@ class DataContainerFocus extends LinearFocusManager {
         var viewport = dcontainer.ph;
         var vas:AVector2D<AxisState> = viewport.axisStates;
         for (a in Axis2D) {
-            var bas = chn[on].ph.axisStates;
-            var bph:AxisState = bas[a]; // workaround for hl target
+            var w:IWidget<Axis2D> = cast chn[on];
+            var bas = w.ph.axisStates;
+            var bph:AxisState = bas[a]; // workaround for hl target, maybe not required already
             var vph:AxisState = vas[a];
             if (bph.getPos() < vph.getPos()) {
                 var localPos:Float = bph.getPos() - vph.getPos() - scroll.getOffset(a);
