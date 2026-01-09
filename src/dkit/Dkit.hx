@@ -268,6 +268,7 @@ class SwfDkit extends BaseDkit {
 
     override function initDkit() {
         mc = openfl.utils.Assets.getMovieClip('$lib:$name');
+        mc.name = name;
         new backends.openfl.SpriteAspectKeeper(ph, mc, null, mode, hideOverflow);
     }
 }

@@ -98,6 +98,7 @@ class UikitBase {
         if (hasFlash) {
             pipeline.unknownNodeHandler = xmlNodeHandler.bind(e);
             var mixer = new OflGLNodeMixer();
+            mixer.name = e.name;
             adapter = mixer;
             node = mixer;
             for (xmln in layout.elements()) {
@@ -108,6 +109,7 @@ class UikitBase {
         } else {
             node = pipeline.createContainer(drawcallsLayout);
             var _adapter = new OflGLNodeAdapter();
+            _adapter.name = e.name;
             adapter = _adapter;
             _adapter.addNode(node);
         }
@@ -126,7 +128,9 @@ class UikitBase {
         switch node.nodeName {
             case "openfl":
                 var container:OflGLNodeMixer = cast container;
+                e.addComponent(container);
                 var canvas = new Sprite();
+                canvas.name = "mixer-canvas-" + e.name;
                 container.addChild(canvas);
                 var froot = new FlashBinder(canvas);
                 e.addComponent(froot);
