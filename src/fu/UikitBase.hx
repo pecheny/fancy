@@ -107,7 +107,7 @@ class UikitBase {
             pipeline.renderAspectBuilder.reset();
             pipeline.unknownNodeHandler = defaultNodeHandler;
         } else {
-            node = pipeline.createContainer(drawcallsLayout);
+            node = pipeline.createContainer(layout);
             var _adapter = new OflGLNodeAdapter();
             _adapter.name = e.name;
             adapter = _adapter;
