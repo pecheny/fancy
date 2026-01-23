@@ -227,7 +227,7 @@ class DataContainerDkit<TData, T:IWidget<Axis2D> & DataView<TData>> extends Base
 @:uiComp("switcher")
 @:postInit(initDkit)
 class SwitcherDkit extends BaseDkit {
-    var switcher:WidgetSwitcher<Axis2D>;
+    public var switcher(default, null):WidgetSwitcher<Axis2D>;
 
     override function initDkit() {
         switcher = new WidgetSwitcher(ph.getInnerPh());
