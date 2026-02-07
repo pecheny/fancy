@@ -79,7 +79,6 @@ class UikitBase {
 
     public function createScrollbox(content:ResizableWidget2D, placeholder:Placeholder2D, ?dl:Xml) {
         var scroll = new W2CScrollableContent(content, placeholder);
-        placeholder.entity.name = "placeholder";
         var scroller = new ScrollboxItem(placeholder, scroll, stage.getAspectRatio());
         addScissors(placeholder);
         createContainer(scroller.ph.entity, dl);
