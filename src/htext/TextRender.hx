@@ -1,4 +1,5 @@
 package htext;
+
 import Axis2D;
 import a2d.transform.TransformerBase;
 import data.IndexCollection;
@@ -20,6 +21,7 @@ class TextRender<T:AttribSet> implements ITextRender<T> {
     var value = "";
     var efficientLen = 0;
     var transformer:TransformerBase;
+    var textTr:TextTransformer;
     var charsLayouter:TextLayouter;
     var bytes = new DynamicBytes(512);
     var attrs:T;
@@ -30,11 +32,12 @@ class TextRender<T:AttribSet> implements ITextRender<T> {
     var dpiWriter:AttributeWriters;
     var dirty = true;
 
-    public function new(attrs:T, layouter, tr, forFill:AttributeFiller = null) {
+    public function new(attrs:T, layouter, tr, textTr, forFill:AttributeFiller = null) {
         this.attrs = attrs;
         this.otherAttributesToFill = forFill;
         this.transformer = tr;
-        transformer.changed.listen(setDirty);
+        this.textTr = textTr;
+        transformer.changed.listen(() -> setDirty(transform));
         charsLayouter = layouter;
 
         posWriter = attrs.getWriter(AttribAliases.NAME_POSITION);
@@ -60,7 +63,7 @@ class TextRender<T:AttribSet> implements ITextRender<T> {
         if (a == vertical)
             vo = charsLayouter.calculateVertOffset();
         var locPos = -vo + rec.pos[a] + rec.scale * rec.tile.getLocalPosOffset(vert, a);
-        return transformer.transformValue(a, locPos);
+        return transformer.transformValue(a, textTr.transformValue(a, locPos));
     }
 
 

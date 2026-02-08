@@ -38,7 +38,7 @@ class CMSDFLabel extends LabelBase<CMSDFSet> {
         wrs.addChild(new SmothnessWriter(dpiWriter[0], l, textStyleContext, tt, stage.getWindowSize()));
         cw = new TextColorFiller(CMSDFSet.instance, glyphs);
         wrs.addChild(cw);
-        rend = new TextRender(attrs, l, tt, wrs);
+        rend = new TextRender(attrs, l, tt, null, wrs);
         return rend;
     }
 
