@@ -24,6 +24,7 @@ class TextRender<T:AttribSet> implements ITextRender<T> {
     var textTr:TextTransformer;
     var charsLayouter:TextLayouter;
     var bytes = new DynamicBytes(512);
+    var positions:Array<Float> = [];
     var attrs:T;
     var otherAttributesToFill:AttributeFiller;
 
@@ -39,7 +40,6 @@ class TextRender<T:AttribSet> implements ITextRender<T> {
         this.textTr = textTr;
         transformer.changed.listen(() -> setDirty(transform));
         charsLayouter = layouter;
-
         posWriter = attrs.getWriter(AttribAliases.NAME_POSITION);
         uvWriter = attrs.getWriter(AttribAliases.NAME_UV_0);
     }
@@ -54,7 +54,7 @@ class TextRender<T:AttribSet> implements ITextRender<T> {
 
     inline function setVert(rec:TileRecord, a:Axis2D, vert:Int, vertOfs) {
         var targ = bytes.bytes;
-        posWriter[a].setValue(targ, vertOfs + vert, getVertPos(rec, a, vert));
+        positions[2 * (vertOfs + vert) + a] = getVertPos(rec, a, vert);
         uvWriter[a].setValue(targ, vertOfs + vert, rec.tile.getUV(vert, a));
     }
 
@@ -63,7 +63,7 @@ class TextRender<T:AttribSet> implements ITextRender<T> {
         if (a == vertical)
             vo = charsLayouter.calculateVertOffset();
         var locPos = -vo + rec.pos[a] + rec.scale * rec.tile.getLocalPosOffset(vert, a);
-        return transformer.transformValue(a, textTr.transformValue(a, locPos));
+        return textTr.transformValue(a, locPos);
     }
 
 
@@ -84,16 +84,29 @@ class TextRender<T:AttribSet> implements ITextRender<T> {
         if (indices == null || indices.length < efficientLen * 6)
             indices = IndexCollection.forQuads(efficientLen);
         bytes.grantCapacity(4 * efficientLen * attrs.stride);
+        positions.resize(tiles.length * 4 * 2);
         for (i in 0...efficientLen)
             setChar(i, tiles[i]);
         if (otherAttributesToFill != null) {
             otherAttributesToFill.write(bytes.bytes, 0);
         }
         dirty = false;
+    function applyTransform() {
+        var targ = bytes.bytes;
+        var i = 0;
+        while (i < charsLayouter.getTiles().length * 4) {
+            posWriter[horizontal].setValue(targ, i, transformer.transformValue(horizontal, positions[i * 2]));
+            posWriter[vertical].setValue(targ, i, transformer.transformValue(vertical, positions[i * 2 + 1]));
+            i++;
+        }
+        dirty = none;
     }
 
     public function render(targets:RenderTarget<T>):Void {
-        if (dirty) fillBuffer();
+        if (dirty) {
+            fillBuffer();
+            applyTransform();
+        }
         targets.blitIndices(indices, efficientLen * 6);
         targets.blitVerts(bytes.bytes, efficientLen * 4);
     }
