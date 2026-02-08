@@ -22,6 +22,6 @@ class TextAutoScale extends Component {
 
     function onChange() {
         tr.scale = scale.value;
-        consumer.setDirty();
+        consumer.setDirty(full);
     }
 }

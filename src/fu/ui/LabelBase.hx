@@ -109,6 +109,11 @@ class LabelBase<T:AttribSet> extends Widget implements ResizableWidget2D impleme
         var val = ctx.getContentSize(horizontal, tr) / (ctx.getFontScale(tr));
         layouter.setWidthConstraint(val / tr.scale);
     }
+    
+    public function setDirty(level:Dirty = full) {
+        render.setDirty(level); // ??
+    }
+
     function updateSize() {
         if (!_inited)
             return;
@@ -117,7 +122,7 @@ class LabelBase<T:AttribSet> extends Widget implements ResizableWidget2D impleme
         updateWordWrap();
         if (mode == word_wrap)
             return;
-        render.setDirty(); // ??
+        render.setDirty(full); // ??
         updateVertSize();
     }
 
