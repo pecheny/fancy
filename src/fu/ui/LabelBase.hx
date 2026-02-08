@@ -36,6 +36,7 @@ class LabelBase<T:AttribSet> extends Widget implements ResizableWidget2D impleme
     var transformer:TextTransformer;
     var vsize:FixedSize;
     var mode:AutoSize;
+    var bake = false;
 
     @:once var stage:Stage;
 
@@ -67,12 +68,23 @@ class LabelBase<T:AttribSet> extends Widget implements ResizableWidget2D impleme
             case word_wrap:
                 ph.axisStates[horizontal].addSibling(new ContainerRefresher(this));
             case word_wrap_auto_height:
+                if (bake) {
+                    trace("Warning: vertical auto size is not compatible with bake, skip.");
+                    return;
+                }
                 vsize = new FixedSize(0);
                 @:privateAccess ph.axisStates[vertical].size = vsize;
                 ph.axisStates[horizontal].addSibling(new ContainerRefresher(this));
         }
         this.mode = mode;
     }
+
+    public function setBake(val:Bool) {
+        if (this.mode == word_wrap_auto_height) {
+            trace("Warning: vertical auto size is not compatible with bake, skip.");
+            return;
+        }
+        this.bake = val;
     }
 
     public function withText(s) {
@@ -121,7 +133,7 @@ class LabelBase<T:AttribSet> extends Widget implements ResizableWidget2D impleme
         if (mode == none)
             return;
         updateWordWrap();
-        if (mode == word_wrap)
+        if (mode == word_wrap || bake)
             return;
         render.setDirty(full); // ??
         updateVertSize();
