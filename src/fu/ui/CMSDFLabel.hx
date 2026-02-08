@@ -1,5 +1,6 @@
 package fu.ui;
 
+import htext.ITextRender.Dirty;
 import a2d.transform.TransformerBase;
 import gl.sets.CMSDFSet;
 import htext.AttributeFiller;
@@ -29,7 +30,7 @@ class CMSDFLabel extends LabelBase<CMSDFSet> {
         // TODO maybe if text contains no color tags filling color attribute instead on relayouting would be more efficient
         layouter.setText("");
         layouter.setText(text);
-        rend.setDirty();
+        rend.setDirty(Dirty.full);
     }
 
     override function createTextRender(attrs:CMSDFSet, l, tt:TransformerBase) {

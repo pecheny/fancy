@@ -27,11 +27,10 @@ class TextRender<T:AttribSet> implements ITextRender<T> {
     var positions:Array<Float> = [];
     var attrs:T;
     var otherAttributesToFill:AttributeFiller;
-
     var posWriter:AttributeWriters;
     var uvWriter:AttributeWriters;
     var dpiWriter:AttributeWriters;
-    var dirty = true;
+    var dirty:Dirty = full;
 
     public function new(attrs:T, layouter, tr, textTr, forFill:AttributeFiller = null) {
         this.attrs = attrs;
@@ -66,15 +65,17 @@ class TextRender<T:AttribSet> implements ITextRender<T> {
         return textTr.transformValue(a, locPos);
     }
 
-
     public function setText(s:String) {
         value = s;
-        setDirty();
+        setDirty(full);
     }
 
-
-    public function setDirty() {
-        dirty = true;
+    public function setDirty(level:Dirty) {
+        if (level >= dirty)
+            dirty = level;
+        if (dirty == force) {
+            fillBuffer();
+        }
     }
 
     function fillBuffer() {
@@ -90,7 +91,9 @@ class TextRender<T:AttribSet> implements ITextRender<T> {
         if (otherAttributesToFill != null) {
             otherAttributesToFill.write(bytes.bytes, 0);
         }
-        dirty = false;
+        dirty = transform;
+    }
+
     function applyTransform() {
         var targ = bytes.bytes;
         var i = 0;
@@ -103,10 +106,10 @@ class TextRender<T:AttribSet> implements ITextRender<T> {
     }
 
     public function render(targets:RenderTarget<T>):Void {
-        if (dirty) {
+        if (dirty >= full)
             fillBuffer();
+        if (dirty >= transform)
             applyTransform();
-        }
         targets.blitIndices(indices, efficientLen * 6);
         targets.blitVerts(bytes.bytes, efficientLen * 4);
     }
