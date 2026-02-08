@@ -1,6 +1,8 @@
 package fu.ui;
 
 import htext.AutoSize;
+import gl.sets.CMSDFSet;
+import a2d.transform.LiquidTransformer;
 import a2d.Widget2DContainer;
 import al.appliers.ContainerRefresher;
 import al.core.WidgetContainer.Refreshable;
@@ -71,7 +73,6 @@ class LabelBase<T:AttribSet> extends Widget implements ResizableWidget2D impleme
         }
         this.mode = mode;
     }
-    }
 
     public function withText(s) {
         text = s;
@@ -83,7 +84,7 @@ class LabelBase<T:AttribSet> extends Widget implements ResizableWidget2D impleme
     }
 
     function createTextRender(attrs:T, l:TextLayouter, tt:TransformerBase):ITextRender<T> {
-        return new TextRender(attrs, l, tt);
+        return new TextRender(attrs, l, tt, null);
     }
 
     public function setAlign(?align:Align) {
@@ -132,7 +133,13 @@ class LabelBase<T:AttribSet> extends Widget implements ResizableWidget2D impleme
         layouter = createLayouter();
         TextTransformer.withTextTransform(ph, stage.getAspectRatio(), textStyleContext);
         transformer = ph.entity.getComponent(TextTransformer);
-        render = createTextRender(attrs, layouter, transformer);
+        LiquidTransformer.withLiquidTransform(ph, stage.getAspectRatio());
+
+        var ltransformer = ph.entity.getComponent(LiquidTransformer);
+        render = createTextRender(attrs, layouter, ltransformer);
+        var crender:TextRender<CMSDFSet> = cast render;
+        @:privateAccess crender.textTr = transformer;
+
         var as = new htext.TextAutoScale(ph.entity, transformer, render);
         render.setText(this.text);
         updateSize();

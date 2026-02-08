@@ -51,7 +51,7 @@ class CMSDFLabel extends LabelBase<CMSDFSet> {
         depth.onChange.listen(writeDepth);
         wrs.addChild(dwr);
 
-        rend = new TextRender(attrs, l, tt, wrs);
+        rend = new TextRender(attrs, l, tt, null, wrs);
         writeDepth();
         return rend;
     }

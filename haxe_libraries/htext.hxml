@@ -1,3 +1,3 @@
-# @install: lix --silent download "gh://github.com/pecheny/htext#ed4a86dd43273656c3878150c0064a9be53ae903" into htext/1.0.0/github/ed4a86dd43273656c3878150c0064a9be53ae903
--cp ${HAXE_LIBCACHE}/htext/1.0.0/github/ed4a86dd43273656c3878150c0064a9be53ae903/src
+# @install: lix --silent download "gh://github.com/pecheny/htext#dde65f226cda51399bfc45de203912e5e960dff3" into htext/1.0.0/github/dde65f226cda51399bfc45de203912e5e960dff3
+-cp ${HAXE_LIBCACHE}/htext/1.0.0/github/dde65f226cda51399bfc45de203912e5e960dff3/src
 -D htext=1.0.0
