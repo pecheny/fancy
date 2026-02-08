@@ -1,22 +1,22 @@
 package htext;
 import Axis2D;
-import data.aliases.AttribAliases;
+import a2d.transform.TransformerBase;
 import data.IndexCollection;
-import font.GLGlyphData.TileRecord;
+import data.aliases.AttribAliases;
 import font.GLGlyphData;
 import gl.AttribSet;
 import gl.RenderTarget;
-import gl.ValueWriter.AttributeWriters;
 import gl.ValueWriter;
+import htext.ITextRender;
 import htext.TextLayouter;
-import a2d.transform.TransformerBase;
 import utils.DynamicBytes;
 
 /**
-* TextRender combines all required from htext and flgl libs to fill haxe.io.Bytes buffer with vertex data of quads according to provided string.
+ * TextRender combines all required from htext and flgl libs to fill haxe.io.Bytes buffer with vertex data of quads according to provided string.
 **/
 class TextRender<T:AttribSet> implements ITextRender<T> {
     static var indices:IndexCollection;
+
     var value = "";
     var efficientLen = 0;
     var transformer:TransformerBase;
@@ -25,9 +25,10 @@ class TextRender<T:AttribSet> implements ITextRender<T> {
     var attrs:T;
     var otherAttributesToFill:AttributeFiller;
 
-    var posWriter:AttributeWriters ;
-    var uvWriter:AttributeWriters ;
-    var dpiWriter:AttributeWriters ;
+    var posWriter:AttributeWriters;
+    var uvWriter:AttributeWriters;
+    var dpiWriter:AttributeWriters;
+    var dirty = true;
 
     public function new(attrs:T, layouter, tr, forFill:AttributeFiller = null) {
         this.attrs = attrs;
@@ -68,7 +69,6 @@ class TextRender<T:AttribSet> implements ITextRender<T> {
         setDirty();
     }
 
-    var dirty = true;
 
     public function setDirty() {
         dirty = true;
@@ -95,5 +95,3 @@ class TextRender<T:AttribSet> implements ITextRender<T> {
         targets.blitVerts(bytes.bytes, efficientLen * 4);
     }
 }
-
-
