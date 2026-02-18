@@ -1,5 +1,6 @@
 package;
 
+import fu.UikitBase;
 import al.openfl.display.FlashBinder;
 import openfl.display.DisplayObjectContainer;
 import a2d.AspectRatioProvider;
@@ -58,7 +59,7 @@ class FuiBuilder {
     @:deprecated public var ar:Stage;
     public var placeholderBuilder(default, null):PlaceholderBuilderUi;
     public var updater(default, null):Updater;
-    public var uikit(default, null):Uikit;
+    public var uikit(default, null):UikitBase;
 
     public function new(stage:Stage, uikit = null) {
         this.ar = stage;
