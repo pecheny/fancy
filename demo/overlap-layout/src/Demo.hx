@@ -1,27 +1,31 @@
 package;
 
-import al.layouts.OverlapLayout;
-import backends.openfl.OpenflBackend.StageImpl;
-import a2d.Placeholder2D;
-import a2d.PlaceholderBuilder2D;
-import a2d.TableWidgetContainer;
-import al.core.DataView;
+import openfl.display3D.Context3D;
+import bindings.RenderEvent;
+import Gui;
 import al.ec.WidgetSwitcher;
-import al.layouts.PortionLayout;
-import al.openfl.display.FlashDisplayRoot;
+import backends.openfl.OpenflBackend.StageImpl;
+// import bindings.GL;
 import dkit.Dkit.BaseDkit;
 import ec.Entity;
 import openfl.display.Sprite;
+import openfl.display3D.Context3DCompareMode;
 
+// import openfl.events.RenderEvent;
 using a2d.ProxyWidgetTransform;
 using a2d.transform.LiquidTransformer;
 using al.Builder;
 
 class Demo extends Sprite {
+    var ctx:Context3D;
+
     public function new() {
         super();
+
+        addEventListener(openfl.events.RenderEvent.RENDER_OPENGL, onRender);
+        // addEventListener(openfl.events.Event.ENTERFRAME, onEnterFrame);
         var stage = new StageImpl(1);
-        var fui = new FuiBuilder(stage);
+        var fui = new FuiBuilder(stage, new FlatDepthUikit(stage));
 
         BaseDkit.inject(fui);
         var root:Entity = fui.createDefaultRoot();
@@ -36,32 +40,62 @@ class Demo extends Sprite {
         var gui = new Cont(wdg);
         gui.dc.initData(["foo", "bar", "baz", "buz", "foo", "bar", "baz", "buz"]);
         switcher.switchTo(wdg);
+
+        ctx = this.stage.context3D;
+
+        // this.stage.context3D.configureBackBuffer(this.stage.stageWidth, this.stage.stageHeight, 0, true);
+        var spr = new Sprite();
+
+        spr.graphics.beginFill(0xff00ffff);
+        spr.graphics.drawRect(0, 0, 1000, 1600);
+        // spr.graphics.drawRect(-0.9, -0.5, 2, 1);
+        spr.graphics.endFill();
+        // spr.addEventListener(openfl.events.RenderEvent.RENDER_OPENGL, (_) -> {});
+
+
+        var matrix = spr.transform.matrix;
+        matrix.scale(1000, 1000);
+        var tr = @:privateAccess spr.__transform;
+        tr.tz = 0.5;
+        // spr.transform.matrix = matrix;
+        trace(spr.transform.matrix.tz);
+
+        spr.name = "SPR";
+
+        addChild(spr);
+        var td = new TestDisplay();
+        td.name = "td";
+        addChild(td);
     }
-}
 
-@:postInit(initDkit)
-class Cont extends BaseDkit {
-    static var SRC = <cont vl={PortionLayout.instance}>
-        <data-container(b().v(pfr, 1).b()) public id="dc"  itemFactory={() -> new RadioButton(b().h(sfr, 0.2).v(sfr, 0.2).b())}  hl={OverlapLayout.instance}/>
-    </cont>
+    var intd = false;
 
-    override function initDkit()
-        super.initDkit();
-}
+    function onRender(event) {
+        // trace(@:privateAccess this.stage.context3D.__state.depthCompareMode);
 
-class RadioButton extends BaseDkit implements DataView<String> {
-    static var SRC = <radio-button hl={PortionLayout.instance}>
-    <label(b().h(pfr, .7).b()) id="caption"  text={ "text" }  />
-    ${fui.quad(__this__.ph, 0x20000000 + Std.int(Math.random() * 0xffffff))}
-</radio-button>;
+        this.stage.context3D.setDepthTest(true, Context3DCompareMode.GREATER_EQUAL);
+        // trace(ctx == this.stage.context3D);
+        if (intd)
+            return;
+        intd = true;
+        // var depthBits = GL.getInteger(GL.DEPTHBITS);
+        // trace("depthBits ", depthBits);
 
-    public function new(ph:Placeholder2D, ?parent:BaseDkit) {
-        super(ph, parent);
-        initComponent();
-        initDkit();
-    }
+        // var objectType = GL.getFramebufferAttachmentParameteriv(GL.FRAMEBUFFER, GL.DEPTH_ATTACHMENT, GL.FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE);
+        // if (objectType == GL.RENDERBUFFER) {
+        //     trace("A Renderbuffer is attached");
+        // } else if (objectType == GL.TEXTURE) {
+        //     trace("A Depth Texture is attached");
+        // } else if (objectType == GL.NONE) {
+        //     trace("no");
+        // }
 
-    public function initData(descr:String) {
-        caption.text = descr;
+        // var renderer:openfl.display.OpenGLRenderer = cast event.renderer;
+        // GL.clearColor(0.2, 0.3, 0.3, 1.0);
+        // GL.enable(GL.DEPTH_TEST);
+        // stage.context3D.configureBackBuffer(stage.stageWidth, stage.stageHeight, 0, true);
+        // GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
+        // GL.depthFunc(GL.NEVER);
+        // trace(GL);
     }
 }

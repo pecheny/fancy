@@ -4,7 +4,7 @@
     <meta title="Sample" package="shoo.fancy.GridsDemo" version="1.0.0" company="shoo"/>
     <app main="Demo" />
 
-    <window antialiasing="4"/>
+    <window antialiasing="4" depth-buffer="true"/>
     <window background="#303030" fps="60" />
     <window background="#303030" fps="60" width="1280" height="760" unless="html5"/>
     <source path="src"/>
@@ -12,6 +12,6 @@
     <haxelib name="openfl"/>
     <haxelib name="fancy"/>
     <haxelib name="uikit-flat"/>
-
+    <haxelib name="openfl-depth-test"/>
 
 </project>
