@@ -1,6 +1,7 @@
 
 
 // import bindings.GL;
+import gl.sets.ColorSet;
 import DepthComponent;
 import openfl.filters.ShaderFilter;
 import openfl.display3D.Context3DCompareMode;
@@ -10,7 +11,6 @@ import ec.PropertyComponent;
 import ec.Component;
 import graphics.ShapesBuffer;
 import gl.AttribSet;
-import gl.sets.ColorSet.DepthColorSet;
 import al.layouts.OverlapLayout;
 import backends.openfl.OpenflBackend.StageImpl;
 import a2d.Placeholder2D;
@@ -30,7 +30,7 @@ using al.Builder;
 @:postInit(initDkit)
 class Cont extends BaseDkit {
     static var SRC = <cont vl={PortionLayout.instance}>
-        <data-container(b().v(pfr, 1).b()) public id="dc" inputFactory={inputFactory}  itemFactory={() -> new RadioButton(b().h(sfr, 0.4).v(sfr, 0.2).b())}  hl={OverlapLayout.instance}/>
+        <data-container(b().v(pfr, 1).b()) public id="dc" inputFactory={inputFactory}  itemFactory={() -> new RadioButton(b().h(sfr, 0.3).v(sfr, 0.2).b())}  hl={OverlapLayout.instance}/>
     </cont>
 
     public function inputFactory(ph:Placeholder2D, n:Int) {
@@ -45,8 +45,8 @@ class Cont extends BaseDkit {
 
 class RadioButton extends BaseDkit implements DataView<String> {
     static var SRC = <radio-button hl={PortionLayout.instance}>
-    <label(b().h(pfr, .7).b()) id="caption"  text={ "text" }  />
-    ${quad(__this__.ph, 0xAA000000 + Std.int(Math.random() * 0xffffff))}
+    <label(b().h(pfr, .7).b()) id="caption"  text={ "text" } style={"fit"} />
+    ${quad(__this__.ph, 0xFF000000 + Std.int(Math.random() * 0xffffff))}
 </radio-button>;
 
     public function new(ph:Placeholder2D, ?parent:BaseDkit) {
@@ -57,7 +57,7 @@ class RadioButton extends BaseDkit implements DataView<String> {
 
     public function quad(ph:Placeholder2D, color) {
         fui.lqtr(ph);
-        var attrs = DepthColorSet.instance;
+        var attrs = ColorSet.instance;
         var shw = new fu.graphics.ShapeWidget(attrs, ph, true);
         shw.addChild(new graphics.shapes.QuadGraphicElement(attrs));
         var colors = new graphics.ShapesColorAssigner(attrs, color, shw.getBuffer());

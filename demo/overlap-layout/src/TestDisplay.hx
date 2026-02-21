@@ -27,6 +27,7 @@ class TestDisplay extends Sprite {
         var height:Int = stage.stageHeight;
         var pixels = new lime.utils.UInt8Array(width * height);
 
+#if !js
         // Read the depth buffer into our array
         GL.readPixels(0, 0, width, height, GL.DEPTH_COMPONENT, GL.UNSIGNED_BYTE, pixels);
         var depthBitmap = new openfl.display.BitmapData(width, height, true, 0);
@@ -43,6 +44,9 @@ class TestDisplay extends Sprite {
         while (numChildren > 0)
             removeChildAt(0);
 
-        addChild(new Bitmap(depthBitmap));
+        var bm = new Bitmap(depthBitmap);
+        bm.scaleX = bm.scaleY = 0.25;
+        addChild(bm);
+#end
     }
 }

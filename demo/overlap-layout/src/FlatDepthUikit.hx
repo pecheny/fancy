@@ -1,26 +1,27 @@
 package;
 
-import gl.AttribSet;
-import gl.passes.PassBase;
-import gl.sets.ColorSet.DepthColorSet;
-import shaderbuilder.SnaderBuilder.PosDepth;
-import shaderbuilder.SnaderBuilder.PosPassthrough;
-import a2d.ContainerStyler;
 import a2d.Stage;
 import al.layouts.PortionLayout;
 import al.layouts.WholefillLayout;
 import al.layouts.data.LayoutData.FixedSize;
 import al.layouts.data.LayoutData.FractionSize;
+import data.DataType;
+import data.aliases.AttribAliases;
 import ec.Entity;
 import fu.gl.GuiDrawcalls;
+import gl.AttribSet;
 import gl.RenderingPipeline;
 import gl.aspects.ExtractionUtils;
 import gl.passes.CmsdfPass;
 import gl.passes.FlatColorPass;
 import gl.passes.ImagePass;
+import gl.passes.PassBase;
+import gl.sets.CMSDFSet;
+import gl.sets.ColorSet;
 import htext.FontAspectsFactory;
-import htext.style.TextContextBuilder;
 import macros.AVConstructor;
+import shaderbuilder.SnaderBuilder.PosDepth;
+import shaderbuilder.SnaderBuilder.PosPassthrough;
 import shimp.ClicksInputSystem.ClickTargetViewState;
 
 class FlatDepthUikit extends fu.UikitBase {
@@ -33,8 +34,20 @@ class FlatDepthUikit extends fu.UikitBase {
         0xFFd46e00, //    PressedOutside =>
         0xff000000);
 
+    public static inline var DEPTH_MASK = "DEPTH_MASK";
+
+    public static final DRAWCALLS_LAYOUT = '<container>
+        <drawcall type="color"/>
+        <drawcall type="text" font="" $DEPTH_MASK="false" />
+    </container>';
+
     public function new(stage:Stage, ?pipeline:RenderingPipeline, fontPath = "Assets/fonts/robo.fnt") {
-        super(stage, Xml.parse(GuiDrawcalls.DRAWCALLS_LAYOUT).firstElement(), fontPath);
+        CMSDFSet.instance.addAttribute(AttribAliases.NAME_DEPTH, 1, DataType.float32);
+        CMSDFSet.instance.createWriters();
+        ColorSet.instance.addAttribute(AttribAliases.NAME_DEPTH, 1, DataType.float32);
+        ColorSet.instance.createWriters();
+
+        super(stage, Xml.parse(DRAWCALLS_LAYOUT).firstElement(), fontPath);
     }
 
     override function regStyles(e:Entity) {
@@ -69,15 +82,20 @@ class FlatDepthUikit extends fu.UikitBase {
 
     override function regDefaultDrawcalls():Void {
         function replacePosElem(cp:PassBase<AttribSet>) {
-            @:privateAccess cp.attr = cast DepthColorSet.instance;
             cp.vertElems.remove(PosPassthrough.instance);
             cp.vertElems.push(PosDepth.instance);
             return cp;
         }
+        var enableMask = new gl.aspects.DepthMaskAspect(true);
+        var disableMask = new gl.aspects.DepthMaskAspect(false);
+        pipeline.addAspectExtractor(RenderingPipeline.ANY_DRAWCALL, (xml:Xml) -> {
+            var dm = xml.get(DEPTH_MASK);
+            if (dm == "false")
+                return disableMask;
+            return enableMask;
+        });
         pipeline.addPass(GuiDrawcalls.BG_DRAWCALL, replacePosElem(cast new FlatColorPass()));
-
-        pipeline.addPass(GuiDrawcalls.TEXT_DRAWCALL, (cast new CmsdfPass()));
-        // pipeline.addPass(GuiDrawcalls.TEXT_DRAWCALL, replacePosElem(cast new CmsdfPass()));
+        pipeline.addPass(GuiDrawcalls.TEXT_DRAWCALL, replacePosElem(cast new CmsdfPass()));
         var fontAsp = new FontAspectsFactory(fonts, pipeline.textureStorage);
         pipeline.addAspectExtractor(GuiDrawcalls.TEXT_DRAWCALL, fontAsp.create, fontAsp.getAlias);
 

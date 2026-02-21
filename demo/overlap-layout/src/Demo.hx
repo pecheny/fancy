@@ -1,5 +1,6 @@
 package;
 
+import openfl.events.Event;
 import openfl.display3D.Context3D;
 import bindings.RenderEvent;
 import Gui;
@@ -42,26 +43,24 @@ class Demo extends Sprite {
         switcher.switchTo(wdg);
 
         ctx = this.stage.context3D;
+        // this.stage.addEventListener(Event.RESIZE, (e) -> {
+        //     trace("r");
+        //     // this.stage.context3D.configureBackBuffer(this.stage.stageWidth, this.stage.stageHeight, 4, true);
+        // });
 
-        // this.stage.context3D.configureBackBuffer(this.stage.stageWidth, this.stage.stageHeight, 0, true);
         var spr = new Sprite();
 
-        spr.graphics.beginFill(0xff00ffff);
-        spr.graphics.drawRect(0, 0, 1000, 1600);
+        spr.graphics.beginFill(0x772A3075);
+        spr.graphics.drawRect(400, 0, 300, 1600);
         // spr.graphics.drawRect(-0.9, -0.5, 2, 1);
         spr.graphics.endFill();
-        // spr.addEventListener(openfl.events.RenderEvent.RENDER_OPENGL, (_) -> {});
 
-
-        var matrix = spr.transform.matrix;
-        matrix.scale(1000, 1000);
-        var tr = @:privateAccess spr.__transform;
-        tr.tz = 0.5;
+        @:privateAccess spr.__transform.tz = 0.5;
+        // var tr = @:privateAccess spr.__transform;
+        // tr.tz = 0.5;
         // spr.transform.matrix = matrix;
-        trace(spr.transform.matrix.tz);
 
         spr.name = "SPR";
-
         addChild(spr);
         var td = new TestDisplay();
         td.name = "td";
