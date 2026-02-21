@@ -1,4 +1,4 @@
-# @install: lix --silent download "gh://github.com/pecheny/flgl#f7a45770198f4fb72a616dddd898cfe810bc253c" into flgl/1.0.0/github/f7a45770198f4fb72a616dddd898cfe810bc253c
+# @install: lix --silent download "gh://github.com/pecheny/flgl#d9d0a6ec9d2cb237668e4261beff23bec0552d94" into flgl/1.0.0/github/d9d0a6ec9d2cb237668e4261beff23bec0552d94
 -lib taxis
--cp ${HAXE_LIBCACHE}/flgl/1.0.0/github/f7a45770198f4fb72a616dddd898cfe810bc253c/src
+-cp ${HAXE_LIBCACHE}/flgl/1.0.0/github/d9d0a6ec9d2cb237668e4261beff23bec0552d94/src
 -D flgl=1.0.0

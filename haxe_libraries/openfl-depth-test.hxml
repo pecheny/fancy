@@ -1,3 +1,3 @@
--cp ${SCOPE_DIR}/jigaproject/openfl-depth-test/src
--D openfl-depth-test=dev
---macro Sys.println("haxe_libraries/openfl-depth-test.hxml:2: [Warning] Using dev version of library openfl-depth-test")
+# @install: lix --silent download "gh://github.com/pecheny/openfl-depth-test#4f03a6341b8f95489b9db99961426e290c94bb66" into openfl-depth-test//github/4f03a6341b8f95489b9db99961426e290c94bb66
+-cp ${HAXE_LIBCACHE}/openfl-depth-test//github/4f03a6341b8f95489b9db99961426e290c94bb66/src
+-D openfl-depth-test=undefined
