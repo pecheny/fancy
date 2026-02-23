@@ -31,12 +31,14 @@ class FancyPg extends Sprite {
     public function new() {
         super();
         var stage = new StageImpl(1);
-        fuiBuilder = new FuiBuilder(stage);
+        var drawcallsLayout = Xml.parse(GuiDrawcalls.DRAWCALLS_LAYOUT).firstElement();
+        drawcallsLayout.addChild(Xml.parse(PictureDrawcalls.DRAWCALLS_LAYOUT(pictureFile)).firstElement());
+        var uikit = new FlatUikit(stage, drawcallsLayout);
+        fuiBuilder = new FuiBuilder(stage, uikit);
         ar = stage;
         b = new PlaceholderBuilder2D(fuiBuilder.ar);
         var root:Entity = fuiBuilder.createDefaultRoot();
         var uikit = fuiBuilder.uikit;
-        uikit.drawcallsLayout.addChild(Xml.parse(PictureDrawcalls.DRAWCALLS_LAYOUT(pictureFile)).firstElement());
         uikit.configure(root);
         uikit.createContainer(root);
         fuiBuilder.configureDisplayRoot(root, this);
@@ -46,7 +48,7 @@ class FancyPg extends Sprite {
 
         var container = b.b("c1").createContainer(vertical, Forward);
         fuiBuilder.makeClickInput(container.ph);
-        var scrollPlaceholder = fuiBuilder.createScrollbox(container, b.b(), uikit.drawcallsLayout);
+        var scrollPlaceholder = uikit.createScrollbox(container, b.b());
         rw.addWidget(scrollPlaceholder);
         for (ch in createMixedContentArray())
             container.addWidget(ch);
