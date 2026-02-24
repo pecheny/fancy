@@ -21,8 +21,6 @@ class Demo extends Sprite {
     public function new() {
         super();
 
-        addEventListener(openfl.events.RenderEvent.RENDER_OPENGL, onRender);
-        // addEventListener(openfl.events.Event.ENTERFRAME, onEnterFrame);
         var stage = new StageImpl(1);
         var fui = new FuiBuilder(stage, new FlatDepthUikit(stage));
 
@@ -59,32 +57,5 @@ class Demo extends Sprite {
         addChild(td);
     }
 
-    var intd = false;
 
-    function onRender(event:openfl.events.RenderEvent) {
-        var renderer:openfl.display.OpenGLRenderer = cast event.renderer;
-        this.stage.context3D.setDepthTest(true, Context3DCompareMode.GREATER_EQUAL);
-        if (intd)
-            return;
-        intd = true;
-        // var depthBits = GL.getInteger(GL.DEPTHBITS);
-        // trace("depthBits ", depthBits);
-
-        // var objectType = GL.getFramebufferAttachmentParameteriv(GL.FRAMEBUFFER, GL.DEPTH_ATTACHMENT, GL.FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE);
-        // if (objectType == GL.RENDERBUFFER) {
-        //     trace("A Renderbuffer is attached");
-        // } else if (objectType == GL.TEXTURE) {
-        //     trace("A Depth Texture is attached");
-        // } else if (objectType == GL.NONE) {
-        //     trace("no");
-        // }
-
-        // var renderer:openfl.display.OpenGLRenderer = cast event.renderer;
-        // GL.clearColor(0.2, 0.3, 0.3, 1.0);
-        // GL.enable(GL.DEPTH_TEST);
-        // stage.context3D.configureBackBuffer(stage.stageWidth, stage.stageHeight, 0, true);
-        // GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
-        // GL.depthFunc(GL.NEVER);
-        // trace(GL);
-    }
 }

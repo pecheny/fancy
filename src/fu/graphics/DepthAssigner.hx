@@ -1,10 +1,10 @@
+package fu.graphics;
+
+import al.prop.DepthComponent;
 import data.aliases.AttribAliases;
 import ec.Component;
-import ec.PropertyComponent;
 import gl.AttribSet;
 import graphics.ShapesBuffer;
-
-class DepthComponent extends PropertyComponent<Float> {}
 
 class DepthAssigner<T:AttribSet> extends Component {
     var attrs:T;
