@@ -1,8 +1,5 @@
 package;
 
-import openfl.events.Event;
-import openfl.display3D.Context3D;
-import bindings.RenderEvent;
 import Gui;
 import al.ec.WidgetSwitcher;
 import backends.openfl.OpenflBackend.StageImpl;
@@ -10,6 +7,7 @@ import backends.openfl.OpenflBackend.StageImpl;
 import dkit.Dkit.BaseDkit;
 import ec.Entity;
 import openfl.display.Sprite;
+import openfl.display3D.Context3D;
 import openfl.display3D.Context3DCompareMode;
 
 // import openfl.events.RenderEvent;
@@ -42,12 +40,6 @@ class Demo extends Sprite {
         gui.dc.initData(["foo", "bar", "baz", "buz", "foo", "bar", "baz", "buz"]);
         switcher.switchTo(wdg);
 
-        ctx = this.stage.context3D;
-        // this.stage.addEventListener(Event.RESIZE, (e) -> {
-        //     trace("r");
-        //     // this.stage.context3D.configureBackBuffer(this.stage.stageWidth, this.stage.stageHeight, 4, true);
-        // });
-
         var spr = new Sprite();
 
         spr.graphics.beginFill(0x772A3075);
@@ -69,11 +61,9 @@ class Demo extends Sprite {
 
     var intd = false;
 
-    function onRender(event) {
-        // trace(@:privateAccess this.stage.context3D.__state.depthCompareMode);
-
+    function onRender(event:openfl.events.RenderEvent) {
+        var renderer:openfl.display.OpenGLRenderer = cast event.renderer;
         this.stage.context3D.setDepthTest(true, Context3DCompareMode.GREATER_EQUAL);
-        // trace(ctx == this.stage.context3D);
         if (intd)
             return;
         intd = true;

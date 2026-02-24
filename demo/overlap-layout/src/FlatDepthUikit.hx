@@ -1,5 +1,6 @@
 package;
 
+import openfl.Lib;
 import a2d.Stage;
 import al.layouts.PortionLayout;
 import al.layouts.WholefillLayout;
@@ -46,6 +47,10 @@ class FlatDepthUikit extends fu.UikitBase {
         CMSDFSet.instance.createWriters();
         ColorSet.instance.addAttribute(AttribAliases.NAME_DEPTH, 1, DataType.float32);
         ColorSet.instance.createWriters();
+
+        Lib.current.stage.addEventListener(openfl.events.Event.RESIZE, (e) -> {
+            Lib.current.stage.context3D?.clear(0, 0, 0, 0, 0);
+        });
 
         super(stage, Xml.parse(DRAWCALLS_LAYOUT).firstElement(), fontPath);
     }
