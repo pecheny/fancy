@@ -1,8 +1,7 @@
-
-
 // import bindings.GL;
+import fu.graphics.DepthAssigner;
+import al.prop.DepthComponent;
 import gl.sets.ColorSet;
-import DepthComponent;
 import openfl.filters.ShaderFilter;
 import openfl.display3D.Context3DCompareMode;
 import openfl.geom.Matrix3D;
@@ -27,6 +26,7 @@ import openfl.display.Sprite;
 using a2d.ProxyWidgetTransform;
 using a2d.transform.LiquidTransformer;
 using al.Builder;
+
 @:postInit(initDkit)
 class Cont extends BaseDkit {
     static var SRC = <cont vl={PortionLayout.instance}>

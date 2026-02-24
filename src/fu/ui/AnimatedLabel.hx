@@ -27,7 +27,7 @@ class AnimatedLabel extends LabelBase<CMSDFSet> implements Animatable {
         var cw = new TextColorFiller(CMSDFSet.instance, l);
         cw.color = 0xffffff;
         wrs.addChild(cw);
-        _render = new VUnfoldAnimTextRender(attrs, l, tt, wrs);
+        _render = new VUnfoldAnimTextRender(attrs, l, tt, null, wrs);
         return _render;
     }
 

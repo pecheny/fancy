@@ -1,5 +1,8 @@
 package fu.ui;
 
+import htext.AutoSize;
+import gl.sets.CMSDFSet;
+import a2d.transform.LiquidTransformer;
 import a2d.Widget2DContainer;
 import al.appliers.ContainerRefresher;
 import al.core.WidgetContainer.Refreshable;
@@ -32,6 +35,8 @@ class LabelBase<T:AttribSet> extends Widget implements ResizableWidget2D impleme
     var layouter:TextLayouter;
     var transformer:TextTransformer;
     var vsize:FixedSize;
+    var mode:AutoSize;
+    var bake = false;
 
     @:once var stage:Stage;
 
@@ -50,15 +55,36 @@ class LabelBase<T:AttribSet> extends Widget implements ResizableWidget2D impleme
     public function new(ph:Placeholder2D, tc, attrs:T) {
         this.attrs = attrs;
         this.textStyleContext = tc;
-        if (textStyleContext.autoSize)
-            enableAutoSize();
+        // wrong, nullref before super(ph)
+        // if (textStyleContext.autoSize)
+        //     enableAutoSize();
         super(ph);
     }
 
-    public function enableAutoSize() {
-        vsize = new FixedSize(0);
-        @:privateAccess ph.axisStates[vertical].size = vsize;
-        ph.axisStates[horizontal].addSibling(new ContainerRefresher(this));
+
+    public function setAutoSizeMode(mode:AutoSize) {
+        switch mode {
+            case none:
+            case word_wrap:
+                ph.axisStates[horizontal].addSibling(new ContainerRefresher(this));
+            case word_wrap_auto_height:
+                if (bake) {
+                    trace("Warning: vertical auto size is not compatible with bake, skip.");
+                    return;
+                }
+                vsize = new FixedSize(0);
+                @:privateAccess ph.axisStates[vertical].size = vsize;
+                ph.axisStates[horizontal].addSibling(new ContainerRefresher(this));
+        }
+        this.mode = mode;
+    }
+
+    public function setBake(val:Bool) {
+        if (this.mode == word_wrap_auto_height) {
+            trace("Warning: vertical auto size is not compatible with bake, skip.");
+            return;
+        }
+        this.bake = val;
     }
 
     public function withText(s) {
@@ -71,7 +97,7 @@ class LabelBase<T:AttribSet> extends Widget implements ResizableWidget2D impleme
     }
 
     function createTextRender(attrs:T, l:TextLayouter, tt:TransformerBase):ITextRender<T> {
-        return new TextRender(attrs, l, tt);
+        return new TextRender(attrs, l, tt, null);
     }
 
     public function setAlign(?align:Align) {
@@ -89,14 +115,31 @@ class LabelBase<T:AttribSet> extends Widget implements ResizableWidget2D impleme
         updateSize();
     }
 
-    function updateSize() {
-        if (vsize == null || !_inited)
-            return;
+    function updateWordWrap() {
         var ctx = textStyleContext;
         var tr = transformer;
         layouter.setText(text);
         var val = ctx.getContentSize(horizontal, tr) / (ctx.getFontScale(tr));
         layouter.setWidthConstraint(val / tr.scale);
+    }
+    
+    public function setDirty(level:Dirty = full) {
+        render.setDirty(level); // ??
+    }
+
+    function updateSize() {
+        if (!_inited)
+            return;
+        if (mode == none)
+            return;
+        updateWordWrap();
+        if (mode == word_wrap || bake)
+            return;
+        render.setDirty(full); // ??
+        updateVertSize();
+    }
+
+    function updateVertSize() {
         var old = @:privateAccess vsize.value;
         var newv = layouter.getContentSize(vertical) * getFontScale();
         @:privateAccess vsize.value = newv;
@@ -108,7 +151,13 @@ class LabelBase<T:AttribSet> extends Widget implements ResizableWidget2D impleme
         layouter = createLayouter();
         TextTransformer.withTextTransform(ph, stage.getAspectRatio(), textStyleContext);
         transformer = ph.entity.getComponent(TextTransformer);
-        render = createTextRender(attrs, layouter, transformer);
+        LiquidTransformer.withLiquidTransform(ph, stage.getAspectRatio());
+
+        var ltransformer = ph.entity.getComponent(LiquidTransformer);
+        render = createTextRender(attrs, layouter, ltransformer);
+        var crender:TextRender<CMSDFSet> = cast render;
+        @:privateAccess crender.textTr = transformer;
+
         var as = new htext.TextAutoScale(ph.entity, transformer, render);
         render.setText(this.text);
         updateSize();

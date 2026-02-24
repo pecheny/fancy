@@ -1,5 +1,8 @@
 package fu.ui;
 
+import data.aliases.AttribAliases;
+import htext.TextDepthFiller;
+import htext.ITextRender.Dirty;
 import a2d.transform.TransformerBase;
 import gl.sets.CMSDFSet;
 import htext.AttributeFiller;
@@ -29,16 +32,17 @@ class CMSDFLabel extends LabelBase<CMSDFSet> {
         // TODO maybe if text contains no color tags filling color attribute instead on relayouting would be more efficient
         layouter.setText("");
         layouter.setText(text);
-        rend.setDirty();
+        rend.setDirty(Dirty.full);
     }
 
     override function createTextRender(attrs:CMSDFSet, l, tt:TransformerBase) {
         var dpiWriter = attrs.getWriter(CMSDFSet.NAME_DPI);
         var wrs = new AttFillContainer();
+        entity.addComponent(wrs);
         wrs.addChild(new SmothnessWriter(dpiWriter[0], l, textStyleContext, tt, stage.getWindowSize()));
         cw = new TextColorFiller(CMSDFSet.instance, glyphs);
         wrs.addChild(cw);
-        rend = new TextRender(attrs, l, tt, wrs);
+        rend = new TextRender(attrs, l, tt, null, wrs);
         return rend;
     }
 
