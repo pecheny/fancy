@@ -180,17 +180,19 @@ class FuiBuilder {
     public function lqtr(ph) {
         return LiquidTransformer.withLiquidTransform(ph, ar.getAspectRatio());
     }
-
-    public function quad(ph:Placeholder2D, color) {
+    
+    public function shape(ph:Placeholder2D, descr:Dynamic):Placeholder2D {
         lqtr(ph);
-        var attrs = ColorSet.instance;
-        var shw = new ShapeWidget(attrs, ph, true);
-        shw.addChild(new QuadGraphicElement(attrs));
-        var colors = new ShapesColorAssigner(attrs, color, shw.getBuffer());
-        ph.entity.addComponent(colors);
-        shw.manInit();
-        return shw;
+        return uikit.shape(ph, descr);
     }
+    
+    public var quadDescr = {type:"quad", color:0};
+
+    public function quad(ph:a2d.Placeholder2D, color = 0) {
+        quadDescr.color = color;
+        return shape(ph, quadDescr);
+    }
+
 
     /**
         @param createGldo - if true, GLNode of Image type with apropriate TextureAspect would be created. 

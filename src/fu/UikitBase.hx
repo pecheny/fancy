@@ -139,4 +139,8 @@ class UikitBase {
                 throw "wrong " + node.nodeName;
         }
     }
+
+    public function shape(ph:Placeholder2D, descr:Dynamic):Placeholder2D {
+        return ph;
+    }
 }
