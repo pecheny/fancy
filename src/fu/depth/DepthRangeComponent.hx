@@ -4,7 +4,7 @@ import ec.PropertyComponent;
 
 class DepthRangeComponent extends PropertyComponent<Float> {
     @:isVar public var maxValue(get, set):Float;
-    
+
     public function new(maxVal) {
         super();
         this.maxValue = maxVal;
@@ -18,5 +18,9 @@ class DepthRangeComponent extends PropertyComponent<Float> {
         this.maxValue = maxValue;
         onChange.dispatch();
         return maxValue;
+    }
+
+    public function toString() {
+        return 'DepthRange [$value:$maxValue]';
     }
 }
