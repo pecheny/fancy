@@ -29,7 +29,6 @@ class TextRender<T:AttribSet> implements ITextRender<T> {
     var otherAttributesToFill:AttributeFiller;
     var posWriter:AttributeWriters;
     var uvWriter:AttributeWriters;
-    var dpiWriter:AttributeWriters;
     var dirty:Dirty = full;
 
     public function new(attrs:T, layouter, tr, textTr, forFill:AttributeFiller = null) {
