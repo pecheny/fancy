@@ -35,7 +35,7 @@ class LabelBase<T:AttribSet> extends Widget implements ResizableWidget2D impleme
     var layouter:TextLayouter;
     var transformer:TextTransformer;
     var vsize:FixedSize;
-    var mode:AutoSize;
+    var mode:AutoSize = none;
     var bake = false;
 
     @:once var stage:Stage;
@@ -68,6 +68,7 @@ class LabelBase<T:AttribSet> extends Widget implements ResizableWidget2D impleme
             case word_wrap:
                 ph.axisStates[horizontal].addSibling(new ContainerRefresher(this));
             case word_wrap_auto_height:
+            trace("ah");
                 if (bake) {
                     trace("Warning: vertical auto size is not compatible with bake, skip.");
                     return;
@@ -133,13 +134,14 @@ class LabelBase<T:AttribSet> extends Widget implements ResizableWidget2D impleme
         if (mode == none)
             return;
         updateWordWrap();
-        if (mode == word_wrap || bake)
+        if ((mode == word_wrap) || bake)
             return;
         render.setDirty(full); // ??
         updateVertSize();
     }
 
     function updateVertSize() {
+        trace(mode, bake);
         var old = @:privateAccess vsize.value;
         var newv = layouter.getContentSize(vertical) * getFontScale();
         @:privateAccess vsize.value = newv;
