@@ -112,21 +112,21 @@ class CascadeProps<T> extends DummyProps<T> implements IComponent {
     }
 }
 
-// class PropsAccess<T> {
-//     var p:PropStorage<T>;
-//     function new() {}
-//     public static function getOrCreateStr<T>(e:Entity):PropsAccess<T> {
-//         var pa = new PropsAccess<T>();
-//         pa.p = null;
-//         pa.p = e.getComponent(PropStorage);
-//         if (pa.p != null)
-//             return pa;
-//         pa.p = new CascadeProps<T>(null, e.name + "-props");
-//         e.addComponentByType(PropStorage, pa.p);
-//         return pa;
-//     }
-//     public function with(name, val:T) {
-//         p.set(name, val);
-//         return this;
-//     }
-// }
+class PropsAccess<T> {
+    var p:PropStorage<T>;
+    function new() {}
+    public static function getOrCreateStr<T>(e:Entity):PropsAccess<T> {
+        var pa = new PropsAccess<T>();
+        pa.p = null;
+        pa.p = e.getComponent(PropStorage);
+        if (pa.p != null)
+            return pa;
+        pa.p = new CascadeProps<T>(null, e.name + "-props");
+        e.addComponentByType(PropStorage, pa.p);
+        return pa;
+    }
+    public function with(name, val:T) {
+        p.set(name, val);
+        return this;
+    }
+}
