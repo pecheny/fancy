@@ -1,3 +1,3 @@
-# @install: lix --silent download "gh://github.com/pecheny/slec#ac175dc3c6d5aba4b9582a94d941e83561d4949d" into slec/0.0.0-alpha/github/ac175dc3c6d5aba4b9582a94d941e83561d4949d
--cp ${HAXE_LIBCACHE}/slec/0.0.0-alpha/github/ac175dc3c6d5aba4b9582a94d941e83561d4949d/src
+# @install: lix --silent download "gh://github.com/pecheny/slec#4c51d1364b6d4497d109d54e51d051d36b46e343" into slec/0.0.0-alpha/github/4c51d1364b6d4497d109d54e51d051d36b46e343
+-cp ${HAXE_LIBCACHE}/slec/0.0.0-alpha/github/4c51d1364b6d4497d109d54e51d051d36b46e343/src
 -D slec=0.0.0-alpha
