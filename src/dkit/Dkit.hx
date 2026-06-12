@@ -1,10 +1,13 @@
 package dkit;
 
+import Axis2D;
 import a2d.ContainerStyler;
 import a2d.Placeholder2D;
+import a2d.Stage;
 import a2d.Widget.ResizableWidget2D;
 import a2d.Widget2DContainer;
 import al.appliers.ContainerRefresher;
+import al.core.AxisApplier.DynApp;
 import al.core.DataView;
 import al.core.TWidget;
 import al.ec.WidgetSwitcher;
@@ -13,6 +16,7 @@ import al.layouts.WholefillLayout;
 import ec.Entity;
 import fu.Signal.IntSignal;
 import fu.ui.ButtonBase;
+import openfl.display.DisplayObject;
 
 using a2d.ProxyWidgetTransform;
 
@@ -265,11 +269,41 @@ class SwfDkit extends BaseDkit {
     public var mc(default, null):openfl.display.MovieClip;
     public var mode:backends.openfl.SpriteAspectKeeper.ScaleMode = fit;
     public var hideOverflow:Bool = false;
-
+    var ak:backends.openfl.SpriteAspectKeeper;
+    @:once var s:Stage;
+    var boundBindingd:Array<{ph:Placeholder2D, dobj:DisplayObject}> = [];
     override function initDkit() {
         mc = openfl.utils.Assets.getMovieClip('$lib:$name');
         mc.name = name;
-        new backends.openfl.SpriteAspectKeeper(ph, mc, null, mode, hideOverflow);
+        ak = new backends.openfl.SpriteAspectKeeper(ph, mc, null, mode, hideOverflow);
+        for (ch in children) {
+            entity.addChild(ch.ph.entity);
+            var chdo = mc.getChildByName(ch.entity.name);
+            if (chdo != null)
+                boundBindingd.push({ph: ch.ph, dobj: chdo});
+        }
+        if (boundBindingd.length > 0)
+            ph.axisStates[vertical].addSibling(new DynApp(refresh));
+    }
+
+    function refresh() {
+        if (@:privateAccess !ak._inited)
+            return;
+        var p1 = new flash.geom.Point();
+        var p2 = new flash.geom.Point();
+        var p3 = new flash.geom.Point();
+        for (b in boundBindingd) {
+            p1.setTo(b.dobj.x, b.dobj.y);
+            mc.transform.matrix.transformPointToOutput(p1, p2);
+            p1.setTo(b.dobj.width, b.dobj.height);
+            mc.transform.matrix.transformPointToOutput(p1, p3);
+            b.ph.axisStates[horizontal].apply(do2ph(horizontal, p2.x), do2ph(horizontal, p3.x - mc.x));
+            b.ph.axisStates[vertical].apply(do2ph(vertical, p2.y), do2ph(vertical, p3.y - mc.y));
+        }
+    }
+
+    public inline function do2ph(a, val:Float) {
+        return val / s.getWindowSize()[a] * s.getAspectRatio()[a] * 2;
     }
 }
 #end
