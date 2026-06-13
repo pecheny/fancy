@@ -6,9 +6,9 @@ import backends.openfl.OpenflBackend.StageImpl;
 // import bindings.GL;
 import dkit.Dkit.BaseDkit;
 import ec.Entity;
+import fu.gl.GuiDrawcalls;
 import openfl.display.Sprite;
 import openfl.display3D.Context3D;
-import openfl.display3D.Context3DCompareMode;
 
 // import openfl.events.RenderEvent;
 using a2d.ProxyWidgetTransform;
@@ -20,10 +20,9 @@ class Demo extends Sprite {
 
     public function new() {
         super();
-
         var stage = new StageImpl(1);
-        var fui = new FuiBuilder(stage, new FlatDepthUikit(stage));
-
+        var drawcallsLayout = Xml.parse(GuiDrawcalls.DRAWCALLS_LAYOUT).firstElement();
+        var fui = new FuiBuilder(stage, new FlatDepthUikit(stage, drawcallsLayout));
         BaseDkit.inject(fui);
         var root:Entity = fui.createDefaultRoot();
 
@@ -56,6 +55,4 @@ class Demo extends Sprite {
         td.name = "td";
         addChild(td);
     }
-
-
 }
